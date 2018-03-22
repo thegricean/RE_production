@@ -1,11 +1,3 @@
-writing/2016/theory/redundant_reference.pdf
-writing/2016/cogsci/refexp.pdf
-writing/2017/cogsci/distrib_learn.pdf
-*predictionsWithEmpiricalLength.csv
-*predictionsWithEmpiricalLength_ic.csv
-*predictionsWithEmpiricalLength_ict.csv
-*Params.csv
-*Predictives.csv
 *.RData
 */node_modules/
 *.bbl
@@ -31,14 +23,8 @@ writing/2017/cogsci/distrib_learn.pdf
 *mturk.csv
 *mturk/
 models/*/bdaOutput/*
-models/basic_level_reference/allModelPreds.csv
 *normalizedFreqLength.csv
-church_playground
-corpus_results/data/*
-Caroline/5_OI_Final_Experiment2/results_round1/
-Caroline/5_OI_Final_Experiment2/results_round2/
 *.gitattributes
-models/1_basic_overinformativeness/results_model/data/*
 experiments/elisa_paper_relevant/interactiveReferenceGame/results/rscripts/app_bsc/*
 *node_modules*
 *dump.rdb
