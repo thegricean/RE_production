@@ -1,0 +1,6 @@
+
+- analysis_expX.R with main analyses and visualizations for each experiment
+
+- helpers.R with helper functions
+
+- preprocessing_expX.R with preprocessing code for raw data files for each experiment

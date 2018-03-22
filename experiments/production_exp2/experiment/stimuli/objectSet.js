@@ -1,0 +1,102 @@
+// Indexed by object set ID
+var conds = [{targetType: 'banana', targetColor: 'yellow', targetTypicality: 'typical', context: 'informative', fullName: 'banana_yellow', url: 'stimuli/banana_yellow.png', width: 285, height: 171}, 
+			 {targetType: 'banana', targetColor: 'yellow', targetTypicality: 'typical', context: 'overinformative', fullName: 'banana_yellow', url: 'stimuli/banana_yellow.png', width: 285, height: 171},
+			 {targetType: 'banana', targetColor: 'yellow', targetTypicality: 'typical', context: 'overinformative-cc', fullName: 'banana_yellow', url: 'stimuli/banana_yellow.png', width: 285, height: 171},
+			 {targetType: 'banana', targetColor: 'yellow', targetTypicality: 'typical', context: 'informative-cc', fullName: 'banana_yellow', url: 'stimuli/banana_yellow.png', width: 285, height: 171},
+			 {targetType: 'banana', targetColor: 'blue', targetTypicality: 'atypical', context: 'informative', fullName: 'banana_blue', url: 'stimuli/banana_blue.png', width: 285, height: 171},
+			 {targetType: 'banana', targetColor: 'blue', targetTypicality: 'atypical', context: 'informative-cc', fullName: 'banana_blue', url: 'stimuli/banana_blue.png', width: 285, height: 171},
+			 {targetType: 'banana', targetColor: 'blue', targetTypicality: 'atypical', context: 'overinformative', fullName: 'banana_blue', url: 'stimuli/banana_blue.png', width: 285, height: 171},
+			 {targetType: 'banana', targetColor: 'blue', targetTypicality: 'atypical', context: 'overinformative-cc', fullName: 'banana_blue', url: 'stimuli/banana_blue.png', width: 285, height: 171},
+			 {targetType: 'banana', targetColor: 'brown', targetTypicality: 'midtypical', context: 'informative', fullName: 'banana_brown', url: 'stimuli/banana_brown.png', width: 285, height: 171},
+			 {targetType: 'banana', targetColor: 'brown', targetTypicality: 'midtypical', context: 'informative-cc', fullName: 'banana_brown', url: 'stimuli/banana_brown.png', width: 285, height: 171},
+			 {targetType: 'banana', targetColor: 'brown', targetTypicality: 'midtypical', context: 'overinformative', fullName: 'banana_brown', url: 'stimuli/banana_brown.png', width: 285, height: 171},
+			 {targetType: 'banana', targetColor: 'brown', targetTypicality: 'midtypical', context: 'overinformative-cc', fullName: 'banana_brown', url: 'stimuli/banana_brown.png', width: 285, height: 171},
+
+			 {targetType: 'carrot', targetColor: 'orange', targetTypicality: 'typical', context: 'informative', fullName: 'carrot_orange', url: 'stimuli/carrot_orange.png', width: 285, height: 171}, 
+			 {targetType: 'carrot', targetColor: 'orange', targetTypicality: 'typical', context: 'informative-cc', fullName: 'carrot_orange', url: 'stimuli/carrot_orange.png', width: 285, height: 171}, 
+			 {targetType: 'carrot', targetColor: 'orange', targetTypicality: 'typical', context: 'overinformative', fullName: 'carrot_orange', url: 'stimuli/carrot_orange.png', width: 285, height: 171},
+			 {targetType: 'carrot', targetColor: 'orange', targetTypicality: 'typical', context: 'overinformative-cc', fullName: 'carrot_orange', url: 'stimuli/carrot_orange.png', width: 285, height: 171},
+			 {targetType: 'carrot', targetColor: 'pink', targetTypicality: 'atypical', context: 'informative', fullName: 'carrot_pink', url: 'stimuli/carrot_pink.png', width: 285, height: 171},
+			 {targetType: 'carrot', targetColor: 'pink', targetTypicality: 'atypical', context: 'informative-cc', fullName: 'carrot_pink', url: 'stimuli/carrot_pink.png', width: 285, height: 171},
+			 {targetType: 'carrot', targetColor: 'pink', targetTypicality: 'atypical', context: 'overinformative', fullName: 'carrot_pink', url: 'stimuli/carrot_pink.png', width: 285, height: 171},
+			 {targetType: 'carrot', targetColor: 'pink', targetTypicality: 'atypical', context: 'overinformative-cc', fullName: 'carrot_pink', url: 'stimuli/carrot_pink.png', width: 285, height: 171},
+			 {targetType: 'carrot', targetColor: 'brown', targetTypicality: 'midtypical', context: 'informative', fullName: 'carrot_brown', url: 'stimuli/carrot_brown.png', width: 285, height: 171},
+			 {targetType: 'carrot', targetColor: 'brown', targetTypicality: 'midtypical', context: 'informative-cc', fullName: 'carrot_brown', url: 'stimuli/carrot_brown.png', width: 285, height: 171},
+			 {targetType: 'carrot', targetColor: 'brown', targetTypicality: 'midtypical', context: 'overinformative', fullName: 'carrot_brown', url: 'stimuli/carrot_brown.png', width: 285, height: 171},
+			 {targetType: 'carrot', targetColor: 'brown', targetTypicality: 'midtypical', context: 'overinformative-cc', fullName: 'carrot_brown', url: 'stimuli/carrot_brown.png', width: 285, height: 171},
+
+			 {targetType: 'apple', targetColor: 'red', targetTypicality: 'typical', context: 'informative', fullName: 'apple_red', url: 'stimuli/apple_red.png', width: 285, height: 171}, 
+			 {targetType: 'apple', targetColor: 'red', targetTypicality: 'typical', context: 'informative-cc', fullName: 'apple_red', url: 'stimuli/apple_red.png', width: 285, height: 171}, 
+			 {targetType: 'apple', targetColor: 'red', targetTypicality: 'typical', context: 'overinformative', fullName: 'apple_red', url: 'stimuli/apple_red.png', width: 285, height: 171},
+			 {targetType: 'apple', targetColor: 'red', targetTypicality: 'typical', context: 'overinformative-cc', fullName: 'apple_red', url: 'stimuli/apple_red.png', width: 285, height: 171},
+			 {targetType: 'apple', targetColor: 'blue', targetTypicality: 'atypical', context: 'informative', fullName: 'apple_blue', url: 'stimuli/apple_blue.png', width: 285, height: 171},
+			 {targetType: 'apple', targetColor: 'blue', targetTypicality: 'atypical', context: 'informative-cc', fullName: 'apple_blue', url: 'stimuli/apple_blue.png', width: 285, height: 171},
+			 {targetType: 'apple', targetColor: 'blue', targetTypicality: 'atypical', context: 'overinformative', fullName: 'apple_blue', url: 'stimuli/apple_blue.png', width: 285, height: 171},
+			 {targetType: 'apple', targetColor: 'blue', targetTypicality: 'atypical', context: 'overinformative-cc', fullName: 'apple_blue', url: 'stimuli/apple_blue.png', width: 285, height: 171},
+			 {targetType: 'apple', targetColor: 'green', targetTypicality: 'midtypical', context: 'informative', fullName: 'apple_green', url: 'stimuli/apple_green.png', width: 285, height: 171},
+			 {targetType: 'apple', targetColor: 'green', targetTypicality: 'midtypical', context: 'informative-cc', fullName: 'apple_green', url: 'stimuli/apple_green.png', width: 285, height: 171},
+			 {targetType: 'apple', targetColor: 'green', targetTypicality: 'midtypical', context: 'overinformative', fullName: 'apple_green', url: 'stimuli/apple_green.png', width: 285, height: 171},
+			 {targetType: 'apple', targetColor: 'green', targetTypicality: 'midtypical', context: 'overinformative-cc', fullName: 'apple_green', url: 'stimuli/apple_green.png', width: 285, height: 171},
+
+			 {targetType: 'tomato', targetColor: 'red', targetTypicality: 'typical', context: 'informative', fullName: 'tomato_red', url: 'stimuli/tomato_red.png', width: 285, height: 171}, 
+			 {targetType: 'tomato', targetColor: 'red', targetTypicality: 'typical', context: 'informative-cc', fullName: 'tomato_red', url: 'stimuli/tomato_red.png', width: 285, height: 171}, 
+			 {targetType: 'tomato', targetColor: 'red', targetTypicality: 'typical', context: 'overinformative', fullName: 'tomato_red', url: 'stimuli/tomato_red.png', width: 285, height: 171},
+			 {targetType: 'tomato', targetColor: 'red', targetTypicality: 'typical', context: 'overinformative-cc', fullName: 'tomato_red', url: 'stimuli/tomato_red.png', width: 285, height: 171},
+			 {targetType: 'tomato', targetColor: 'pink', targetTypicality: 'atypical', context: 'informative', fullName: 'tomato_pink', url: 'stimuli/tomato_pink.png', width: 285, height: 171},
+			 {targetType: 'tomato', targetColor: 'pink', targetTypicality: 'atypical', context: 'informative-cc', fullName: 'tomato_pink', url: 'stimuli/tomato_pink.png', width: 285, height: 171},
+			 {targetType: 'tomato', targetColor: 'pink', targetTypicality: 'atypical', context: 'overinformative', fullName: 'tomato_pink', url: 'stimuli/tomato_pink.png', width: 285, height: 171},
+			 {targetType: 'tomato', targetColor: 'pink', targetTypicality: 'atypical', context: 'overinformative-cc', fullName: 'tomato_pink', url: 'stimuli/tomato_pink.png', width: 285, height: 171},
+			 {targetType: 'tomato', targetColor: 'green', targetTypicality: 'midtypical', context: 'informative', fullName: 'tomato_green', url: 'stimuli/tomato_green.png', width: 285, height: 171},
+			 {targetType: 'tomato', targetColor: 'green', targetTypicality: 'midtypical', context: 'informative-cc', fullName: 'tomato_green', url: 'stimuli/tomato_green.png', width: 285, height: 171},
+			 {targetType: 'tomato', targetColor: 'green', targetTypicality: 'midtypical', context: 'overinformative', fullName: 'tomato_green', url: 'stimuli/tomato_green.png', width: 285, height: 171},
+			 {targetType: 'tomato', targetColor: 'green', targetTypicality: 'midtypical', context: 'overinformative-cc', fullName: 'tomato_green', url: 'stimuli/tomato_green.png', width: 285, height: 171},
+
+			 {targetType: 'pear', targetColor: 'green', targetTypicality: 'typical', context: 'informative', fullName: 'pear_green', url: 'stimuli/pear_green.png', width: 285, height: 171}, 
+			 {targetType: 'pear', targetColor: 'green', targetTypicality: 'typical', context: 'informative-cc', fullName: 'pear_green', url: 'stimuli/pear_green.png', width: 285, height: 171}, 
+			 {targetType: 'pear', targetColor: 'green', targetTypicality: 'typical', context: 'overinformative', fullName: 'pear_green', url: 'stimuli/pear_green.png', width: 285, height: 171},
+			 {targetType: 'pear', targetColor: 'green', targetTypicality: 'typical', context: 'overinformative-cc', fullName: 'pear_green', url: 'stimuli/pear_green.png', width: 285, height: 171},
+			 {targetType: 'pear', targetColor: 'orange', targetTypicality: 'atypical', context: 'informative', fullName: 'pear_orange', url: 'stimuli/pear_orange.png', width: 285, height: 171},
+			 {targetType: 'pear', targetColor: 'orange', targetTypicality: 'atypical', context: 'informative-cc', fullName: 'pear_orange', url: 'stimuli/pear_orange.png', width: 285, height: 171},
+			 {targetType: 'pear', targetColor: 'orange', targetTypicality: 'atypical', context: 'overinformative', fullName: 'pear_orange', url: 'stimuli/pear_orange.png', width: 285, height: 171},
+			 {targetType: 'pear', targetColor: 'orange', targetTypicality: 'atypical', context: 'overinformative-cc', fullName: 'pear_orange', url: 'stimuli/pear_orange.png', width: 285, height: 171},
+			 {targetType: 'pear', targetColor: 'yellow', targetTypicality: 'midtypical', context: 'informative', fullName: 'pear_yellow', url: 'stimuli/pear_yellow.png', width: 285, height: 171},
+			 {targetType: 'pear', targetColor: 'yellow', targetTypicality: 'midtypical', context: 'informative-cc', fullName: 'pear_yellow', url: 'stimuli/pear_yellow.png', width: 285, height: 171},
+			 {targetType: 'pear', targetColor: 'yellow', targetTypicality: 'midtypical', context: 'overinformative', fullName: 'pear_yellow', url: 'stimuli/pear_yellow.png', width: 285, height: 171},
+			 {targetType: 'pear', targetColor: 'yellow', targetTypicality: 'midtypical', context: 'overinformative-cc', fullName: 'pear_yellow', url: 'stimuli/pear_yellow.png', width: 285, height: 171},
+			 
+			 {targetType: 'pepper', targetColor: 'red', targetTypicality: 'typical', context: 'informative', fullName: 'pepper_red', url: 'stimuli/pepper_red.png', width: 285, height: 171}, 
+			 {targetType: 'pepper', targetColor: 'red', targetTypicality: 'typical', context: 'informative-cc', fullName: 'pepper_red', url: 'stimuli/pepper_red.png', width: 285, height: 171}, 
+			 {targetType: 'pepper', targetColor: 'red', targetTypicality: 'typical', context: 'overinformative', fullName: 'pepper_red', url: 'stimuli/pepper_red.png', width: 285, height: 171},
+			 {targetType: 'pepper', targetColor: 'red', targetTypicality: 'typical', context: 'overinformative-cc', fullName: 'pepper_red', url: 'stimuli/pepper_red.png', width: 285, height: 171},
+			 {targetType: 'pepper', targetColor: 'black', targetTypicality: 'typical2', context: 'informative', fullName: 'pepper_black', url: 'stimuli/pepper_black.png', width: 285, height: 171},
+			 {targetType: 'pepper', targetColor: 'black', targetTypicality: 'typical2', context: 'informative-cc', fullName: 'pepper_black', url: 'stimuli/pepper_black.png', width: 285, height: 171},
+			 {targetType: 'pepper', targetColor: 'black', targetTypicality: 'typical2', context: 'overinformative', fullName: 'pepper_black', url: 'stimuli/pepper_black.png', width: 285, height: 171},
+			 {targetType: 'pepper', targetColor: 'black', targetTypicality: 'typical2', context: 'overinformative-cc', fullName: 'pepper_black', url: 'stimuli/pepper_black.png', width: 285, height: 171},
+			 {targetType: 'pepper', targetColor: 'orange', targetTypicality: 'midtypical', context: 'informative', fullName: 'pepper_orange', url: 'stimuli/pepper_orange.png', width: 285, height: 171},
+			 {targetType: 'pepper', targetColor: 'orange', targetTypicality: 'midtypical', context: 'informative-cc', fullName: 'pepper_orange', url: 'stimuli/pepper_orange.png', width: 285, height: 171},
+			 {targetType: 'pepper', targetColor: 'orange', targetTypicality: 'midtypical', context: 'overinformative', fullName: 'pepper_orange', url: 'stimuli/pepper_orange.png', width: 285, height: 171},
+			 {targetType: 'pepper', targetColor: 'orange', targetTypicality: 'midtypical', context: 'overinformative-cc', fullName: 'pepper_orange', url: 'stimuli/pepper_orange.png', width: 285, height: 171},
+
+			 {targetType: 'avocado', targetColor: 'black', targetTypicality: 'midtypical', context: 'informative', fullName: 'avocado_black', url: 'stimuli/avocado_black.png', width: 285, height: 171}, 
+			 {targetType: 'avocado', targetColor: 'black', targetTypicality: 'midtypical', context: 'informative-cc', fullName: 'avocado_black', url: 'stimuli/avocado_black.png', width: 285, height: 171}, 
+			 {targetType: 'avocado', targetColor: 'black', targetTypicality: 'midtypical', context: 'overinformative', fullName: 'avocado_black', url: 'stimuli/avocado_black.png', width: 285, height: 171},
+			 {targetType: 'avocado', targetColor: 'black', targetTypicality: 'midtypical', context: 'overinformative-cc', fullName: 'avocado_black', url: 'stimuli/avocado_black.png', width: 285, height: 171},
+			 {targetType: 'avocado', targetColor: 'red', targetTypicality: 'atypical', context: 'informative', fullName: 'avocado_red', url: 'stimuli/avocado_red.png', width: 285, height: 171},
+			 {targetType: 'avocado', targetColor: 'red', targetTypicality: 'atypical', context: 'informative-cc', fullName: 'avocado_red', url: 'stimuli/avocado_red.png', width: 285, height: 171},
+			 {targetType: 'avocado', targetColor: 'red', targetTypicality: 'atypical', context: 'overinformative', fullName: 'avocado_red', url: 'stimuli/avocado_red.png', width: 285, height: 171},
+			 {targetType: 'avocado', targetColor: 'red', targetTypicality: 'atypical', context: 'overinformative-cc', fullName: 'avocado_red', url: 'stimuli/avocado_red.png', width: 285, height: 171},
+			 {targetType: 'avocado', targetColor: 'green', targetTypicality: 'typical', context: 'informative', fullName: 'avocado_green', url: 'stimuli/avocado_green.png', width: 285, height: 171},
+			 {targetType: 'avocado', targetColor: 'green', targetTypicality: 'typical', context: 'informative-cc', fullName: 'avocado_green', url: 'stimuli/avocado_green.png', width: 285, height: 171},
+			 {targetType: 'avocado', targetColor: 'green', targetTypicality: 'typical', context: 'overinformative', fullName: 'avocado_green', url: 'stimuli/avocado_green.png', width: 285, height: 171},
+			 {targetType: 'avocado', targetColor: 'green', targetTypicality: 'typical', context: 'overinformative-cc', fullName: 'avocado_green', url: 'stimuli/avocado_green.png', width: 285, height: 171}
+			]
+
+var objectList = [
+	conds
+]
+
+module.exports = objectList;
+
+
+
+

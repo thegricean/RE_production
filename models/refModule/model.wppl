@@ -1,0 +1,71 @@
+var initializeModel = function(params) {
+  // TODO
+  // 1. make sure context is in same format for all (i.e. list of lists?)
+  var possibleUtts = function(target, context) {
+    if (params.modelVersion === 'colorSize') {
+      return refModule.getColorSizeUtterances(context);
+    } else if(params.modelVersion === 'nominal') {
+      return refModule.getNominalUtterances(target[0], params.lexicon);
+    } else if(params.modelVersion === 'typicality') {
+      return refModule.getTypicalityUtterances(context);
+    } else {
+      return console.error('unknown modelVersion: ' + params.modelVersion);
+    }
+  };
+  
+  // Cost of utterance
+  // TODO
+  // 1. double-check colors, types, sizes
+  // 2. make sure length/freq either looks at right json or uses combined json
+  var uttCost = function(utt) {
+    var colorMention = _.intersection(refModule.colors, utt.split('_')).length;
+    var sizeMention = _.intersection(refModule.sizes, utt.split('_')).length;
+    
+    var w = (params.modelVersion === 'colorSize' ?
+	     params.colorVsSizeCost :
+	     params.lengthVsFreqCost);
+    if(params.modelVersion === 'colorSize') {
+      return (w * colorMention +
+	      (1 - w) * sizeMention);
+    } else if (_.includes(['nominal', 'typicality'], params.modelVersion))  {
+      return (w * refModule.getRelativeLength(params, utt) +
+	      (1 - w) * refModule.getRelativeLogFrequency(params, utt));
+    } else {
+      return console.error('unknown modelVersion: ' + params.modelVersion);
+    }
+  };
+
+  // Looks up meaning in given lexicon
+  // TODO
+  // 1. Fix lexicon for colorSize (currently data says 'size'/'othersize')
+  var meaning = function(utt, object) {
+    var objStr = _.values(object).join("_");
+    var lexicalEntry = params.lexicon[utt];
+    return _.has(lexicalEntry, objStr) ? lexicalEntry[objStr] : -100; 
+  };
+  
+  // Selects among objects in context using lexicon
+  var literalListener = cache(function(utt, context){
+    return Infer({method:'enumerate', model: function(){
+      var object = uniformDraw(context);
+      factor(params.typWeight * meaning(utt,object)); 
+      return object;
+    }});
+  });
+
+  // Selects among utterances given informativity in context and cost of production,
+  // marginalizing over possible noise in perception of context
+  // Timeit note: marginalizing over listener takes about 200-300ms per utt
+  var speaker = function(target, context) {
+    var utts = possibleUtts(target, context);
+    return Infer({method:'enumerate', model: function(){
+      var utt = uniformDraw(utts);
+      var utility = ((1-params.costWeight) * literalListener(utt, context).score(target)
+		     - params.costWeight * uttCost(utt));
+      factor(params.alpha * utility);
+      return utt;
+    }});
+  };
+
+  return speaker;
+};

@@ -1,0 +1,9 @@
+
+- Data files for mixed effects analyses and visualizations: data_expX.csv
+
+- Typicality norming data files: typicality_expX(_TYPE)?.csv
+
+- Cost data files: cost_expX.csv -- contains one column each for length and frequency
+
+- Raw data files that come straight out of submiterator reformat: raw/data_expX.csv
+

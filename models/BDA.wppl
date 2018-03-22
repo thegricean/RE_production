@@ -1,0 +1,80 @@
+// run using:
+// webppl BDA.wppl --require ./refModule/
+
+// Fix some configuration options
+var config = {
+  'modelVersion' : 'colorSize', // M1: colorSize, M2: typicality, M3: nominal
+  'storePredictives' : false,
+  'outputFileName' : 'testing'
+};
+
+// Pull in requested data/conditions 
+var data = refModule.getData(config.modelVersion);
+console.log("Loading data... found" + data.length + " data points");
+
+var conditions = refModule.getConditions(config.modelVersion);
+console.log("Loading unique conditions... found" + conditions.length);
+
+var paramPrior = function(modelVersion) {
+  // Params shared by all versions of the model
+  var baseParams = {
+    alpha : uniformDrift({a: 0, b: 40, w: 40/20}),
+    costWeight : uniformDrift({a: 0, b: 1, w: 1/20})
+  };
+
+  var specificParams = (modelVersion === 'colorSize' ? {
+
+    colorTyp :        uniformDrift({a: .5, b: 1, w: .5/20}),
+    sizeTyp :         uniformDrift({a: .5, b: 1, w: .5/20}),
+    colorVsSizeCost : uniformDrift({a: 0, b: 1, w: 1/20}),
+    typWeight :       1
+    
+  } : _.includes(['typicality', 'nominal'], modelVersion) ? {
+
+    lengthVsFreqCost: uniform( 0,  1),
+    typWeight :       uniform( 0, 10)
+        
+  } : console.error('unknown modelVersion: ' + modelVersion));
+
+  return extend(config, baseParams, specificParams);
+};
+
+var modelAnalysis = function() {
+
+  var params = paramPrior(config.modelVersion);
+  var lexicon = refModule.constructLexicon(params);
+  var speakerModel = initializeModel(extend(params, {lexicon}));
+
+  foreach(conditions, function(c) {
+    // Extract condition information
+    var conditionName = c.condition;
+    var context = c.context;
+    var target = context[0];
+
+    // Run model
+    var modelOutput = speakerModel(target, context);
+
+    // Store predives
+    if(config.storePredictives) {
+      foreach(modelOutput.support(), function(s){
+  	var key = _.values(c).concat(s);
+  	var newPair = _.zipObject([key], [Math.exp(modelOutput.score(s))]);
+  	globalStore.predictives = extend(globalStore.predictives, newPair);
+      });
+    }
+    
+    // Condition on data
+    var itemData = refModule.getSubset(data, _.omit(c, 'context'));
+    mapData({data: itemData}, function(datum) {
+      observe(modelOutput, datum.response);
+    });
+  });
+
+  return {params : params}; //predictive: globalStore.predictives, 
+};
+
+var outputERP = Infer({method:'MCMC', //kernel: {HMC: {steps: 10, stepSize: 1}},
+		       samples: 1000, lag: 5, burn: 1000, verbose: true,
+		       onlyMAP: true, model: modelAnalysis});
+console.log(outputERP);
+// refModule.bayesianErpWriter(outputERP, "./bdaOutput/" + config.outputFileName);

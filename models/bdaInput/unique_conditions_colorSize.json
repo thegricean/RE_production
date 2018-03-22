@@ -1,0 +1,544 @@
+[
+  {
+    "color": "color",
+    "size": "size",
+    "condition": "color42",
+    "othercolor": "othercolor",
+    "item": "item",
+    "context": [
+      {
+        "size": "size",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "size",
+        "color": "othercolor",
+        "item": "item"
+      },
+      {
+        "size": "size",
+        "color": "othercolor",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "othercolor",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "othercolor",
+        "item": "item"
+      }
+    ]
+  },
+  {
+    "color": "color",
+    "size": "size",
+    "condition": "color31",
+    "othercolor": "othercolor",
+    "item": "item",
+    "context": [
+      {
+        "size": "size",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "size",
+        "color": "othercolor",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "othercolor",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "othercolor",
+        "item": "item"
+      }
+    ]
+  },
+  {
+    "color": "color",
+    "size": "size",
+    "condition": "size32",
+    "othercolor": "othercolor",
+    "item": "item",
+    "context": [
+      {
+        "size": "size",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "othercolor",
+        "item": "item"
+      }
+    ]
+  },
+  {
+    "color": "color",
+    "size": "size",
+    "condition": "color21",
+    "othercolor": "othercolor",
+    "item": "item",
+    "context": [
+      {
+        "size": "size",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "size",
+        "color": "othercolor",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "othercolor",
+        "item": "item"
+      }
+    ]
+  },
+  {
+    "color": "color",
+    "size": "size",
+    "condition": "size22",
+    "othercolor": "othercolor",
+    "item": "item",
+    "context": [
+      {
+        "size": "size",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "color",
+        "item": "item"
+      }
+    ]
+  },
+  {
+    "color": "color",
+    "size": "size",
+    "condition": "color32",
+    "othercolor": "othercolor",
+    "item": "item",
+    "context": [
+      {
+        "size": "size",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "size",
+        "color": "othercolor",
+        "item": "item"
+      },
+      {
+        "size": "size",
+        "color": "othercolor",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "othercolor",
+        "item": "item"
+      }
+    ]
+  },
+  {
+    "color": "color",
+    "size": "size",
+    "condition": "size42",
+    "othercolor": "othercolor",
+    "item": "item",
+    "context": [
+      {
+        "size": "size",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "othercolor",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "othercolor",
+        "item": "item"
+      }
+    ]
+  },
+  {
+    "color": "color",
+    "size": "size",
+    "condition": "size33",
+    "othercolor": "othercolor",
+    "item": "item",
+    "context": [
+      {
+        "size": "size",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "color",
+        "item": "item"
+      }
+    ]
+  },
+  {
+    "color": "color",
+    "size": "size",
+    "condition": "size44",
+    "othercolor": "othercolor",
+    "item": "item",
+    "context": [
+      {
+        "size": "size",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "color",
+        "item": "item"
+      }
+    ]
+  },
+  {
+    "color": "color",
+    "size": "size",
+    "condition": "color22",
+    "othercolor": "othercolor",
+    "item": "item",
+    "context": [
+      {
+        "size": "size",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "size",
+        "color": "othercolor",
+        "item": "item"
+      },
+      {
+        "size": "size",
+        "color": "othercolor",
+        "item": "item"
+      }
+    ]
+  },
+  {
+    "color": "color",
+    "size": "size",
+    "condition": "size43",
+    "othercolor": "othercolor",
+    "item": "item",
+    "context": [
+      {
+        "size": "size",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "othercolor",
+        "item": "item"
+      }
+    ]
+  },
+  {
+    "color": "color",
+    "size": "size",
+    "condition": "color41",
+    "othercolor": "othercolor",
+    "item": "item",
+    "context": [
+      {
+        "size": "size",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "size",
+        "color": "othercolor",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "othercolor",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "othercolor",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "othercolor",
+        "item": "item"
+      }
+    ]
+  },
+  {
+    "color": "color",
+    "size": "size",
+    "condition": "size21",
+    "othercolor": "othercolor",
+    "item": "item",
+    "context": [
+      {
+        "size": "size",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "othercolor",
+        "item": "item"
+      }
+    ]
+  },
+  {
+    "color": "color",
+    "size": "size",
+    "condition": "size41",
+    "othercolor": "othercolor",
+    "item": "item",
+    "context": [
+      {
+        "size": "size",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "othercolor",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "othercolor",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "othercolor",
+        "item": "item"
+      }
+    ]
+  },
+  {
+    "color": "color",
+    "size": "size",
+    "condition": "color43",
+    "othercolor": "othercolor",
+    "item": "item",
+    "context": [
+      {
+        "size": "size",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "size",
+        "color": "othercolor",
+        "item": "item"
+      },
+      {
+        "size": "size",
+        "color": "othercolor",
+        "item": "item"
+      },
+      {
+        "size": "size",
+        "color": "othercolor",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "othercolor",
+        "item": "item"
+      }
+    ]
+  },
+  {
+    "color": "color",
+    "size": "size",
+    "condition": "color33",
+    "othercolor": "othercolor",
+    "item": "item",
+    "context": [
+      {
+        "size": "size",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "size",
+        "color": "othercolor",
+        "item": "item"
+      },
+      {
+        "size": "size",
+        "color": "othercolor",
+        "item": "item"
+      },
+      {
+        "size": "size",
+        "color": "othercolor",
+        "item": "item"
+      }
+    ]
+  },
+  {
+    "color": "color",
+    "size": "size",
+    "condition": "color44",
+    "othercolor": "othercolor",
+    "item": "item",
+    "context": [
+      {
+        "size": "size",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "size",
+        "color": "othercolor",
+        "item": "item"
+      },
+      {
+        "size": "size",
+        "color": "othercolor",
+        "item": "item"
+      },
+      {
+        "size": "size",
+        "color": "othercolor",
+        "item": "item"
+      },
+      {
+        "size": "size",
+        "color": "othercolor",
+        "item": "item"
+      }
+    ]
+  },
+  {
+    "color": "color",
+    "size": "size",
+    "condition": "size31",
+    "othercolor": "othercolor",
+    "item": "item",
+    "context": [
+      {
+        "size": "size",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "color",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "othercolor",
+        "item": "item"
+      },
+      {
+        "size": "othersize",
+        "color": "othercolor",
+        "item": "item"
+      }
+    ]
+  }
+]
