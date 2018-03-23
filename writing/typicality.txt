@@ -1,0 +1,12 @@
+On typicality.
+
+What do people mean when they say that typicality matters to the production of referring expressions? Or even that more typical things are mentioned less? The typicality of WHAT, as judged by WHOM?
+
+The four main studies that have demonstrated typicality effects on modifier choice are Sedivy 2003, Mitchell et al 2013, Westerbeek 2015, and Rubio-Fernandez 2016. Mitchell found that more typical shapes/materials are mentioned less than atypical ones. Sedivy, Westerbeek and Rubio-Fernandez found that more typical colors are mentioned less than atypical ones. A somewhat different study that also purports to be investigating typicality effects is one that I recently reviewed, where the finding is that colors that are MORE typical (ie, closer to a color category's focal point) are mentioned more than atypical ones. But this is a categorically different type of typicality, so I'll ignore it for the time being.
+
+OK. The question is why typicality matters. In all the studies I just mentioned, it's an object's particular FEATURE VALUE (a particular color, a particular shape) that is judged to be (a)typical for an OBJECT, and that in turn results in more or less redundant adjective use.
+The way we've been treating typicality in the model, though, is to treat a DESCRIPTION as more or less typical for an OBJECT.
+
+Is the right way to do this instead to keep typicality distinct from what we originally called "fidelity"? I.e., keep typicality reserved as a property that object-dependent feature values exhibit, while fidelity is a property of utterances? Fidelity should then be derived compositionally FROM typicality and other properties like salience? What is salience? Do we want to get into that?
+
+
