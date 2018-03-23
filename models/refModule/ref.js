@@ -144,22 +144,43 @@ var supportWriter = function(s, p, handle) {
   }
 };
 
-// Note this is highly specific to a single type of erp -- extend to capture colorsize contexts
+var predictiveSupportWriter = function(s, p, handle) {
+  var l = s.length;
+  for (var i = 0; i < l; i++) {
+    fs.writeSync(handle, s[i] + '\n');
+  }
+};
+
+// Note this is highly specific to a single type of erp
 var bayesianErpWriter = function(erp, filePrefix) {
-  var predictiveFile = fs.openSync(filePrefix + "Predictives.csv", 'w');
-  fs.writeSync(predictiveFile, ["condition", "TargetColor","TargetType","Dist1Color","Dist1Type","Dist2Color","Dist2Type",
-				"value", "prob", "MCMCprob"] + '\n');
-
-  var paramFile = fs.openSync(filePrefix + "Params.csv", 'w');
-  fs.writeSync(paramFile, ["parameter", "value", "MCMCprob"] + '\n');
-
   var supp = erp.support();
+
+  if(_.has(supp[0], 'simulations')) {
+    var predictiveFile = fs.openSync(filePrefix + ".csv", 'w');
+    fs.writeSync(predictiveFile, ['context','alpha', "costWeight", 'modelVersion', "colorTyp",
+				  "sizeTyp", "typeTyp", "colorVsSizeCost",
+				  "typWeight", "utterance",
+				  "logModelProb"] + '\n');
+  }
+  if(_.has(supp[0], 'params')) {
+    var paramFile = fs.openSync(filePrefix + "Params.csv", 'w');
+    fs.writeSync(paramFile, ["perception", "pragmatics", "production", "alpha",
+			     "simScaling", "pragWeight","costWeight",
+			     "logLikelihood", "posteriorProb"] + '\n');
+  }
+
   supp.forEach(function(s) {
-    supportWriter(s.predictive, erp.score(s), predictiveFile);
-    supportWriter(s.params, erp.score(s), paramFile);
+    if(_.has(s, 'simulations'))
+      predictiveSupportWriter(s.simulations, erp.score(s), predictiveFile);
+    if(_.has(s, 'params'))
+      supportWriter(s.params, erp.score(s), paramFile);
   });
-  fs.closeSync(predictiveFile);
-  fs.closeSync(paramFile);
+  if(_.has(supp[0], 'predictives')) {
+    fs.closeSync(predictiveFile);
+  }
+  if(_.has(supp[0], 'params')) {
+    fs.closeSync(paramFile);
+  }
   console.log('writing complete.');
 };
 
