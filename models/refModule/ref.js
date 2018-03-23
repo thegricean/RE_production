@@ -56,33 +56,6 @@ var sizes = ["size", "othersize", 'big', 'small'];
 var types = ['item', 'thing', 'thumbtack', 'couch',
 	     'tv', 'desk', 'chair', 'fan'];       
 
-var makeArr = function(n, v) {
-  return _.repeat(n, v);
-};
-
-// var makeColorSizeLists = function(wordsOrObjects) {
-//   var colorList = wordsOrObjects === 'words' ? colors.concat('') : colors;
-//   var sizeList = wordsOrObjects === 'words' ? sizes.concat('') : sizes;
-//   var typeList = wordsOrObjects === 'words' ? types.concat('') : types;
-
-//   return _.flattenDepth(_.map(sizeList, function(size) {
-//     return _.map(colorList, function(color) {
-//       return _.map(typeList, function(type) {
-//         return [size, color, type];
-//       });
-//     });
-//   }), 2);
-// };
-
-// var colorSizeWordMeanings = function(params) {
-//   return _.extend(
-//     _.zipObject(colors, _.times(colors.length, _.constant(params.colorTyp))),
-//     _.zipObject(sizes, _.times(sizes.length, _.constant(params.sizeTyp))),
-//     _.zipObject(types, _.times(types.length, _.constant(params.typeTyp))),
-//     {'thing' : 1}
-//  );
-// };
-
 var getColorSizeUttMeaning = function(params, utt, obj) {
   var wordMeanings = _.map(utt.split('_'), function(word) {
     if(_.includes(colors, word))
