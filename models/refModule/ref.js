@@ -2,6 +2,22 @@ var _ = require('lodash');
 var fs = require('fs');
 var babyparse = require('babyparse');
 
+function cartesianProductOf(list_of_lists) {
+  return _.reduce(list_of_lists, function(a, b) {
+    return _.flatten(_.map(a, function(x) {
+      return _.map(b, function(y) {
+        return x.concat([y]);
+      });
+    }), false);
+  }, [ [] ]);
+};
+
+var obj_product = function(obj) {
+  return _.map(cartesianProductOf(_.values(obj)), function(paramSet) {
+    return _.zipObject(_.keys(obj), paramSet);
+  });
+};
+
 var powerset = function (set) {
   if (set.length == 0)
     return [[]];
@@ -31,9 +47,6 @@ var getColorSizeUtterances = function(context) {
   return _.uniq(_.flattenDeep(_.map(context, function(obj) {
     return _.map(_.filter(powerset([obj.size, obj.color]), v => v != ''),
 		 modifier => modifier.join('_'));
-      // return _.map([obj.item], function(noun) {
-    //return modifier.join('_');
-      // });
   })));
 };
 
@@ -99,6 +112,10 @@ var constructLexicon = function(params) {
 function readCSV(filename){
   return babyparse.parse(fs.readFileSync(filename, 'utf8'),
 			 {header:true}).data;
+};
+
+function getTestContexts(modelVersion){
+  return require('../simulations/testContexts.json');
 };
 
 // TODO: these paths could cause problems if we refactor module
@@ -212,8 +229,8 @@ var getRelativeLength = function(params, label) {
 module.exports = {
   getNominalUtterances, getColorSizeUtterances, getTypicalityUtterances,
   constructLexicon, powerset, getSubset, 
-  bayesianErpWriter, writeERP, writeCSV, readCSV,
-  getData, getConditions,
+  bayesianErpWriter, writeERP, writeCSV, readCSV, getTestContexts,
+  getData, getConditions, obj_product,
   getRelativeLength, getRelativeLogFrequency, getTypSubset,
   colors, sizes
 };

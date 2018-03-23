@@ -1,13 +1,13 @@
 {
-  'size-sufficient' : [
+  "size-sufficient" : [
     ["size", "blue", "thumbtack"],
     ["othersize", "blue", "thumbtack"],
     ["othersize", "red", "thumbtack"]],
-  'color-sufficient' : [
+  "color-sufficient" : [
     ["size", "blue", "thumbtack"],
     ["size", "red", "thumbtack"],
     ["othersize", "red", "thumbtack"]],
-  'koolen_exp1_low' : [
+  "koolen_exp1_low" : [
     ["big", "green", "fan"],
     ["big", "green", "tv"],
     ["big", "green", "desk"],
@@ -16,7 +16,7 @@
     ["big", "green", "chair"],
     ["big", "green", "couch"],
     ["big", "green", "chair"]],
-  'koolen_exp1_high' : [
+  "koolen_exp1_high" : [
     ["small", "blue", "couch"],
     ["big", "gray", "chair"],
     ["small", "green", "tv"],
@@ -25,7 +25,7 @@
     ["big", "red", "desk"],
     ["big", "brown", "tv"],                                          
     ["big", "gray", "chair"]],
-  'koolen_exp2_low' : [
+  "koolen_exp2_low" : [
     ["big", "red", "chair"],
     ["big", "red", "fan"],
     ["small", "red", "desk"],
@@ -34,7 +34,7 @@
     ["small", "red", "chair"],
     ["big", "red", "fan"],                                          
     ["big", "red", "couch"]],
-  'koolen_exp2_high' : [
+  "koolen_exp2_high" : [
     ["small", "brown", "chair"],
     ["big", "blue", "desk"],
     ["small", "gray", "fan"],
