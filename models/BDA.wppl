@@ -1,18 +1,19 @@
 // run using:
-// webppl BDA.wppl --require ./refModule/
+// webppl BDA.wppl --require ./refModule/ -- --modelVersion colorSize
+
+// model version can be <colorSize> <typicality> <nominal>
 
 // Fix some configuration options
 var config = {
-  'modelVersion' : 'colorSize', // M1: colorSize, M2: typicality, M3: nominal
   'storePredictives' : false,
-  'outputFileName' : 'testing'
+  'outputFileName' : 'bdaOutput-' + argv.modelVersion
 };
 
 // Pull in requested data/conditions 
-var data = refModule.getData(config.modelVersion);
+var data = refModule.getData(argv.modelVersion);
 console.log("Loading data... found" + data.length + " data points");
 
-var conditions = refModule.getConditions(config.modelVersion);
+var conditions = refModule.getConditions(argv.modelVersion);
 console.log("Loading unique conditions... found" + conditions.length);
 
 var paramPrior = function(modelVersion) {
@@ -41,7 +42,7 @@ var paramPrior = function(modelVersion) {
 
 var modelAnalysis = function() {
 
-  var params = paramPrior(config.modelVersion);
+  var params = paramPrior(argv.modelVersion);
   var lexicon = refModule.constructLexicon(params);
   var speakerModel = initializeModel(extend(params, {lexicon}));
 
@@ -50,7 +51,7 @@ var modelAnalysis = function() {
     var conditionName = c.condition;
     var context = c.context;
     var target = context[0];
-
+    
     // Run model
     var modelOutput = speakerModel(target, context);
 

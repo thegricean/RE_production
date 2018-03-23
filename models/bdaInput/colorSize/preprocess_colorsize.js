@@ -33,18 +33,16 @@ var constructWholeContext = function(c) {
   return _.extend(c, {context: context});
 };
 
-var data = refModule.readCSV("bda_data_colorsize_reduced.csv"); // loads data with 46 "other utterance" cases excluded
-console.log(data);
-//console.log("Loading data complete...",+data.length+" data points");
+// TODO: read in from raw data
+var data = refModule.readCSV("bda_data_colorSizeReduced.csv");
+fs.writeFileSync('./bda_data.json',
+		 JSON.stringify(data, null, 2));
 
-var conditions = refModule.readCSV("./unique_conditions_colorsize_reduced.csv"); // loads unique conditions with 46 "other utterance" cases excluded
-console.log("Loading unique conditions complete..."+conditions.length+" conditions");
+// TODO: create from raw data?
+var conditions = refModule.readCSV("./unique_conditions_colorsize.csv");
 
 var contexts = _.map(conditions, function(condition) {
   return constructWholeContext(condition);
 });
-
-console.log(contexts);
-console.log("Constructing contexts complete...");
-fs.writeFileSync('./bda_data_colorsize_reduced.json',
-		 JSON.stringify(data, null, 2));
+fs.writeFileSync('./unique_conditions.json',
+		 JSON.stringify(contexts, null, 2));
