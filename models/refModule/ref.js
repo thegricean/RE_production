@@ -45,59 +45,65 @@ var getTypicalityUtterances = function(context) {
 // utterances are only modifiers
 var getColorSizeUtterances = function(context) {
   return _.uniq(_.flattenDeep(_.map(context, function(obj) {
-    return _.map(_.filter(powerset([obj.size, obj.color]), v => v != ''),
+    return _.map(_.filter(powerset([obj.size, obj.color, obj.type]), v => v != ''),
 		 modifier => modifier.join('_'));
   })));
 };
 
-// Working with collapsed color utterances
-var colors = ['color', 'othercolor'];
-var sizes = ["size", "othersize"];
-var types = ['item'];       
+// Need to be able to look up what type a word is (includes collapsed versions)...
+var colors = ['color', 'othercolor', 'blue', 'red', 'green', 'gray', 'brown'];
+var sizes = ["size", "othersize", 'big', 'small'];
+var types = ['item', 'thing', 'thumbtack', 'couch',
+	     'tv', 'desk', 'chair', 'fan'];       
 
 var makeArr = function(n, v) {
   return _.repeat(n, v);
 };
 
-var makeColorSizeLists = function(wordsOrObjects) {
-  var colorList = wordsOrObjects === 'words' ? colors.concat('') : colors;
-  var sizeList = wordsOrObjects === 'words' ? sizes.concat('') : sizes;
-  var typeList = wordsOrObjects === 'words' ? types.concat('') : types;
+// var makeColorSizeLists = function(wordsOrObjects) {
+//   var colorList = wordsOrObjects === 'words' ? colors.concat('') : colors;
+//   var sizeList = wordsOrObjects === 'words' ? sizes.concat('') : sizes;
+//   var typeList = wordsOrObjects === 'words' ? types.concat('') : types;
 
-  return _.flattenDepth(_.map(sizeList, function(size) {
-    return _.map(colorList, function(color) {
-      return _.map(typeList, function(type) {
-        return [size, color, type];
-      });
-    });
-  }), 2);
-};
+//   return _.flattenDepth(_.map(sizeList, function(size) {
+//     return _.map(colorList, function(color) {
+//       return _.map(typeList, function(type) {
+//         return [size, color, type];
+//       });
+//     });
+//   }), 2);
+// };
 
-var colorSizeWordMeanings = function(params) {
-  return _.extend(
-    _.zipObject(colors, _.times(colors.length, _.constant(params.colorTyp))),
-    _.zipObject(sizes, _.times(sizes.length, _.constant(params.sizeTyp))),
-    _.zipObject(types, _.times(types.length, _.constant(1))),
-    {'thing' : 1}
- );
+// var colorSizeWordMeanings = function(params) {
+//   return _.extend(
+//     _.zipObject(colors, _.times(colors.length, _.constant(params.colorTyp))),
+//     _.zipObject(sizes, _.times(sizes.length, _.constant(params.sizeTyp))),
+//     _.zipObject(types, _.times(types.length, _.constant(params.typeTyp))),
+//     {'thing' : 1}
+//  );
+// };
+
+var getColorSizeUttMeaning = function(params, utt, obj) {
+  var wordMeanings = _.map(utt.split('_'), function(word) {
+    if(_.includes(colors, word))
+      return word == obj.color ? params.colorTyp : 1 - params.colorTyp;
+    else if (_.includes(sizes, word))
+      return word == obj.size ? params.sizeTyp : 1 - params.sizeTyp;
+    else if (_.includes(types, word))
+      return word == obj.type ? params.typeTyp : 1 - params.typeTyp;
+    else
+      console.error('word ' + word + ' not recognized');
+  });
+  return _.reduce(wordMeanings, _.multiply);
 };
 
 var constructLexicon = function(params) {
   if(params.modelVersion === 'colorSize') {
-    var allUtts = makeColorSizeLists('words');
-    var uttKeys = _.map(allUtts, (utt) => _.filter(utt, u => u != '').join('_'));
-    var allObjs = makeColorSizeLists('objects');
-    var objKeys = _.map(allObjs, (obj) => obj.join('_'));
-    var wordMeaning = colorSizeWordMeanings(params);
-    return _.zipObject(uttKeys, _.map(allUtts, function(utt) {
-      return _.zipObject(objKeys, _.map(allObjs, function(obj) {
-	var meanings = _.map(_.zip(utt, obj), function(tuple) {
-          var uttWord = tuple[0], objProp = tuple[1];
-          return (uttWord === '' ? 1 :
-                  (uttWord === 'thing' || uttWord === objProp) ? wordMeaning[uttWord] :
-                  (1 - wordMeaning[uttWord]));
-	});
-	return _.reduce(meanings, _.multiply);
+    var utts = getColorSizeUtterances(params.context);
+    var objs = _.map(params.context, obj => _.values(obj).join("_"));
+    return _.zipObject(utts, _.map(utts, function(utt) {
+      return _.zipObject(objs, _.map(params.context, function(obj) {
+	return getColorSizeUttMeaning(params, utt, obj);
       }));
     }));
   } else if (params.modelVersion === 'typicality') {
