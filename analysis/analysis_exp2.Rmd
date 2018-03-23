@@ -495,7 +495,7 @@ p_no_other$BDADist2Type = sapply(strsplit(as.character(p_no_other$BDADist2),"_")
 write.table(unique(p_no_other[,c("context","clickedColor","clickedType","BDADist1Color","BDADist1Type","BDADist2Color","BDADist2Type")]),file=here("models","bdaInput","typicality","unique_conditions.csv"),sep=",",col.names=F,row.names=F,quote=F)
 
 # write data for bda
-# write.table(p_no_other[,c("context","clickedColor","clickedType","BDADist1Color","BDADist1Type","BDADist2Color","BDADist2Type","UttforBDA")],file="/Users/elisakreiss/Documents/Stanford/overinformativeness/models/unified/bdaInput/bda_data_typicality_purple.csv",sep=",",col.names=F,row.names=F,quote=F)
+write.table(p_no_other[,c("context","clickedColor","clickedType","BDADist1Color","BDADist1Type","BDADist2Color","BDADist2Type","UttforBDA")],file=here("models","bdaInput","typicality","bda_data.csv"),sep=",",col.names=F,row.names=F,quote=F)
 ```
 
 ## 4.2 Statistical analysis
