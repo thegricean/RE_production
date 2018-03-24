@@ -1,4 +1,4 @@
-./writing/redundant_reference.pdf
+writing/redundant_reference.pdf
 *.RData
 */node_modules/
 *.bbl
@@ -26,6 +26,5 @@
 models/*/bdaOutput/*
 *normalizedFreqLength.csv
 *.gitattributes
-experiments/elisa_paper_relevant/interactiveReferenceGame/results/rscripts/app_bsc/*
 *node_modules*
 *dump.rdb
