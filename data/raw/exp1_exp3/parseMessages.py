@@ -133,7 +133,7 @@ headers.append('clickedColor')
 #print headers
 print triallines[0].keys()
 
-w = csv.DictWriter(open("results.csv", "wb"),fieldnames=headers,restval="NA",delimiter="\t")
+w = csv.DictWriter(open("rawdata_exp1_exp3.csv", "wb"),fieldnames=headers,restval="NA",delimiter="\t")
 w.writeheader()
 w.writerows(finaltriallines)
 			
