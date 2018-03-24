@@ -34,12 +34,12 @@ var constructWholeContext = function(c) {
 };
 
 // TODO: read in from raw data
-var data = refModule.readCSV("bda_data_colorSizeReduced.csv");
+var data = refModule.readCSV("bda_data_colorSize.csv");
 fs.writeFileSync('./bda_data.json',
 		 JSON.stringify(data, null, 2));
 
 // TODO: create from raw data?
-var conditions = refModule.readCSV("./unique_conditions_colorsize.csv");
+var conditions = refModule.readCSV("./unique_conditions_colorSize.csv");
 
 var contexts = _.map(conditions, function(condition) {
   return constructWholeContext(condition);
