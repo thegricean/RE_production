@@ -1,0 +1,55 @@
+// simulates model forward with given params/context 
+// webppl simulate.wppl --require ../refModule/ -- --modelVersion colorSize 
+
+// list of objects in context (target 1st)
+var contexts = refModule.getTestContexts(argv.modelVersion);
+
+// alpha: soft-max optimality (0,35)
+// colorTyp: typicality of color modifiers (.5,1)
+// sizeTyp: typicality of size modifiers (.5,1)
+// typeTyp: typicality of type mention
+// colorVsSizeCost: relative cost of producing color (w=0) vs. size (w=1)
+// costWeight: relative weight on cost (0,1)
+// typWeight: how much to stretch empirical typ values (fixed in colorSize)
+var paramPrior = function() {
+  var modelSpecificParam = {
+    colorSize : {
+      colorTyp : uniformDraw([.5, .6, .7, .8, .9, .95, .999]), 
+      sizeTyp :  uniformDraw([.5, .6, .7, .8, .9, .95, .999]), 
+      typeTyp :  uniformDraw([.5, .6, .7, .8, .9, .95, .999]), 
+      colorVsSizeCost : [.5],  
+      typWeight : [1]          
+    },
+    typicalityNominal : {
+      lengthVsFreqCost: [.5],  // relative weight on length (w=0) vs. freq (w=1)
+      typWeight : [1]          // how much to stretch empirical typ values
+    }
+  };
+  return extend({
+    alpha : uniformDraw(_.range(1, 37, 5)), 
+    costWeight : [0] ,
+    modelVersion : argv.modelVersion
+  }, modelSpecificParam[argv.modelVersion]);
+};
+
+var forwardModel = function() {
+  var paramSet = paramPrior();
+  console.log(paramSet);
+  var predictives = map(function(contextName) {
+    var context = contexts[contextName];
+    var lexicon = refModule.constructLexicon(extend(paramSet, {'context' : context}));
+    var speakerModel = initializeModel(extend(paramSet, {'lexicon': lexicon}));
+    var modelOutput = speakerModel(context[0], context);
+    return map(function(utt){
+      return [contextName]
+	.concat(_.values(paramSet))
+	.concat(utt)
+	.concat(modelOutput.score(utt))
+	.join(',');
+    }, modelOutput.support());
+  }, _.keys(contexts));
+  return {simulations : _.flatten(predictives)};
+};
+
+var outputERP = Infer({method:'enumerate', model: forwardModel});
+refModule.bayesianErpWriter(outputERP, argv.modelVersion + '-simulations');
