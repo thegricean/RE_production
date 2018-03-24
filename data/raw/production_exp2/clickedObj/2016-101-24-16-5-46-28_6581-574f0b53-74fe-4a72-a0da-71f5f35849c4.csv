@@ -1,0 +1,18 @@
+gameid, time, roundNum, trialType, context,nameClickedObj, targetStatusClickedObj, spLocsClickedObj, lisLocsClickedObj, alt1Name, alt1TargetStatus, alt1SpLocs, alt1LisLocs, alt2Name, alt2TargetStatus, alt2SpLocs, alt2LisLocs
+6581-5,1480032349767,1,tomato,overinformative-cc,pear_orange,distractor,3,3,distractor_tomato_red,distractor,4,4,tomato_red,target,2,2
+6581-5,1480032380661,2,banana,informative-cc,banana_blue,target,2,2,banana_brown,distractor,3,3,distractor_banana_blue,distractor,4,4
+6581-5,1480032384690,3,carrot,informative,pear_yellow,distractor,3,3,carrot_brown,distractor,2,4,carrot_pink,target,4,2
+6581-5,1480032395146,4,banana,informative-cc,banana_brown,target,3,4,banana_yellow,distractor,4,2,distractor_banana_brown,distractor,2,3
+6581-5,1480032401766,5,tomato,informative-cc,tomato_red,target,2,2,distractor_tomato_red,distractor,4,4,tomato_pink,distractor,3,3
+6581-5,1480032407116,6,banana,overinformative-cc,banana_brown,target,3,3,avocado_green,distractor,2,4,distractor_banana_brown,distractor,4,2
+6581-5,1480032411102,7,apple,overinformative,pear_green,distractor,2,3,apple_blue,target,3,4,pepper_red,distractor,4,2
+6581-5,1480032416624,8,apple,informative,banana_brown,distractor,2,3,apple_blue,target,3,2,apple_red,distractor,4,4
+6581-5,1480032423082,9,avocado,overinformative-cc,avocado_green,target,2,4,distractor_avocado_green,distractor,3,2,carrot_brown,distractor,4,3
+6581-5,1480032428032,10,apple,informative,apple_red,distractor,4,2,pepper_red,distractor,3,3,apple_green,target,2,4
+6581-5,1480032433285,11,avocado,overinformative-cc,distractor_avocado_red,distractor,4,2,avocado_red,target,2,4,pepper_black,distractor,3,3
+6581-5,1480032436845,12,pepper,overinformative,avocado_red,distractor,3,3,pepper_black,target,4,4,pear_yellow,distractor,2,2
+6581-5,1480032441940,13,avocado,informative-cc,avocado_green,distractor,2,3,avocado_red,target,4,2,distractor_avocado_red,distractor,3,4
+6581-5,1480032446024,14,tomato,overinformative,tomato_pink,target,4,3,apple_red,distractor,2,2,pepper_black,distractor,3,4
+6581-5,1480032451804,15,carrot,informative,carrot_pink,distractor,2,3,carrot_orange,target,3,2,banana_brown,distractor,4,4
+6581-5,1480032455191,16,tomato,informative,tomato_pink,distractor,3,3,pepper_black,distractor,4,2,tomato_green,target,2,4
+6581-5,1480032459564,17,apple,informative-cc,apple_green,target,3,2,apple_red,distractor,2,3,distractor_apple_green,distractor,4,4
