@@ -26,6 +26,5 @@ writing/redundant_reference.pdf
 models/*/bdaOutput/*
 *normalizedFreqLength.csv
 *.gitattributes
-experiments/elisa_paper_relevant/interactiveReferenceGame/results/rscripts/app_bsc/*
 *node_modules*
 *dump.rdb
