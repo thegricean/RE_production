@@ -1,0 +1,14 @@
+gameid, time, roundNum, trialType, context,nameClickedObj, targetStatusClickedObj, spLocsClickedObj, lisLocsClickedObj, alt1Name, alt1TargetStatus, alt1SpLocs, alt1LisLocs, alt2Name, alt2TargetStatus, alt2SpLocs, alt2LisLocs
+0960-e,1480296034957,1,banana,overinformative,banana_brown,target,3,2,apple_blue,distractor,4,3,apple_green,distractor,2,4
+0960-e,1480296051764,2,tomato,informative-cc,tomato_red,target,3,2,distractor_tomato_red,distractor,4,4,tomato_pink,distractor,2,3
+0960-e,1480296065317,3,apple,overinformative,apple_green,target,3,3,pepper_red,distractor,2,4,pear_yellow,distractor,4,2
+0960-e,1480296072926,4,avocado,overinformative-cc,avocado_green,target,2,3,distractor_avocado_green,distractor,4,4,apple_blue,distractor,3,2
+0960-e,1480296085619,5,carrot,informative,carrot_pink,target,3,4,pear_yellow,distractor,2,3,carrot_brown,distractor,4,2
+0960-e,1480296098711,6,carrot,informative-cc,carrot_orange,target,2,4,carrot_brown,distractor,3,3,distractor_carrot_orange,distractor,4,2
+0960-e,1480296113081,7,carrot,overinformative-cc,carrot_pink,target,3,3,banana_yellow,distractor,2,4,distractor_carrot_pink,distractor,4,2
+0960-e,1480296123817,8,carrot,informative-cc,carrot_brown,target,4,4,carrot_orange,distractor,2,3,distractor_carrot_brown,distractor,3,2
+0960-e,1480296134180,9,tomato,informative,tomato_pink,target,2,3,pepper_orange,distractor,4,2,tomato_green,distractor,3,4
+0960-e,1480296143191,10,tomato,overinformative-cc,tomato_pink,target,4,3,distractor_tomato_pink,distractor,2,4,carrot_brown,distractor,3,2
+0960-e,1480296210542,11,pepper,overinformative-cc,pepper_orange,target,2,2,banana_brown,distractor,3,3,distractor_pepper_orange,distractor,4,4
+0960-e,1480296349740,12,pear,informative-cc,pear_orange,target,3,3,distractor_pear_orange,distractor,2,2,pear_green,distractor,4,4
+0960-e,1480296354512,13,carrot,overinformative-cc,avocado_green,distractor,4,3,carrot_orange,target,2,2,distractor_carrot_orange,distractor,3,4
