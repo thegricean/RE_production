@@ -8,7 +8,7 @@ The data files that the mixed effects analyses and data visualizations for Exp. 
 
 ## Typicality norming
 
-The data files from the typicality norming studies are stored in `typicality_expX(_TYPE)`. They contain means and 95% CIs for each item and can be reproduced from the raw data files with the R scripts stored in raw/norming_expX/*/norming.R.
+The data files from the typicality norming studies are stored in `typicality_expX(_TYPE)`. They contain means and 95% CIs for each item and can be reproduced from the raw data files with the R scripts stored in `raw/norming_expX/*/norming.R`.
 
 ## Cost 
 
