@@ -1,11 +1,11 @@
 import os, csv
 
 
-datadir = "/Users/titlis/cogsci/projects/stanford/projects/overinformativeness/experiments/26_24_without_cup/experiment/data/"
+datadir = "."
 
-csv_messagenames = [o for o in os.listdir("/Users/titlis/cogsci/projects/stanford/projects/overinformativeness/experiments/26_24_without_cup/experiment/data/message/") if (o.endswith('csv') & o.startswith('2016-10'))]
+csv_messagenames = [o for o in os.listdir("./message/") if (o.endswith('csv') & o.startswith('2016-10'))]
 
-csv_trialnames =  [o for o in os.listdir("/Users/titlis/cogsci/projects/stanford/projects/overinformativeness/experiments/26_24_without_cup/experiment/data/clickedObj/") if (o.endswith('csv') & o.startswith('2016-10'))]
+csv_trialnames =  [o for o in os.listdir("./clickedObj/") if (o.endswith('csv') & o.startswith('2016-10'))]
 
 
 # helper function to get messages associated with a particular trial
@@ -128,7 +128,7 @@ headers.append('clickedColor')
 print triallines[0].keys()
 
 
-w = csv.DictWriter(open("../data/results.csv", "wb"),fieldnames=headers,restval="NA",delimiter="\t")
+w = csv.DictWriter(open("rawdata_exp2.csv", "wb"),fieldnames=headers,restval="NA",delimiter="\t")
 w.writeheader()
 w.writerows(finaltriallines)
 			
