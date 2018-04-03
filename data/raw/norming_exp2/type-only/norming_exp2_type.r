@@ -8,8 +8,8 @@ library(here)
 theme_set(theme_bw(18))
 source(here("analysis","helper_scripts","helpers.r"))
 
-d = read.table(file=here("data","raw","norming_exp2","original_type","norming_1.csv"),sep=",", header=T)#, quote="")
-d1 = read.table(file=here("data","raw","norming_exp2","original_type","norming_2.csv"),sep=",", header=T)#, quote="")
+d = read.table(file=here("data","raw","norming_exp2","type-only","norming0.csv"),sep=",", header=T)#, quote="")
+d1 = read.table(file=here("data","raw","norming_exp2","type-only","norming1.csv"),sep=",", header=T)#, quote="")
 
 d1$workerid = d1$workerid + 60
 d = rbind(d,d1)
@@ -113,4 +113,4 @@ agr$Utterance = agr$utterance
 agr$CI.low = agr$YMin
 agr$CI.high = agr$YMax
 
-write.csv(agr[,c("Item","Color","Utterance","Typicality","CI.low","CI.high")], file=here("data","typicality_exp2_type.csv"),row.names=F,quote=F)
+write.csv(agr[,c("Item","Color","Utterance","Typicality","CI.low","CI.high")], file=here("data","raw","norming_exp2","typicality_exp2_type.csv"),row.names=F,quote=F)

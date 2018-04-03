@@ -9,8 +9,8 @@ theme_set(theme_bw(18))
 source(here("analysis","helper_scripts","helpers.r"))
 
 # import results from first two color norming studies
-d = read.table(file=here("data","raw","norming_exp2","original_color","norming_1.csv"),sep=",", header=T)#, quote="")
-d1 = read.table(file=here("data","raw","norming_exp2","original_color","norming_2.csv"),sep=",", header=T)#, quote="")
+d = read.table(file=here("data","raw","norming_exp2","color-only","norming0.csv"),sep=",", header=T)#, quote="")
+d1 = read.table(file=here("data","raw","norming_exp2","color-only","norming1.csv"),sep=",", header=T)#, quote="")
 
 d1$workerid = d1$workerid + 60
 d = rbind(d,d1)
@@ -73,16 +73,16 @@ df_p1p2 = df_nopink[!(df_nopink$Color == "purple" & df_nopink$Item == "carrot"),
 # rename pink carrot/tomato to purple carrot/tomato
 df_p1p2$Color = ifelse(df_p1p2$Color == "pink", "purple", df_p1p2$Color)
 
-blub = df_p1p2
-blub$Combo  = paste(blub$Color,blub$Item)
+help = df_p1p2
+help$Combo  = paste(help$Color,help$Item)
 
-table(blub$Combo, blub$color_utterance)
+table(help$Combo, help$color_utterance)
 
 # add part 3 HERE! (because of labeling of purple carrot)
-d2_0 = read.table(file=here("data","raw","norming_exp2","original_color","norming_3","norming0.csv"),sep=",", header=T)#, quote="")
-d2_1 = read.table(file=here("data","raw","norming_exp2","original_color","norming_3","norming1.csv"),sep=",", header=T)
-d2_2 = read.table(file=here("data","raw","norming_exp2","original_color","norming_3","norming2.csv"),sep=",", header=T)
-d2_3 = read.table(file=here("data","raw","norming_exp2","original_color","norming_3","norming3.csv"),sep=",", header=T)
+d2_0 = read.table(file=here("data","raw","norming_exp2","color-only","norming2.csv"),sep=",", header=T)#, quote="")
+d2_1 = read.table(file=here("data","raw","norming_exp2","color-only","norming3.csv"),sep=",", header=T)
+d2_2 = read.table(file=here("data","raw","norming_exp2","color-only","norming4.csv"),sep=",", header=T)
+d2_3 = read.table(file=here("data","raw","norming_exp2","color-only","norming5.csv"),sep=",", header=T)
 
 length(unique(d2_0$workerid))
 length(unique(d2_1$workerid))
@@ -138,5 +138,4 @@ agr$Utterance = agr$color_utterance
 agr$CI.low = agr$YMin
 agr$CI.high = agr$YMax
 
-write.csv(agr[,c("Item","Color","Utterance","Typicality","CI.low","CI.high")], file=here("data","typicality_exp2_color.csv"),row.names=F,quote=F)
-
+write.csv(agr[,c("Item","Color","Utterance","Typicality","CI.low","CI.high")], file=here("data","raw","norming_exp2","typicality_exp2_color.csv"),row.names=F,quote=F)
