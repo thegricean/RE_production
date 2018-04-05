@@ -14,6 +14,7 @@ production = read.table(file=here("data","data_exp2.csv"),sep="\t", header=T, qu
 # Plot utterance choice proportions by typicality #
 ###################################################
 
+# plot utterance choice proportions by typicality thick for poster/thesis
 agr = production %>%
   select(Color,Type,ColorAndType,Other,NormedTypicality,context) %>%
   gather(Utterance,Mentioned,-context,-NormedTypicality) %>%
@@ -23,32 +24,36 @@ agr = as.data.frame(agr)
 agr$YMin = agr$Probability - agr$ci.low
 agr$YMax = agr$Probability + agr$ci.high
 # change order of Utterance column
-agr$Utterance <- as.character(agr$Utterance)
-agr$Utterance <- factor(agr$Utterance, levels=c("Type", "Color", "ColorAndType", "Other"))
-agr$Utterance <- ifelse(agr$Utterance == "Type", "Only Type",
-                        ifelse(agr$Utterance == "Color", "Only Color",
-                               ifelse(agr$Utterance == "ColorAndType", "Color + Type",
-                                      ifelse(agr$Utterance == "Other", "Other","ERROR"))))
+agr$Utterance <- ifelse(agr$Utterance == "Type", "type-only",
+                        ifelse(agr$Utterance == "Color", "color-only",
+                               ifelse(agr$Utterance == "ColorAndType", "color-and-type",
+                                      ifelse(agr$Utterance == "Other", "other","ERROR"))))
+agr$Utterance <- as.factor(agr$Utterance)
+agr$Utterance <- factor(agr$Utterance, levels=c("type-only", "color-only", "color-and-type", "other"))
+
 # change context names to have nicer facet labels 
-levels(agr$context) = c("informative","informative\nwith color competitor", "overinformative", "overinformative\nwith color competitor")
+levels(agr$context) = c("informative","informative-cc", "overinformative", "overinformative-cc")
 # plot
 ggplot(agr, aes(x=NormedTypicality,y=Probability,color=Utterance)) +
-  geom_smooth(method="lm",size=.6) +
-  geom_point(size=.5) +
+  geom_point(size=2) +
+  geom_smooth(method="lm",size=2.25) +
   facet_wrap(~context) +
-  xlab("Typicality") +
+  xlab("Typicality of object for type-only utterance") +
   ylab("Empirical utterance proportion") +
   coord_cartesian(xlim=c(0.4,1),ylim=c(0, 1)) +
   scale_color_manual(values=c("#56B4E9", "#E69F00", "#9fdf9f", "#999999")) +
-  theme(axis.title=element_text(size=14,colour="#757575")) +
-  theme(axis.text.x=element_text(size=10,colour="#757575")) +
-  theme(axis.text.y=element_text(size=10,colour="#757575")) +
-  theme(axis.ticks=element_line(size=.25,colour="#757575"), axis.ticks.length=unit(.75,"mm")) +
-  theme(strip.text.x=element_text(size=12,colour="#757575")) +
-  theme(legend.title=element_text(size=14,color="#757575")) +
-  theme(legend.text=element_text(size=11,colour="#757575")) +
+  theme(axis.title=element_text(size=25,colour="#757575")) +
+  theme(axis.text.x=element_text(size=20,colour="#757575")) +
+  theme(axis.text.y=element_text(size=20,colour="#757575")) +
+  theme(axis.ticks=element_line(size=.5,colour="#757575"), axis.ticks.length=unit(1,"mm")) +
+  theme(strip.text.x=element_text(size=25,colour="#757575")) +
+  theme(legend.position="top") +
+  theme(legend.title=element_text(size=25,color="#757575")) +
+  theme(legend.text=element_text(size=20,colour="#757575")) +
+  labs(color = "Utterance") +
   theme(strip.background=element_rect(colour="#939393",fill="white")) +
   theme(panel.background=element_rect(colour="#939393"))
+ggsave(here("writing","pics","empiricalProportions_typ_nobanana.png"),width=11,height=9)
 
 #######################################################################
 # Plot utterance choice proportions by typicality for color/non-color #
@@ -92,12 +97,46 @@ ggplot(agr, aes(x=NormedTypicality,y=Probability,color=Utterance)) +
 # Mixed effects regression #
 ############################
 
+# Read cost file
+cost = read.csv(here("data","cost_exp2.csv"),header=TRUE)
+row.names(cost) = cost$target
+
+production = droplevels(production[production$UttforBDA != "other",])
+
+# 
+production$ColTypeLength = cost[as.character(production$Target),]$length
+# This is actually a LogProbability
+production$ColTypeFreq = cost[as.character(production$Target),]$freq
+production$TypeLength = cost[as.character(production$Item),]$length
+production$TypeFreq = cost[as.character(production$Item),]$freq
+production$ColorLength = cost[as.character(production$TargetColor),]$length
+production$ColorFreq = cost[as.character(production$TargetColor),]$freq
+
+production$TargetLength = ifelse(production$ColorAndType,production$ColTypeLength,
+                                 ifelse(production$Type,production$TypeLength,
+                                        ifelse(production$Color,production$ColorLength,"ERROR")))
+production$TargetFreq = ifelse(production$ColorAndType,production$ColTypeFreq,
+                               ifelse(production$Type,production$TypeFreq,
+                                      ifelse(production$Color,production$ColorFreq,"ERROR")))
+production$UttAlt1Length = ifelse(production$ColorAndType,production$TypeLength,
+                                  ifelse(production$Type,production$ColorLength,
+                                         ifelse(production$Color,production$ColTypeLength,"ERROR")))
+production$UttAlt1Freq = ifelse(production$ColorAndType,production$TypeFreq,
+                                ifelse(production$Type,production$ColorFreq,
+                                       ifelse(production$Color,production$ColTypeFreq,"ERROR")))
+production$UttAlt2Length = ifelse(production$ColorAndType,production$ColorLength,
+                                  ifelse(production$Type,production$ColTypeLength,
+                                         ifelse(production$Color,production$TypeLength,"ERROR")))
+production$UttAlt2Freq = ifelse(production$ColorAndType,production$ColorFreq,
+                                ifelse(production$Type,production$ColTypeFreq,
+                                       ifelse(production$Color,production$TypeFreq,"ERROR")))
+
 # Encode informativity and color competitor presence as binary
 production$Informative = as.factor(ifelse(production$context %in% c("informative","informative-cc"),"informative","overinformative"))
 production$CC = as.factor(ifelse(production$context %in% c("informative-cc","overinformative-cc"),"cc","no-cc"))
 
 # Exclude all "other" utterances
-an = droplevels(production[production$UttforBDA != "other",])
+an = production[,c("gameid","context","NormedTypicality","Informative","CC","Item","ColorAndType","Color","TargetLength","TargetFreq","UttAlt1Length","UttAlt1Freq","UttAlt2Length","UttAlt2Freq")]
 # nrow(an)
 
 centered = cbind(an,myCenter(an[,c("NormedTypicality","Informative","CC")]))

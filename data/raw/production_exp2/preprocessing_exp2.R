@@ -108,7 +108,7 @@ production[production$Color == 1,]$UttforBDA = as.character(production[productio
 production[production$Type == 1,]$UttforBDA = as.character(production[production$Type == 1,]$clickedType)
 production[production$ColorAndType == 1,]$UttforBDA = paste(as.character(production[production$ColorAndType == 1,]$clickedColor),as.character(production[production$ColorAndType == 1,]$clickedType),sep="_")
 
-production$target = paste(production$clickedColor, production$clickedType, sep="_")
+production$Target = paste(production$clickedColor, production$clickedType, sep="_")
 
 # Write unique conditions for bda
 bda_df = droplevels(production[production$UttforBDA != "other",])
@@ -129,6 +129,9 @@ write.table(unique(bda_df[,c("context","clickedColor","clickedType","BDADist1Col
 write.table(bda_df[,c("context","clickedColor","clickedType","BDADist1Color","BDADist1Type","BDADist2Color","BDADist2Type","UttforBDA")],file=here("models","bdaInput","typicality","bda_data_typicality.csv"),sep=",",col.names=F,row.names=F,quote=F)
 
 # Write file for regression analysis and visualization
+production$Dist1 = paste(production$Dist1Color, production$Dist1Type, sep="_")
+production$Dist2 = paste(production$Dist2Color, production$Dist2Type, sep="_")
 production$Item = production$clickedType
-preproc_file = production[,c("gameid","context","NormedTypicality","UtteranceType","Color","ColorAndType","Type","ColorMentioned","ItemMentioned","Other","Item","Dist1","Dist2","UttforBDA")]
+production$TargetColor = production$clickedColor
+preproc_file = production[,c("gameid","context","NormedTypicality","UtteranceType","Color","ColorAndType","Type","ColorMentioned","ItemMentioned","Other","Item","TargetColor","Target","Dist1","Dist2","UttforBDA")]
 write.table(preproc_file,file=here("data","data_exp2.csv"),sep="\t",row.names=F,quote=F)
