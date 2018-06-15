@@ -1,38 +1,19 @@
-setwd("/Users/titlis/cogsci/projects/stanford/projects/overinformativeness/experiments/7_overinf_basiclevel_biggersample/results")
-source("rscripts/helpers.r")
-source("rscripts/createLaTeXTable.R")
+library(tidyverse)
+theme_set(theme_bw(18))
+source("helper_scripts/helpers.R")
+source("helper_scripts/createLaTeXTable.R")
 
-d = read.csv(file="data/basiclev_manModified_allAttr.csv",quote="")
-# This dataset includes all data
-
-#############  PRE-PROCESSING
-
-# First exclude cases where distractor was selected (41)
-d = d[d$targetStatusClickedObj == "target",]
+d = read.csv(file="../data/data_exp3.csv",sep="\t")
 nrow(d)
 
-# Then exclude the cases where only an attribute was mentioned, not sub/basic/super (276)
-table(d$sub,d$basic,d$super)
-d[!d$sub & !d$basic & !d$super,c("refExp","nameClickedObj")]
-d = d[d$sub | d$basic | d$super,]
-nrow(d)
+#### Add costs and typicality:
 
-# Number of cases with more than one level mentioned: 26 (included and coded as sub mentions)
-d[d$moreThanOneLevelMentioned,c("sub","basic","super","refExp")]
-nrow(d[d$moreThanOneLevelMentioned,c("sub","basic","super","refExp")])
+# Add costs
+costs = read.table(file="../data/cost_exp3.csv",sep=",", header=T, quote="")
 
-# Get rid of all unnecessary columns
-d = d %>%
-  mutate(target_sub = tolower(nameClickedObj), target_basic = tolower(basiclevelClickedObj), target_super = tolower(superdomainClickedObj), alt1_sub = tolower(alt1Name), alt1_basic = tolower(alt1Basiclevel), alt1_super = tolower(alt1superdomain), alt2_sub = tolower(alt2Name), alt2_basic = tolower(alt2Basiclevel), alt2_super = tolower(alt2superdomain)) %>%
-  select(gameid,roundNum,condition,target_sub,target_basic,target_super,alt1_sub,alt1_basic,alt1_super,alt2_sub,alt2_basic,alt2_super,speakerMessages,listenerMessages,refExp,sub,basic,super)
-
-# add frequencies from Google Books corpus and compute log frequency diffs for regression
-frequencies = read.table(file="data/frequencyChart.csv",sep=",", header=T, quote="")
-row.names(frequencies) = tolower(as.character(frequencies$noun))
-
-d$freq_sub = as.numeric(as.character(frequencies[as.character(d$target_sub),]$relFreq))
-d$freq_basic = frequencies[as.character(d$target_basic),]$relFreq
-d$freq_super = frequencies[as.character(d$target_super),]$relFreq
+d$freq_sub = costs[as.character(d$target_sub),]$relFreq
+d$freq_basic = costs[as.character(d$target_basic),]$relFreq
+d$freq_super = costs[as.character(d$target_super),]$relFreq
 
 d$log_freq_sub = log(d$freq_sub)
 d$log_freq_basic = log(d$freq_basic)
@@ -41,28 +22,29 @@ d$log_freq_super = log(d$freq_super)
 d$diff_logfreq_subbasic = d$log_freq_sub - d$log_freq_basic
 d$diff_logfreq_subsuper = d$log_freq_sub - d$log_freq_super
 
-# add length of precoded word and mean empirical lengths
-lengths = read.csv("data/lengthChart_uniformLabels.csv")
-row.names(lengths) = lengths$noun
-lengths$totalLength = nchar(as.character(lengths$noun))
+row.names(costs) = costs$noun
+costs$precodedLength = nchar(as.character(costs$noun))
 
 # empirical
-d$mean_length_sub = lengths[as.character(d$target_sub),]$average_length
-d$mean_length_basic =  lengths[as.character(d$target_basic),]$average_length
-d$mean_length_super =  lengths[as.character(d$target_super),]$average_length
+d$mean_length_sub = costs[as.character(d$target_sub),]$average_length
+d$mean_length_basic =  costs[as.character(d$target_basic),]$average_length
+d$mean_length_super =  costs[as.character(d$target_super),]$average_length
 
 # precoded
-d$precoded_length_sub = lengths[as.character(d$target_sub),]$totalLength
-d$precoded_length_basic =  lengths[as.character(d$target_basic),]$totalLength
-d$precoded_length_super =  lengths[as.character(d$target_super),]$totalLength
+d$precoded_length_sub = costs[as.character(d$target_sub),]$precodedLength
+d$precoded_length_basic =  costs[as.character(d$target_basic),]$precodedLength
+d$precoded_length_super =  costs[as.character(d$target_super),]$precodedLength
 
 d$ratio_length_subbasic = d$mean_length_sub/d$mean_length_basic
 d$ratio_length_subsuper = d$mean_length_sub/d$mean_length_super
 
-d$redCondition = as.factor(ifelse(d$condition == "basic12","sub_necessary",ifelse(d$condition == "basic33","super_sufficient","basic_sufficient")))
+# get length/frequency correlation
+costs$logFreq = log(costs$relFreq)
+cor(costs$logFreq,costs$average_length) # -.44
 
-# add typicality values
-typs = read.table("/Users/titlis/cogsci/projects/stanford/projects/overinformativeness/experiments/5_norming_object_typicality_phrasing1/results/data/itemtypicalities.txt",header=T,quote="",sep="\t")
+
+# Add typicality values
+typs = read.table("../data/typicality_exp3.csv",header=T,quote="",sep=",")
 head(typs)
 ttyps = droplevels(subset(typs, itemtype == "target"))
 row.names(ttyps) = paste(ttyps$labeltype, ttyps$item)
@@ -73,39 +55,33 @@ d$typ_super = ttyps[paste("super",as.character(d$target_sub)),]$meanresponse
 d$ratio_typ_subbasic = d$typ_sub/d$typ_basic
 d$ratio_typ_subsuper = d$typ_sub/d$typ_super
 
-# get length/frequency correlation for cogsci paper
-freqs = d %>%
-  select(log_freq_sub,log_freq_basic,log_freq_super) %>%
-  gather(Level,Freq)
-nrow(freqs)  
 
-lengths = d %>%
-  select(mean_length_sub,mean_length_basic,mean_length_super) %>%
-  gather(Level,Length)
-nrow(lengths)  
-
-full = cbind(freqs,lengths)
-cor(full$Freq,full$Length) # -.49
-
-d$binaryCondition = as.factor(ifelse(d$condition == "basic12","sub_necessary","nonsub_sufficient"))
+### Some supplementary qualitative analyses:
 
 # very few super mentions
 prop.table(table(d$condition,d$super),margin = 1)
 prop.table(table(d$condition,d$basic), margin=1)
 
-# moer qualitative stuff
 table(d$target_basic)
 table(d[d$super,]$target_basic)
 table(d[d$sub,]$target_basic)
 
-#############  ANALYSIS
-# TYPE MENTION WITH DOMAIN-LEVEL RANDOM EFFECTS
+
+
+#################################################
+#################  ANALYSIS  ####################
+#################################################
+
+# TYPE MENTION WITH DOMAIN-LEVEL RANDOM EFFECTS #
 
 centered = cbind(d, myCenter(d[,c("mean_length_sub","mean_length_basic","mean_length_super","log_freq_sub","log_freq_basic","log_freq_super","diff_logfreq_subbasic","diff_logfreq_subsuper","ratio_length_subbasic","ratio_length_subsuper","typ_sub","typ_basic","typ_super","ratio_typ_subbasic","ratio_typ_subsuper","binaryCondition")]))
 
 # check: do you need four-level condition difference?
 contrasts(centered$condition) = cbind("12.vs.rest"=c(3/4,-1/4,-1/4,-1/4),"22.vs.3"=c(0,2/3,-1/3,-1/3),"23.vs.33"=c(0,0,1/2,-1/2))
 contrasts(centered$redCondition) = cbind("sub.vs.rest"=c(-1/3,2/3,-1/3),"basic.vs.super"=c(1/2,0,-1/2))
+
+library(languageR)
+library(lme4)
 
 pairscor.fnc(centered[,c("cdiff_logfreq_subbasic","cratio_length_subbasic","cratio_typ_subbasic","redCondition","sub")])
 
@@ -158,6 +134,7 @@ summary(m.m.t.c)
 anova(m.m.t,m.m.t.c) # nope, no value added by more complex condition
 
 library(MuMIn)
+
 r.squaredGLMM(m)
 r.squaredGLMM(m.m.t) # increase of .06 in marginal R2, so typicality certainly explains variance
 r.squaredGLMM(m.m.t.c) # further increase in explained variance with most complex condition close to 0
@@ -176,7 +153,9 @@ empirical$PredictionM = ifelse(empirical$FittedM >= .5, T, F)
 cor(empirical$sub,empirical$Prediction)
 cor(empirical$sub,empirical$PredictionM) # better correlation with than without random effects
 
-### PAPER PLOTS
+
+
+######### PAPER PLOTS
 
 # overall pattern, fig ??
 agr = d %>%
@@ -198,7 +177,7 @@ ggplot(agr, aes(x=condition,y=Probability)) +
   facet_wrap(~Utterance) +
   ylab("Proportion of utterance choice") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
-ggsave("graphs_basiclevel/results-collapsed.pdf",height=4.1,width=7)
+#ggsave("graphs_basiclevel/results-collapsed.pdf",height=4.1,width=7)
 
 agr = d %>%
   select(sub,basic,super, condition, target_basic) %>%
@@ -219,7 +198,7 @@ ggplot(agr, aes(x=condition,y=Probability)) +
   facet_grid(target_basic~Utterance) +
   ylab("Proportion of utterance choice") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
-ggsave("graphs_basiclevel/results-bydomain.pdf",height=10,width=7)
+#ggsave("graphs_basiclevel/results-bydomain.pdf",height=10,width=7)
 
 # correlation between mean empirical length and ratio of sub to basic length
 cor(d$mean_length_sub,d$ratio_length_subbasic) # r=.84 between mean length and sub to basic ratio
@@ -271,7 +250,6 @@ dodge = position_dodge(.9)
 agr$Condition = factor(x=gsub("_","\n",as.character(agr$redCondition)),levels=c("sub\nnecessary","basic\nsufficient","super\nsufficient"))
 #agr$Condition = factor(x=as.character(agr$redCondition),levels=c("sub_necessary","basic_sufficient","super_sufficient"))
 agr$Typicality = factor(x=as.character(agr$bin_typ_subbasic),levels=c("more typical","less typical"))
-library(wesanderson)
 
 pt = ggplot(agr, aes(x=Typicality,y=Probability)) +
   geom_bar(stat="identity",position=dodge,color="black") +
@@ -284,7 +262,7 @@ pt = ggplot(agr, aes(x=Typicality,y=Probability)) +
 
 library(gridExtra)
 library(grid)
-pdf("/Users/titlis/cogsci/projects/stanford/projects/overinformativeness/writing/2016/theory/pics/lengthtypicality.pdf",height=3.5,width=8)
+pdf("../writing/pics/lengthtypicality.pdf",height=3.5,width=8)
 grid.arrange(pl,pt,nrow=1,  left = textGrob("Proportion of sub level mention", rot = 90, vjust = 1,gp = gpar(cex = .9)))
 dev.off()
 
@@ -311,51 +289,49 @@ table(gs$condition,gs$sub)
 
 
 
+##### Modeling plots (this code was originally in writing/rscripts/plots.R)
 
+##FIXME: these paths are not correct (files dont exist in new repo yet)
 
+# Exp 3 - nominal choice: qualitative pattern (blue plot) across all models
+a = read.table("../../../../models/5a_bda_nom_det_nocost/predictive-barplot-fulldataset-detfit-nocost-hmc.txt",sep="\t",header=T,quote="")
+b = read.table("../../../../models/5b_bda_nom_det/predictive-barplot-fulldataset-detfit-hmc.txt",sep="\t",header=T,quote="")
+c = read.table("../../../../models/5c_bda_nom_full_nocost/predictive-barplot-fulldataset-typicalities-nocost-hmc.txt",sep="\t",header=T,quote="")
+d = read.table("../../../../models/5d_bda_nom_full/predictive-barplot-fulldataset-typicalities-hmc.txt",sep="\t",header=T,quote="")
+emp = read.table("../../../../models/5d_bda_nom_full/predictive-barplot-empirical.txt",sep="\t",header=T,quote="")
 
+dd = rbind(a,b,c,d,emp)
+nrow(dd)
 
+dd$Utt = factor(x=dd$Utterance,levels=c("sub","basic","super"))
+ggplot(dd, aes(x=condition,y=Probability,fill=ModelType)) +
+  geom_bar(stat="identity",color="black") +
+  geom_errorbar(aes(ymin=YMin,ymax=YMax),width=.25) +
+  scale_fill_brewer(guide=F) +
+  ylab("Utterance probability") +
+  xlab("Condition") +
+  facet_grid(ModelType~Utt) +
+  theme(axis.text.x=element_text(angle=45,vjust=1,hjust=1),plot.margin=unit(c(0,0,0,0),"cm"))
+ggsave("../writing/pics/qualitativepattern-complete.pdf",height=8.5,width=6)
 
+# nominal choice: scatterplot across all models
+a = read.table("../../../../models/5a_bda_nom_det_nocost/predictive-scatterplot-fulldataset-detfit-nocost-hmc.txt",sep="\t",header=T,quote="")
+b = read.table("../../../../models/5b_bda_nom_det/predictive-scatterplot-fulldataset-detfit-hmc.txt",sep="\t",header=T,quote="")
+c = read.table("../../../../models/5c_bda_nom_full_nocost/predictive-scatterplot-fulldataset-typicalities-nocost-hmc.txt",sep="\t",header=T,quote="")
+d = read.table("../../../../models/5d_bda_nom_full/predictive-scatterplot-fulldataset-typicalities-hmc.txt",sep="\t",header=T,quote="")
 
+dd = rbind(a,b,c,d)
+dd$Condition = dd$condition
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ggplot(dd, aes(x=MAP,y=EmpProportion,shape=Condition,color=Utterance)) +
+  geom_abline(intercept=0,slope=1,color="gray60") +
+  geom_point() +
+  xlim(c(0,1)) +
+  ylim(c(0,1)) +
+  ylab("Empirical proportion") +
+  xlab("Model predicted probability") +
+  facet_wrap(~ModelType,nrow = 2)
+# ggsave("scatterplot-complete.pdf",height=3,width=11.5)
+ggsave("../writing/pics/scatterplot-complete.pdf",height=5.5,width=7.5)
 
 

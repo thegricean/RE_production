@@ -82,17 +82,20 @@ print(paste("Total number of trials used for final analysis: ", nrow(exp3_post_t
 
 # Write file for regression analysis and visualization 
 final_d = exp3_post_targets %>%
-  rename(Trial=roundNum, TargetItem=nameClickedObj) %>%
-  select(gameid,Trial,condition,TargetItem, basiclevelClickedObj,superdomainClickedObj,speakerMessages,listenerMessages,refExp,clickedType,sub,basic,super,moreThanOneLevelMentioned,additionalAttrMentioned,oneMentioned,theMentioned,fullSentence,spLocsClickedObj,lisLocsClickedObj,alt1Name,alt1SpLocs,alt1LisLocs,alt1Basiclevel,alt1superdomain,alt2Name,alt2SpLocs,alt2LisLocs, alt2Basiclevel,alt2superdomain)
+  mutate(Trial=roundNum, target_sub = tolower(nameClickedObj), target_basic = tolower(basiclevelClickedObj), target_super = tolower(superdomainClickedObj), alt1_sub = tolower(alt1Name), alt1_basic = tolower(alt1Basiclevel), alt1_super = tolower(alt1superdomain), alt2_sub = tolower(alt2Name), alt2_basic = tolower(alt2Basiclevel), alt2_super = tolower(alt2superdomain)) %>%
+  select(gameid,Trial,condition,target_sub,target_basic,target_super,speakerMessages,listenerMessages,
+         refExp,sub,basic,super,alt1_sub,alt1_basic,alt1_super,alt2_sub,alt2_basic,alt2_super)
 nrow(final_d)
 
-final_d$TargetItem = as.factor(tolower(as.character(final_d$TargetItem))) # make labels uniform
+final_d$redCondition = as.factor(ifelse(final_d$condition == "basic12","sub_necessary",ifelse(final_d$condition == "basic33","super_sufficient","basic_sufficient")))
+final_d$binaryCondition = as.factor(ifelse(final_d$condition == "basic12","sub_necessary","nonsub_sufficient"))
 
 write.table(final_d, file="../data/data_exp3.csv",sep="\t",quote=F,row.names=F)
 
 
 
-### Some additional info:
+
+### Some supplementary analyses:
 
 # In how many trials where a sub level term was mentioned, was there in addition an attribute mentioned?
 sub_add_attr_trials = sum(exp3_post$additionalAttrMentioned & exp3_post$sub)
@@ -139,7 +142,7 @@ write.csv(tmp, "../data/exp3_bdaInput.csv", row.names = F, quote = F)
 
 ### Add information on costs
 
-## 1) Import frequency
+## 1) Add frequencies from Google Books corpus and compute log frequency diffs for regression
 
 frequencies = read.table(file="../data/raw/cost_exp3/exp3_frequency.csv",sep=",", header=T, quote="")
 frequencies$noun = as.factor(tolower(as.character(frequencies$noun))) # make labels uniform
