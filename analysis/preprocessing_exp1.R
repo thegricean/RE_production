@@ -5,7 +5,7 @@ source("helper_scripts/helpers.R")
 # Read raw data and get only trials from Exp. 1
 d = read.table(file="../data/raw/production_exp1_exp3/rawdata_exp1_exp3.csv",sep="\t", header=T, quote="")
 colsize = droplevels(d[d$trialType == "colorSizeTrial",])
-nrow(colsize)
+colsizerows = nrow(colsize)
 head(colsize)
 
 # Was a color mentioned?
@@ -32,15 +32,33 @@ table(colsize$theMentioned)
 write.table(colsize,file="../data/raw/production_exp1_exp3/data_exp1_preManualTypoCorrection.csv", sep="\t",quote=F,row.names=F)
 
 # Read CG's manually corrected dataset for further preprocessing
-d = read.table(file="../data/raw/production_exp1_exp3/data_exp1_postManualTypoCorrection.csv",sep=",", header=T, quote="")
+d = read.table(file="../data/raw/production_exp1_exp3/data_exp1_postManualTypoCorrection.csv",sep=",", header=T, quote="")  
+### Note that 6 trials of participants with game-id 2370-c were excluded during manual processing due to speaker non-compliance (i.e., missing speaker utterances while correctly selecting target objects)
+
 head(d)
 colsizerows = nrow(d)
-colsizerows
+
+# How many trials were automatically labelled as mentioning a pre-coded level of reference?
+auto_trials = sum(d$automaticallyLabelledTrial)
+print(paste("percentage of automatically labelled trials: ", auto_trials*100/colsizerows)) # 95.7
+
+# How many trials were manually labelled as mentioning a pre-coded level of reference? (overlooked by grep search due to typos or grammatical modification of the expression)
+manu_trials = sum(d$manuallyAddedTrials)
+print(paste("percentage of manually added trials: ", manu_trials*100/colsizerows)) # 1.9
+
+# How often were articles omitted?
+no_article_trials = colsizerows - sum(d$typeMentioned)
+print(paste("percentage trials where articles were omitted: ", no_article_trials*100/colsizerows)) # 71.6
+
+# How often were nouns omitted?
+d$article_mentioned = ifelse(d$oneMentioned == TRUE | d$theMentioned == TRUE, 1, 0)
+no_noun_trials = colsizerows - sum(d$article_mentioned)
+print(paste("percentage of trials where nouns were omitted: ", no_noun_trials*100/colsizerows)) # 88.6
 
 # In how many cases did the listener choose the wrong object?
 colsizeCor = droplevels(d[!is.na(d$targetStatusClickedObj) & d$targetStatusClickedObj != "distractor",])
 nrow(colsizeCor)
-print(paste(100*(1-(nrow(colsizeCor)/colsizerows)),"% of cases of non-target choices"))
+print(paste(100*(1-(nrow(colsizeCor)/colsizerows)),"% of cases of non-target choices")) # 1.5
 
 # How many unique pairs?
 length(levels(d$gameid)) # 64
