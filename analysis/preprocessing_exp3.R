@@ -86,6 +86,8 @@ final_d = exp3_post_targets %>%
   select(gameid,Trial,condition,TargetItem, basiclevelClickedObj,superdomainClickedObj,speakerMessages,listenerMessages,refExp,clickedType,sub,basic,super,moreThanOneLevelMentioned,additionalAttrMentioned,oneMentioned,theMentioned,fullSentence,spLocsClickedObj,lisLocsClickedObj,alt1Name,alt1SpLocs,alt1LisLocs,alt1Basiclevel,alt1superdomain,alt2Name,alt2SpLocs,alt2LisLocs, alt2Basiclevel,alt2superdomain)
 nrow(final_d)
 
+final_d$TargetItem = as.factor(tolower(as.character(final_d$TargetItem))) # make labels uniform
+
 write.table(final_d, file="../data/data_exp3.csv",sep="\t",quote=F,row.names=F)
 
 
@@ -129,3 +131,39 @@ tmp = exp3_post_targets[(exp3_post_targets$sub | exp3_post_targets$basic | exp3_
   select(gameid, roundNum, targetName, alt1Name, alt2Name, refLevel)
 
 write.csv(tmp, "../data/exp3_bdaInput.csv", row.names = F, quote = F)
+
+
+
+
+############################################################################
+
+### Add information on costs
+
+## 1) Import frequency
+
+frequencies = read.table(file="../data/raw/cost_exp3/exp3_frequency.csv",sep=",", header=T, quote="")
+frequencies$noun = as.factor(tolower(as.character(frequencies$noun))) # make labels uniform
+
+frequencies = frequencies %>%
+  select(noun, relFreq)
+
+## 2) Empirical lengths
+
+# Read manual coding of speaker utterances:
+lengths_extended = read.table(file="../data/raw/cost_exp3/exp3_length_manual_compilation.csv",sep=",", header=T, quote="")
+lengths_extended$noun = as.factor(tolower(as.character(lengths_extended$noun))) # make labels uniform
+
+# (lengths_extended is a semi-manually created file that compiles the lengths of different instances of sub, 
+# basic, and super mentions. Orgininally this should have been automatically; however, it turned out to be
+# difficult to foresee which alternatives referring expressions would be uttered by participants 
+# (i.e., many alternatives could not be automatically coded). 
+# Thus this document lists all used speaker referring expressions used in our production experiment, 
+# their length and their count, as well as the average empirical length and standard deviation.)
+
+lengths = lengths_extended %>%
+  select(noun, average_length)
+
+## 3) Combine to cost file:
+
+costs = full_join(frequencies, lengths, by="noun")
+write.csv(costs, "../data/cost_exp3.csv", row.names = F, quote = F)

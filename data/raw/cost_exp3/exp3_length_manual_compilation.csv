@@ -1,0 +1,52 @@
+noun,alt1,length1,counts1,alt2,length2,counts2,alt3,length3,counts3,alt4,length4,counts4,alt5,length5,counts5,alt6,length6,counts6,alt7,length7,counts7,alt8,length8,counts8,alt9,length9,counts9,,average_length,std_length,average_length_ExcelFunction,std_length_ExcelFunction
+animal,animal,6,12,,,,,,,,,,,,,,,,,,,,,,,,,,6,0,6,0
+bear,bear,4,111,,,,,,,,,,,,,,,,,,,,,,,,,,4,0,4,0
+bedsideTable,Bedside table,13,0,dresser,7,4,nightstand,10,13,chest,5,4,side table,10,1,cabinet,7,1,stand,5,3,night stand,11,4,drawer,6,2,,8.31,0.68,8.3125,0.6762627297
+bird,bird,4,84,tbird,5,1,,,,,,,,,,,,,,,,,,,,,,,4.01,0.02,4.0117647059,0.0224882656
+blackBear,Black bear,10,23,grizzly,7,1,,,,,,,,,,,,,,,,,,,,,,,9.88,0.14,9.875,0.1399325436
+candy,candy,5,38,candies,7,1,,,,,,,,,,,,,,,,,,,,,,,5.05,0.07,5.0512820513,0.0711494585
+car,car,3,114,care,4,1,,,,,,,,,,,,,,,,,,,,,,,3.01,0.02,3.0086956522,0.0179364805
+catfish,catfish,7,16,cat fish,8,3,eel,3,2,bass,4,1,,,,,,,,,,,,,,,,,6.64,0.4,6.6363636364,0.3974025537
+clothing,clothing,8,1,,,,,,,,,,,,,,,,,,,,,,,,,,8,0,8,0
+clownFish,clownfish,9,5,clown fish,10,2,goldfish,8,1,gold fish,9,1,,,,,,,,,,,,,,,,,9.11,0.38,9.1111111111,0.3845571233
+coffeeTable,Coffee table,12,6,coffe table,11,1,coffee,6,1,bench,5,4,,,,,,,,,,,,,,,,,9.08,0.95,9.0833333333,0.9471771172
+convertible,convertible,11,13,Sports car,12,3,,,,,,,,,,,,,,,,,,,,,,,11.19,0.2,11.1875,0.1956543182
+daisy,daisy,5,16,dandelion,9,3,sunflower,9,1,rose,4,1,dandellion,10,1,,,,,,,,,,,,,,5.91,0.55,5.9090909091,0.5464848271
+dalmatian,dalmatian,9,24,dalm,4,1,,,,,,,,,,,,,,,,,,,,,,,8.8,0.18,8.8,0.1752712184
+diningTable,Dining table,12,0,coffee table,12,1,,,,,,,,,,,,,,,,,,,,,,,12,0,12,0
+dog,dog,3,117,canine,6,2,,,,,,,,,,,,,,,,,,,,,,,3.05,0.04,3.0504201681,0.0407367133
+dressShirt,Dress shirt,11,3,,,,,,,,,,,,,,,,,,,,,,,,,,11,0,11,0
+eagle,eagle,5,43,hawk,4,2,eag,3,1,,,,,,,,,,,,,,,,,,,,4.91,0.1,4.9130434783,0.1021376698
+fish,fish,4,113,,,,,,,,,,,,,,,,,,,,,,,,,,4,0,4,0
+flower,flower,6,84,flowerr,7,1,floer,5,1,flow,4,1,,,,,,,,,,,,,,,,,5.98,0.05,5.9770114943,0.0540594581
+furniture,furniture,9,5,,,,,,,,,,,,,,,,,,,,,,,,,,9,0,9,0
+germanShepherd,German Shepherd,15,7,german shepard,14,6,husky,5,1,gshep,5,1,german shep,11,1,,,,,,,,,,,,,,13.13,0.82,13.125,0.8165515849
+goldFish,goldfish,8,24,gold fish,9,4,gold,4,2,,,,,,,,,,,,,,,,,,,,7.87,0.22,7.8666666667,0.2224822295
+grizzlyBear,Grizzly bear,12,2,grizzly,7,3,,,,,,,,,,,,,,,,,,,,,,,9,0.98,9,0.9797958971
+gummyBears,gummybears,10,0,gummy bears,11,23,gummi,5,17,gummi bear,10,2,gummies,7,3,bmmy bears,10,1,gummie bears,12,1,,,,,,,,8.53,0.47,8.5319148936,0.4726841181
+hawaiiShirt,Hawaii shirt,12,3,hawaiian shirt,14,3,flower shirt,12,5,hawaiin shirt,13,2,,,,,,,,,,,,,,,,,12.62,0.46,12.6153846154,0.4639214338
+hummingBird,hummingbird,11,17,Humming bird,12,2,humming,7,4,hum,3,1,,,,,,,,,,,,,,,,,10.08,0.5,10.0833333333,0.5035478531
+husky,husky,5,17,wolf,4,12,huskie,6,2,,,,,,,,,,,,,,,,,,,,4.68,0.22,4.6774193548,0.2197987036
+jellyBeans,jellybeans,10,10,jelly beans,11,22,jeli,4,1,je bean,7,1,jelly,5,8,jellybean,9,2,,,,,,,,,,,9.34,0.44,9.3409090909,0.4356764412
+mnMs,M&Ms,4,12,m and m,7,6,m&m,3,12,M & m,5,4,mm,2,5,skittles,8,1,m and ms,8,3,M & ms,6,1,,,,,4.41,0.49,4.4090909091,0.4936038691
+minivan,minivan,7,9,van,5,26,mini van,8,3,,,,,,,,,,,,,,,,,,,,5.71,0.27,5.7105263158,0.2717085185
+pandaBear,Panda bear,10,4,panda,5,38,,,,,,,,,,,,,,,,,,,,,,,5.48,0.2,5.4761904762,0.2029259435
+parrot,parrot,6,27,parakeet,8,2,,,,,,,,,,,,,,,,,,,,,,,6.14,0.13,6.1379310345,0.1335500814
+picnicTable,Picnic table,12,21,picnic,6,7,picknick table,14,1,bench,5,6,park table,10,1,picnic bench,12,1,,,,,,,,,,,9.73,0.58,9.7297297297,0.5792998434
+pigeon,pigeon,6,22,pidgeon,7,4,dove,4,4,,,,,,,,,,,,,,,,,,,,5.87,0.22,5.8666666667,0.218404716
+plant,plant,5,0,,,,,,,,,,,,,,,,,,,,,,,,,,5,0,,
+polarBear,Polar bear,10,23,polar,5,7,,,,,,,,,,,,,,,,,,,,,,,8.83,0.35,8.8333333333,0.3455107442
+poloShirt,Polo shirt,10,4,polo,4,5,t shirt,7,1,,,,,,,,,,,,,,,,,,,,6.7,0.79,6.7,0.7855137597
+pug,pug,3,22,wolf,4,1,,,,,,,,,,,,,,,,,,,,,,,3.04,0.08,3.0434782609,0.0833860456
+rose,rose,4,42,,,,,,,,,,,,,,,,,,,,,,,,,,4,0,4,0
+shirt,shirt,5,151,,,,,,,,,,,,,,,,,,,,,,,,,,5,0,5,0
+skittles,skittles,8,32,M & m's,7,3,m&ms,4,2,m&m,3,3,mm,2,2,s,1,1,M & ms,6,1,skittle,7,1,,,,,6.87,0.43,6.9333333333,0.4283998155
+snack,snack,5,0,,,,,,,,,,,,,,,,,,,,,,,,,,5,0,,
+sportsCar,Sports car,10,9,Sport car,9,2,,,,,,,,,,,,,,,,,,,,,,,9.82,0.23,9.8181818182,0.2321288231
+sunflower,sunflower,9,17,sunflowe,8,1,dandelion,9,1,,,,,,,,,,,,,,,,,,,,8.95,0.11,8.9473684211,0.1115916146
+suv,suv,3,28,,,,,,,,,,,,,,,,,,,,,,,,,,3,0,3,0
+swordFish,swordfish,9,19,marlin,6,3,sword fish,10,3,shark,5,6,,,,,,,,,,,,,,,,,8.03,0.43,8.0322580645,0.4340535613
+tShirt,T-Shirt,7,9,tshirt,6,1,t,1,1,,,,,,,,,,,,,,,,,,,,6.36,0.48,6.3636363636,0.4831970346
+table,table,5,112,desk,4,1,,,,,,,,,,,,,,,,,,,,,,,4.99,0.02,4.9911504425,0.0181706899
+tulip,tulip,5,12,rose,4,19,,,,,,,,,,,,,,,,,,,,,,,4.39,0.18,4.3870967742,0.1750864958
+vehicle,vehicle,7,5,,,,,,,,,,,,,,,,,,,,,,,,,,7,0,7,0
