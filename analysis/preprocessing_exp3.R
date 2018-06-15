@@ -163,6 +163,8 @@ lengths_extended$noun = as.factor(tolower(as.character(lengths_extended$noun))) 
 lengths = lengths_extended %>%
   select(noun, average_length)
 
+write.csv(lengths, "../data/raw/cost_exp3/exp3_length_uniform_labels.csv", row.names = F, quote = F)
+
 ## 3) Combine to cost file:
 
 costs = full_join(frequencies, lengths, by="noun")
