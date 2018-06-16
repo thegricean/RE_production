@@ -145,16 +145,18 @@ write.csv(tmp, "../data/exp3_bdaInput.csv", row.names = F, quote = F)
 ## 1) Add frequencies from Google Books corpus and compute log frequency diffs for regression
 
 frequencies = read.table(file="../data/raw/cost_exp3/exp3_frequency.csv",sep=",", header=T, quote="")
-frequencies$noun = as.factor(tolower(as.character(frequencies$noun))) # make labels uniform
+frequencies$target = as.factor(tolower(as.character(frequencies$noun))) # make labels uniform
+frequencies$freq = frequencies$relFreq
 
 frequencies = frequencies %>%
-  select(noun, relFreq)
+  select(target, freq)
 
 ## 2) Empirical lengths
 
 # Read manual coding of speaker utterances:
 lengths_extended = read.table(file="../data/raw/cost_exp3/exp3_length_manual_compilation.csv",sep=",", header=T, quote="")
-lengths_extended$noun = as.factor(tolower(as.character(lengths_extended$noun))) # make labels uniform
+lengths_extended$target = as.factor(tolower(as.character(lengths_extended$noun))) # make labels uniform
+lengths_extended$length = lengths_extended$average_length
 
 # (lengths_extended is a semi-manually created file that compiles the lengths of different instances of sub, 
 # basic, and super mentions. Orgininally this should have been automatically; however, it turned out to be
@@ -164,11 +166,11 @@ lengths_extended$noun = as.factor(tolower(as.character(lengths_extended$noun))) 
 # their length and their count, as well as the average empirical length and standard deviation.)
 
 lengths = lengths_extended %>%
-  select(noun, average_length)
+  select(target, length)
 
 write.csv(lengths, "../data/raw/cost_exp3/exp3_length_uniform_labels.csv", row.names = F, quote = F)
 
 ## 3) Combine to cost file:
 
-costs = full_join(frequencies, lengths, by="noun")
+costs = full_join(frequencies, lengths, by="target")
 write.csv(costs, "../data/cost_exp3.csv", row.names = F, quote = F)
