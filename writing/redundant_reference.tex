@@ -882,10 +882,34 @@ Stimuli were selected from nine distinct domains, each corresponding to distinct
 Each trial consisted of a display of three images, one of which was designated as the target object. Each pair of participants saw each target exactly once, for a total of 36 trials per pair. These target items were randomly assigned distractor items which were selected from three different context conditions, corresponding to different communicative pressures (see \figref{fig:dogcontexts}). The \emph{subordinate necessary} contexts contained one distractor of the same basic category and one distractor of the same superordinate category (e.g., target: \emph{dalmatian}, distractors: \emph{greyhound} (also a dog) and \emph{squirrel} (also an animal)). The \emph{basic sufficient} contexts contained either two distractors of the same superordinate category but different basic category as the target (e.g., target: \emph{husky}, distractors: \emph{hamster} and \emph{elephant}) or one distractor of the same superordinate category and one unrelated item (e.g., target: \emph{pug}, distractors: \emph{cow} and \emph{table}). The \emph{superordinate sufficient} contexts contained two unrelated items (e.g., target: \emph{German Shepherd}, distractors: \emph{shirt} and \emph{cookie}). 
 
 \begin{figure}
-\includegraphics[width=\textwidth]{pics/design}
-\caption{Example contexts in which different levels of reference are necessary for establishing unique reference to the target marked with a green border: (a) subordinate necessary (\emph{dalmatian}); (b, c) basic sufficient (\emph{dog}) and subordinate possible (\emph{husky}, \
-\emph{pug}); (d) superordinate sufficient (\emph{animal}) and basic or subordinate possible (\emph{dog}, \emph{German Shepherd}).\ek{I would make the item descriptions clearer (instead of item12,...) or leave them out}\jd{let's get rid of the itemXX notation entirely -- caroline, can you make sure that's the case in the basic level section, including this figure?}}
-\label{fig:dogcontexts}
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.8\textwidth]{pics/item12.pdf}
+		\caption{subordinate necessary}
+		\label{fig:item12}
+	\end{subfigure}
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.8\textwidth]{pics/item22.pdf}
+		\centering
+		\caption{basic sufficient (two superordinate distractors)}
+		\label{fig:item22}
+	\end{subfigure}
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.8\textwidth]{pics/item23.pdf}
+		\caption{basic sufficient (one superordinate distractor)}
+		\label{fig:item23}
+	\end{subfigure}
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=.8\textwidth]{pics/item33.pdf}
+		\centering
+		\caption{superordinate sufficient}
+		\label{fig:item33}
+	\end{subfigure}
+	\caption{Example contexts in which different levels of reference are necessary for establishing unique reference to the target marked with a green border: (a) subordinate necessary (\emph{dalmatian}); (b, c) basic sufficient (\emph{dog}) and subordinate possible (\emph{husky}, \emph{pug}); (d) superordinate sufficient (\emph{animal}) and basic or subordinate possible (\emph{dog}, \emph{German Shepherd}).}
+	\label{fig:dogcontexts}
 \end{figure}
 
 This context manipulation served as a manipulation of utterance informativeness: any target could be referred to at the subordinate (\emph{dalmatian}), basic (\emph{dog}) or superordinate (\emph{animal}) level. However, the level of reference necessary for uniquely referring differed across contexts.
@@ -899,14 +923,14 @@ We collected 2193 referring expressions. To determine the level of reference for
 
 \subsubsection{Results and discussion}
 
-Proportions of sub, basic, and super level utterances are shown in the top row of \figref{fig:exp2results}. Overall, super level mentions are highly dispreferred ($< 2\%$), so we focus in this section only on predictors of sub over basic level mentions. The clearest pattern of note is that sub level mentions are only preferred in the most constrained context that necessitates the sub level mention for unique reference (item12, e.g. target: dalmatian, distractor: greyhound). Nevertheless, even in these contexts there is a non-negligible proportion of basic level mentions (28\%). In the remaining contexts, where the sub and basic level are equally informative, there is a clear preference for the basic level. 
+Proportions of sub, basic, and super level utterances are shown in the top row of \figref{fig:exp2results}. Overall, super level mentions are highly dispreferred ($< 2\%$), so we focus in this section only on predictors of sub over basic level mentions. The clearest pattern of note is that sub level mentions are only preferred in the most constrained context that necessitates the sub level mention for unique reference (e.g., target: dalmatian, distractor: greyhound; see \figref{fig:item12}). Nevertheless, even in these contexts there is a non-negligible proportion of basic level mentions (28\%). In the remaining contexts, where the sub and basic level are equally informative, there is a clear preference for the basic level. 
 
 
 \begin{figure}
 \centering
 % old location: \includegraphics[width=.7\textwidth]{../../../models/old/5d_bda_nom_full/graphs/qualitativepattern-fulldataset-typicalities-hmc}
 \includegraphics[width=.7\textwidth]{pics/qualitativepattern-fulldataset-typicalities-hmc}
-\caption{Utterance probabilities across different conditions. Columns indicate utterances, rows indicate data type (empirical proportion, MAP estimates of posterior predictives for full model with cost and continuous semantics.\jd{recreate these plots with (reduced) condition as facets, diffferent utts in colors, x-axis sub-to-basic typicality, to make it more comparable to exp 2? and then just report the length/frequency effects without plotting them}}
+\caption{Utterance probabilities across different conditions. Columns indicate utterances, rows indicate data type (empirical proportion, MAP estimates of posterior predictives for full model with cost and continuous semantics.\jd{recreate these plots with (reduced) condition as facets, different utts in colors, x-axis sub-to-basic typicality, to make it more comparable to exp 2? and then just report the length/frequency effects without plotting them}}
 \label{fig:exp2results}
 \end{figure}
 
@@ -918,7 +942,7 @@ What explains these preferences? In order to test for effects of informativeness
 
 \emph{Typicality} was coded as the ratio of the target's sub to basic level label typicality.\footnote{Typicalities were elicited in a separate norming study that was identical in procedure to that of Exp.~1a. See \appref{app:typicalitynorms2} for details about the study.} That is, the higher the ratio, the more typical the object was for the sub level label compared to the basic level; or in other words, a higher ratio indicates that the object was relatively atypical for the basic label compared to the sub label. For instance, the panda was relatively atypical for its basic level ``bear'' (mean rating 0.75) compared to the sub level term ``panda bear'' (mean rating 0.98), which resulted in a relatively \emph{high} typicality ratio.
 
-\emph{Informativeness} condition was coded as a three-level factor: \emph{sub necessary}, \emph{basic sufficient}, and \emph{super sufficient}, where item22 and item23 were collapsed into \emph{basic sufficient}. Condition was Helmert-coded: two contrasts over the three condition levels were included in the model, comparing each level against the mean of the remaining levels (in order: \emph{sub necessary}, \emph{basic sufficient}, \emph{super sufficient}). This allowed us to determine whether the probabilities of type mention  for neighboring conditions were significantly different from each other, as suggested by \figref{fig:exp2results}.
+\emph{Informativeness} condition was coded as a three-level factor: \emph{sub necessary}, \emph{basic sufficient}, and \emph{super sufficient}, where \emph{basic sufficient (two superordinate distractors)} and \emph{basic sufficient (one superordinate distractor)} were collapsed into \emph{basic sufficient}. Condition was Helmert-coded: two contrasts over the three condition levels were included in the model, comparing each level against the mean of the remaining levels (in order: \emph{sub necessary}, \emph{basic sufficient}, \emph{super sufficient}). This allowed us to determine whether the probabilities of type mention  for neighboring conditions were significantly different from each other, as suggested by \figref{fig:exp2results}.
 
 %\begin{table}[!tbp]
 %\begin{center}
