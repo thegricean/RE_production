@@ -12,4 +12,4 @@ The data files from the typicality norming studies are stored in `typicality_exp
 
 ## Cost 
 
-The data files containing cost information for utterances in Exp. 2 - 3 are `cost_expX.csv`. Relevant cost information is the log probability of the utterance (column `frq`) and mean length of the utterance in characters (`length`). These files can be reproduced by FIXME insert instructions
+The data files containing cost information for utterances in Exp. 2 - 3 are `cost_expX.csv`. Relevant cost information is the log probability of the utterance (column `frq`) and mean length of the utterance in characters (`length`). These files can be reproduced by running FIXME and `../analysis/preprocessing_exp3.R` for experiment 2 and experiment 3, respectively.
