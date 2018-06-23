@@ -1,5 +1,6 @@
 library(tidyverse)
 library(gridExtra)
+library(brms)
 theme_set(theme_bw(18))
 source("helper_scripts/helpers.r")
 source("helper_scripts/createLaTeXTable.R")
@@ -14,7 +15,6 @@ nrow(d)
 
 agr = d %>%
   select(redundant,RedundantProperty,NumDistractors,SceneVariation) %>%
-  fct_recode(RedundantProperty,"color redundant"="color", "size redundant" = "size") %>%
   gather(Utterance,Mentioned,-RedundantProperty,-NumDistractors,-SceneVariation) %>%
   group_by(Utterance,RedundantProperty,NumDistractors,SceneVariation) %>%
   summarise(Probability=mean(Mentioned),ci.low=ci.low(Mentioned),ci.high=ci.high(Mentioned)) %>%
@@ -40,11 +40,11 @@ contrasts(centered$SufficientProperty)
 pairscor.fnc(centered[,c("redUtterance","SufficientProperty","SceneVariation")])
 
 # Main analysis reported in paper along with Fig. 8
-m = glmer(redUtterance ~ cSufficientProperty*cSceneVariation + (1+cSceneVariation|gameid) + (1|clickedType), data=centered, family="binomial")
+m = glmer(redUtterance ~ cSufficientProperty*cSceneVariation + (1|gameid) + (1|clickedType), data=centered, family="binomial")
 summary(m)
 
 # Simple effects analysis reported in paper along with Fig. 8
-m.simple = glmer(redUtterance ~ SufficientProperty*cSceneVariation - cSceneVariation + (1+cSceneVariation|gameid) + (1|clickedType), data=centered, family="binomial")
+m.simple = glmer(redUtterance ~ SufficientProperty*cSceneVariation - cSceneVariation + (1|gameid) + (1|clickedType), data=centered, family="binomial")
 summary(m.simple)
 
 # Supplementary analysis: do the analysis only on those cases that have scene variation > 0
@@ -54,6 +54,19 @@ contrasts(centered$SufficientProperty)
 
 m = glmer(redUtterance ~ cSufficientProperty*cSceneVariation + (1+cSceneVariation|gameid) + (1|clickedType), data=centered, family="binomial")
 summary(m) # doing the analysis only on the ratio > 0 cases gets rid of the interaction, ie variation has the same effect on color-redundant and size-redunant trials. (that is, the big scene variation slope in the color-redundant condition was driven mostly by the 0-ratio cases)
+
+# Because of lmer's convergence issues, do the Bayesian regression, which yields the same qualitative results with maximal random effects structure
+m.b.full = brm(redUtterance ~ cSufficientProperty*cSceneVariation + (1+cSufficientProperty*cSceneVariation|gameid) + (1+cSufficientProperty*cSceneVariation|clickedType), data=centered, family="bernoulli")
+summary(m.b.full)
+
+plot(m.b.full, pars = c("cSufficientProperty"))
+plot(m.b.full, pars = c("cSceneVariation"))
+plot(m.b.full, pars = c("cSufficientProperty:cSceneVariation"))
+
+# posterior probability of sufficient property beta > 0
+mean(posterior_samples(m.b.full, pars = "b_cSufficientProperty") > 0)
+mean(posterior_samples(m.b.full, pars = "b_cSceneVariation") > 0)
+mean(posterior_samples(m.b.full, pars = "b_cSufficientProperty:cSceneVariation") > 0)
 
 ##############################################
 # Typicality analysis reported in Appendix E #
