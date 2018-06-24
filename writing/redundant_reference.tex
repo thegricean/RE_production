@@ -651,8 +651,7 @@ Additionally, the proposed RSA model allows us to ask questions that have not be
 
 \paragraph{Participants}
 We recruited 61 pairs of participants (122 participants total) over Amazon's Mechanical Turk who were each paid \$1.80 for their participation. 
-Two participant-pairs were excluded because they did not finish the experiment and therefore could not receive payment. Trials in which the speaker did not produce any utterances were excluded as well, which resulted in the exclusion of two additional participant-pairs.
-Finally, there were 10 speakers who consistently used roundabout descriptions instead of direct referring expressions (e.g., \emph{monkeys love\dots} to refer to banana). These pairs were also excluded because they were playing a game more akin to Taboo.
+
 
 \paragraph{Procedure}
 
@@ -713,6 +712,10 @@ In the end, each participant saw 42 different contexts. Each of the 21 items (co
 
 
 \subsubsection{Data pre-processing and exclusion}
+
+Two participant-pairs were excluded because they did not finish the experiment and therefore could not receive payment. Trials on which the speaker did not produce any utterances were also excluded, resulting in the exclusion of two additional participant-pairs.
+Finally, there were 10 speakers who consistently used roundabout descriptions instead of direct referring expressions (e.g., \emph{monkeys love\dots} to refer to banana). These pairs were also excluded.
+
 We analyzed data from 1974 trials. Just as in Exp.~1, participants communicated freely, which led to a vast amount of different referring expressions. To test the model's predictions, the utterance produced for each trial was classified as belonging to one of the following categories: \textit{type-only} (``banana''), \textit{color-and-type} (``yellow banana''), and \textit{color-only} (``yellow'') utterances. Referring expressions that included categories (``yellow fruit''), descriptions (``has green stem''), color-circumscriptions (``funky carrot''), and negations (``yellow but not banana'') were regarded as \textit{other} and excluded. To this end we conducted the following semi-automatic data pre-processing.
 %Only five utterances (0.003\%) were assigned to the category "other".\\
 
@@ -728,7 +731,7 @@ There were 6 cases (0.3\%) that could not be categorized. Those were mostly gree
 \subsubsection{Typicality norming}
 \label{sec:typicalitynormingcolor}
 
-In order to test for typicality effects on the production data and to evaluate RSA's performance, we collected empirical typicality values for each utterance/object pair across three separate studies. The first study collected typicalities for \emph{color-and-type}/object pairs (e.g., \emph{yellow banana} as applied to a yellow banana, a blue banana, an orange pear, etc., see \figref{fig:colorobj}). The second study collected typicalities for \emph{type-only}/object pairs (e.g., \emph{banana} as applied to a yellow banana, a blue banana, an orange pear, etc., \figref{fig:obj}). The third study collected typicalities for \emph{color}/color pairs (e.g., \emph{yellow} as applied to a color patch of the average yellow from the yellow banana stimulus or to a color patch of the average orange from the orange pear stimulus, and so on, for all other colors, \figref{fig:colorpatch}). 
+In order to test for typicality effects on the production data and to evaluate RSA's performance, we collected empirical typicality values for each utterance/object pair (as proxy for values of the sort listed in \tableref{tab:colorobjectfidelities}) across three separate studies. The first study collected typicalities for \emph{color-and-type}/object pairs (e.g., \emph{yellow banana} as applied to a yellow banana, a blue banana, an orange pear, etc., see \figref{fig:colorobj}). The second study collected typicalities for \emph{type-only}/object pairs (e.g., \emph{banana} as applied to a yellow banana, a blue banana, an orange pear, etc., \figref{fig:obj}). The third study collected typicalities for \emph{color}/color pairs (e.g., \emph{yellow} as applied to a color patch of the average yellow from the yellow banana stimulus or to a color patch of the average orange from the orange pear stimulus, and so on, for all other colors, \figref{fig:colorpatch}). 
 
 On each trial, participants saw one of the stimuli used in the production experiment in isolation and were asked: ``How typical is this object for a \emph{utterance}'', where \emph{utterance} was replaced by an utterance of interest. In the color typicality study, they were asked ``How typical is this color for the color \emph{color}?'', where \emph{color} was replaced by one of the relevant color terms. They then adjusted a continuous sliding scale with endpoints labeled ``very atypical'' and ``very typical'' to indicate their response. An overview of the differences between the three typicality norming studies is shown in Table~\ref{tab:normingoverview}. 
 
@@ -810,8 +813,9 @@ There was also a main effect of informativeness, such that color mention was les
 
 
 \subsection{Model evaluation}
+\label{sec:colorypicalitymodel}
 
-We evaluated the continuous semantics RSA model on the obtained production data from Exp.~2. While the architecture of the model remained the same as that of the model presented in \sectionref{sec:modifiedmodel}, we briefly review the minor necessary changes, some of which we already mentioned at the beginning of this section. These changes concerned the lexicon and the cost function. We elaborate on each in turn. 
+We evaluated the continuous semantics RSA model on the obtained production data from Exp.~2. While the architecture of the model remained the same as that of the model presented in \sectionref{sec:modifiedmodel}, we briefly review the minor necessary changes, some of which we already mentioned at the beginning of this section. These changes concerned the lexicon and the cost function.\footnote{See \tableref{tab:modeldiffs} for an overview of the models reported in the paper.} We elaborate on each in turn. 
 
 \subsubsection{Lexicon}
 
@@ -824,7 +828,7 @@ For the purpose of evaluating the model in \sectionref{sec:rsaevaluationbasicsce
 c(u) = \beta_F\cdot p(u) + (1-\beta_F)\cdot l(u)
 \end{equation}
 
-Here, $p(u)$ is utterance frequency as estimated from the Google Books corpus (years 1950 to 2008) \jd{elisa, was anything done to the values, eg log transform? \ek{the used frequencies are logFrequencies} was it frequencies or probabilities? \ek{not between 0 and 1, so frequency and not probability}}; $l(u)$ is the mean empirical length of the utterance in characters in the production data (e.g., sometimes \emph{yellow} was abbreviated as \emph{yel}, leading to an $l(u)$ smaller than 6); and $\beta_F$ is a weight that interpolates between length and frequency (when 1, cost is only a function of frequency; when 0, cost is only a function of length). Both $p(u)$ and $l(u)$ were normalized to fall into the interval $[0,1]$. The cost function thus prefers short and frequent utterances (e.g., \emph{blue}) over long and infrequent ones (\emph{turquoise-ish bananaesque thing}).
+Here, $p(u)$ is utterance frequency as estimated from the Google Books corpus (years 1950 to 2008); $l(u)$ is the mean empirical length of the utterance in characters in the production data (e.g., sometimes \emph{yellow} was abbreviated as \emph{yel}, leading to an $l(u)$ smaller than 6); and $\beta_F$ is a weight that interpolates between length and frequency (when 1, cost is only a function of frequency; when 0, cost is only a function of length). Both $p(u)$ and $l(u)$ were normalized to fall into the interval $[0,1]$. The cost function thus prefers short and frequent utterances (e.g., \emph{blue}) over long and infrequent ones (\emph{turquoise-ish bananaesque thing}).
 
 \subsubsection{Evaluation}
 
@@ -859,9 +863,9 @@ In the next section, we move beyond the choice of modifier and ask whether conti
 
 In this section we investigate whether continuous semantics RSA accounts for referring expression production beyond the choice of modifier. In particular, we focus on speakers' choice of taxonomic level of reference in nominal referring expressions. A particular object can be referred to at its subordinate (\emph{dalmatian}), basic (\emph{dog}), or superordinate (\emph{animal}) level, among other choices. As discussed in \sectionref{sec:nominalintro},  multiple factors play a role in the choice of nominal referring expression, including an expression's contextual informativeness, its cognitive cost \cite<short and frequent terms are preferred over long and infrequent ones,>{griffin1998,jescheniak1994}, and its typicality \cite<an utterance is more likely to be used if the object is a good instance of it,> {Jolicoeur1984}.
 
-Choice of taxonomic level (e.g., between \emph{dog} and \emph{dalmatian}) is analogous to the choice of modified referring expressions (e.g., between \emph{dog} and \emph{big dog}) in that the two expressions differ in how much information about the intended referent is provided – in how informative the expressions are. In contrast to adding additional adjectives, choosing a level of reference implies no additional word-cost, but instead entails trading-off the cost (i.e., length and frequency) of the different nouns. Thus, the same factors we have seen to govern choice of modifier over the previous two sections are also involved in nominal choice.
+Choice of taxonomic level (e.g., between \emph{dog} and \emph{dalmatian}) is analogous to the choice of modified referring expressions (e.g., between \emph{dog} and \emph{big dog}) in that the two expressions differ in how much information about the intended referent is provided. In contrast to adding additional adjectives, choosing a level of reference implies no additional word-cost, but instead entails trading-off the cost (i.e., length and frequency) of the different nouns. Thus, the same factors we have seen to govern choice of modifier over the previous two sections are also involved in nominal choice.
 
-In order to evaluate continuous semantics RSA for nominal choice, we proceeded as in \sectionref{sec:colortypicality}: we collected production data within the same reference game setting, but varied the contextual informativeness of utterances by varying whether distractors shared the same basic or superordinate category with the target (see \figref{fig:dogcontexts}). We also elicited typicality ratings for object-utterance combinations, which entered the model as the semantic values via the lexicon. We then conducted the same type of Bayesian data analysis as reported in the previous sections.
+In order to evaluate continuous semantics RSA for nominal choice, we proceeded as in \sectionref{sec:colortypicality}: we collected production data within the same reference game setting, but varied the contextual informativeness of utterances by varying whether distractors shared the same basic or superordinate category with the target (see \figref{fig:dogcontexts}). We also elicited typicality ratings for object-utterance combinations, which entered the model as the semantic values via the lexicon. We then conducted the same type of Bayesian data analysis as reported in the previous sections for model evaluation.
 
 \subsection{Experiment 3: taxonomic level of reference in nominal referring expressions}
 \label{sec:exp3}
@@ -874,7 +878,7 @@ We recruited 58 pairs of participants (116 participants total, the same particip
 
 \paragraph{Procedure and materials}
 
-The procedure was identical to that of Exp.~1.\footnote{Exp.~3 constitutes a replication of \citeA{GrafEtAl2016}.} Participants proceeded through 72 trials. Of these, half were critical trials of interest and half were filler trials (the critical trials from Exp.~1). On critical trials, we varied the level of reference that was sufficient to mention for uniquely establishing reference.
+The procedure was identical to that of Exp.~1.\footnote{Exp.~3 constitutes a replication of the production experiment reported in \citeA{GrafEtAl2016}.} Participants proceeded through 72 trials. Of these, half were critical trials of interest and half were filler trials (the critical trials from Exp.~1). On critical trials, we varied the level of reference that was sufficient to mention for uniquely establishing reference.
 
 Stimuli were selected from nine distinct domains, each corresponding to distinct basic level categories such as \emph{dog}.  For each domain, we selected four subcategories to form our target set (e.g. \emph{dalmatian}, \emph{pug}, \emph{German Shepherd} and \emph{husky}). See \tableref{tab:reflevelstimuli} in \appref{app:taxonomicstimuli} for a full list of domains and their associated target items. Each domain also contained an additional item which belonged to the same basic level category as the target (e.g., \emph{greyhound}) and items which belonged to the same supercategory but not the same basic level (e.g., \emph{elephant} or \emph{squirrel}). The latter items were used as distractors.
 
@@ -917,24 +921,24 @@ This context manipulation served as a manipulation of utterance informativeness:
 
 \subsubsection{Data pre-processing and exclusion}
 
-We collected 2193 referring expressions. To determine the level of reference for each trial, we followed the following procedure. First, speakers' and listeners' messages were parsed automatically; the referring expression used by the speaker was extracted for each trial and checked for whether it contained the current target's correct sub, basic or super level term using a simple grep search. In this way, 71.4\% of trials were labelled as mentioning a pre-coded level of reference. In the next step, remaining utterances were checked manually to determine whether they contained a correct level of reference term which was not detected by the grep search due to typos or grammatical modification of the expression. In this way, meaning-equivalent alternatives such as \emph{doggie} for \emph{dog}, or reduced forms such as \emph{gummi}, \emph{gummies} and \emph{bears} for \emph{gummy bears} were counted as containing the corresponding level of reference term. This covered another 15.0\% of trials. 41 trials on which the listener selected the wrong referent were excluded, leading to the elimination of 2.1\% of trials. Six trials were excluded, because the speaker did not produce any utterances. Additionally, a total of 12.5\% of correct trials were excluded because the utterance consisted only of an attribute of the superclass (\emph{the living thing} for \emph{animal}), of the basic level (\emph{can fly} for \emph{bird}), of the subcategory (\emph{barks} for \emph{dog}) or of the particular instance (\emph{the thing facing left}) rather than a category noun. These kinds of attributes were also mentioned in addition to the noun on trials which were included in the analysis for 8.9\% of sub level terms, 18.9\% of basic level terms, and 60.9\% of super level terms. On 1.2\% of trials two different levels of reference were mentioned; in this case the more specific level of reference was counted as being mentioned in this trial. After all exclusion and pre-processing, 1872 cases classified as one of \emph{sub}, \emph{basic}, or \emph{super} entered into the analysis.
+We collected 2193 referring expressions. To determine the level of reference for each trial, we followed the following procedure. First, speakers' and listeners' messages were parsed automatically; the referring expression used by the speaker was extracted for each trial and checked for whether it contained the current target's correct \emph{sub}(ordinate), \emph{basic}, or \emph{super}(ordinate) level term using a simple grep search. In this way, 71.4\% of trials were labelled as mentioning a pre-coded level of reference. In the next step, remaining utterances were checked manually by one of the authors (CG) to determine whether they contained a correct level of reference term which was not detected by the grep search due to typos or grammatical modification of the expression. In this way, meaning-equivalent alternatives such as \emph{doggie} for \emph{dog}, or reduced forms such as \emph{gummi}, \emph{gummies} and \emph{bears} for \emph{gummy bears} were counted as containing the corresponding level of reference term. This covered another 15.0\% of trials. 41 trials on which the listener selected the wrong referent were excluded, leading to the elimination of 2.1\% of trials. Six trials were excluded, because the speaker did not produce any utterances. Additionally, a total of 12.5\% of correct trials were excluded because the utterance consisted only of an attribute of the superclass (\emph{the living thing} for \emph{animal}), of the basic level (\emph{can fly} for \emph{bird}), of the subcategory (\emph{barks} for \emph{dog}) or of the particular instance (\emph{the thing facing left}) rather than a category noun. These kinds of attributes were also mentioned in addition to the noun on trials which were included in the analysis for 8.9\% of sub level terms, 18.9\% of basic level terms, and 60.9\% of super level terms. On 1.2\% of trials two different levels of reference were mentioned; in this case the more specific level of reference was counted as being mentioned in this trial. After all exclusion and pre-processing, 1872 cases classified as one of \emph{sub}, \emph{basic}, or \emph{super} entered into the analysis.
 
-\jd{CONTINUE HERE}
 
 \subsubsection{Results and discussion}
 
-Proportions of sub, basic, and super level utterances are shown in the top row of \figref{fig:exp2results}. Overall, super level mentions are highly dispreferred ($< 2\%$), so we focus in this section only on predictors of sub over basic level mentions. The clearest pattern of note is that sub level mentions are only preferred in the most constrained context that necessitates the sub level mention for unique reference (e.g., target: dalmatian, distractor: greyhound; see \figref{fig:item12}). Nevertheless, even in these contexts there is a non-negligible proportion of basic level mentions (28\%). In the remaining contexts, where the sub and basic level are equally informative, there is a clear preference for the basic level. 
+
+Proportions of sub, basic, and super level utterances are shown in \figref{fig:exp2results}. Overall, super level mentions are highly dispreferred ($< 2\%$), so we focus in this section only on predictors of sub over basic level mentions. The clearest pattern of note is that sub level mentions are only preferred in the most constrained context that necessitates the sub level mention for unique reference (e.g., target: dalmatian, distractor: greyhound; see \figref{fig:item12}). Nevertheless, even in these contexts there is a non-negligible proportion of basic level mentions (28\%). In the remaining contexts, where the sub and basic level are equally informative, there is a clear preference for the basic level. In addition, mitigating this context effect, sub level mentions increased with increasing typicality of the object as an instance of the sub level utterance.
 
 
 \begin{figure}
 \centering
-% old location: \includegraphics[width=.7\textwidth]{../../../models/old/5d_bda_nom_full/graphs/qualitativepattern-fulldataset-typicalities-hmc}
-\includegraphics[width=.7\textwidth]{pics/qualitativepattern-fulldataset-typicalities-hmc}
-\caption{Utterance probabilities across different conditions. Columns indicate utterances, rows indicate data type (empirical proportion, MAP estimates of posterior predictives for full model with cost and continuous semantics.\jd{recreate these plots with (reduced) condition as facets, different utts in colors, x-axis sub-to-basic typicality, to make it more comparable to exp 2? and then just report the length/frequency effects without plotting them}}
+%\includegraphics[width=.7\textwidth]{pics/qualitativepattern-fulldataset-typicalities-hmc}
+\includegraphics[width=.9\textwidth]{pics/results-exp3.png}
+\caption{Utterance proportions for each target item across different informativeness conditions as a function of the object's subordinate level typicality. Example target items \emph{polo shirt} (basic: \emph{shirt}, super: \emph{clothes}),  \emph{SUV} (basic: \emph{car}, super: \emph{vehicle}), and \emph{parrot} (basic: \emph{bird}, super: \emph{animal}) that were characteristic of relatively low to relatively high sub typicality items are labeled explicitly.}
 \label{fig:exp2results}
 \end{figure}
 
-What explains these preferences? In order to test for effects of informativeness, length, frequency, and typicality on nominal choice we conducted a mixed effects logistic regression predicting sub over basic level mention from centered predictors for the factors of interest and the maximal random effects structure that allowed the model to converge (random by-speaker and by-target intercepts). 
+What explains these preferences? In order to test for effects of informativeness, length, frequency, and typicality on nominal choice we conducted a mixed effects logistic regression predicting sub over basic level mention from centered predictors for the factors of interest and the maximal random effects structure that allowed the model to converge (random by-speaker and by-target intercepts).\footnote{In order to address convergence issues with \verb+lmer+ when specifying the full random effects structure -- i.e., by-speaker and by-item random intercepts and slopes for all fixed effects -- we also ran a Bayesian binomial mixed effects model with weakly informative priors using the \verb+brms+ package \cite{brms} that included the same fixed effects structure as the lmer model and the full random effects structure. The results were qualitatively identical, yielding  evidence for main effects of context (sub vs basic sufficient: posterior mean $\beta$ = 2.44, $95\%$ CI = $[$1.87,3.06$]$, $p(\beta > 0)$ = 1; basic vs super sufficient: posterior mean $\beta$ = 0.70, $95\%$ CI = $[$0.32,1.09$]$, $p(\beta > 0)$ = 1), typicality (posterior mean $\beta$ = 9.96, $95\%$ CI = $[$3.55,17.51$]$, $p(\beta > 0)$ = 1), and length (posterior mean $\beta$ = -1.12, $95\%$ CI = $[$-2.00,-0.31$]$, $p(\beta < 0)$ = 1).} 
 
 \emph{Frequency} was coded as the difference between the sub and the basic level's log frequency, as extracted from the Google Books Ngram English corpus ranging from 1960 to 2008. 
 
@@ -961,42 +965,44 @@ What explains these preferences? In order to test for effects of informativeness
 %
 %\end{table}
 
-The log odds of mentioning the sub level term were greater in the \emph{sub necessary} condition than in either of the other two conditions ($\beta = 2.05$, $SE = .17$, $p < .0001$), and greater in the \emph{basic sufficient} condition than in the \emph{super sufficient} condition ($\beta = .54$, $SE = .15$, $p < .001$), suggesting that the contextual informativeness of the sub level mention has a gradient effect on utterance choice.\footnote{Importantly, model comparison between the reported model and one that subsumes basic and super under the same factor level revealed that the three-level condition variable is justified ($\chi ^2 (1) = 12.82$, $p < .0004$), suggesting that participants don't simply revert to the basic level unless contextually forced not to.} There was also a main effect of typicality, such that the sub level term was preferred for objects that were more typical for the sub level compared to the basic level  description ($\beta = .4.84$, $SE = 1.32$, $p < .001$, see \figref{fig:exp2effects}). In addition, there was a main effect of length, such that as the length of the sub level term increased compared to the basic level term (``chihuahua''/``dog'' vs.~``pug''/``dog''), the sub level term was dispreferred (``chihuahua'' is dispreferred compared to ``pug'', $\beta = -.95$, $SE = .27$, $p < .001$, see \figref{fig:exp2effects}). The main effect of frequency did not reach significance ($\beta = .07$, $SE = .10$, $p < .51$).
+The log odds of mentioning the sub level term were greater in the \emph{sub necessary} condition than in either of the other two conditions ($\beta = 2.11$, $SE = .17$, $p < .0001$), and greater in the \emph{basic sufficient} condition than in the \emph{super sufficient} condition ($\beta = .60$, $SE = .15$, $p < .0001$), suggesting that the contextual informativeness of the sub level mention has a gradient effect on utterance choice.\footnote{Importantly, model comparison between the reported model and one that subsumes basic and super under the same factor level revealed that the three-level condition variable is justified ($\chi ^2 (1) = 12.82$, $p < .0004$), suggesting that participants don't simply revert to the basic level unless contextually forced not to.} There was also a main effect of typicality, such that the sub level term was preferred for objects that were more typical for the sub level compared to the basic level  description ($\beta = 4.82$, $SE = 1.35$, $p < .001$). In addition, there was a main effect of length, such that as the length of the sub level term increased compared to the basic level term (``chihuahua''/``dog'' vs.~``pug''/``dog''), the sub level term was dispreferred (``chihuahua'' is dispreferred compared to ``pug'', $\beta = -.95$, $SE = .27$, $p < .001$). The main effect of frequency did not reach significance ($\beta = .08$, $SE = .11$, $p < .45$).
 
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth]{pics/lengthtypicality}
-\caption{Proportion of sub level (over sub and basic level) terms across conditions. Left: when the sub  length is relatively short (.67,1.82] or long [1.82,4.3) compared to the basic level term. Right: when the target object was relatively more [1.06,1.91) or less (.88,1.06] typical for the sub compared to the basic level term. Intervals were generated by splitting data into groups of roughly equal numbers of observations.\jd{get rid of these figures -- integrate the typicality result into the first results figure (analogous to exp 2), and just report length/frequency without visualizing}}
-\label{fig:exp2effects}
-\end{figure}
+
+%
+%\begin{figure}
+%\centering
+%\includegraphics[width=\textwidth]{pics/lengthtypicality}
+%\caption{Proportion of sub level (over sub and basic level) mentions across conditions. Left: when the sub  length is relatively short (.67,1.82] or long [1.82,4.3) compared to the basic level term. Right: when the target object was relatively more [1.06,1.91) or less (.88,1.06] typical for the sub compared to the basic level term. Length and typicality ratio intervals were generated by splitting data into groups of roughly equal numbers of observations.\jd{get rid of these figures -- integrate the typicality result into the first results figure (analogous to exp 2), and just report length/frequency without visualizing}}
+%\label{fig:exp2effects}
+%\end{figure}
 
 
 Unsurprisingly, there was also significant by-participant and by-domain variation in sub level term mention. %\figref{fig:bigscatterplot} shows the by-domain variation in utterance choice. 
 For instance, mentioning the sub over the basic level term was preferred more in some domains (e.g. in the ``candy'' domain) than in others. Likewise, some domains had a greater preference for basic level terms (e.g. the ``shirt'' domain). Using the super term also ranged from hardly being observable (e.g. the ``flower'' domain) to being used more frequently (e.g. in the ``table'' and ``car'' domain). 
 
-We thus replicate the well-documented preference to refer to objects at the basic level, which is partly modulated by contextual informativeness and partly a result of the basic level term's cognitive cost and typicality compared to its sub level competitor. 
+We thus replicated the well-documented preference to refer to objects at the basic level, which is partly modulated by contextual informativeness and partly a result of the basic level term's cognitive cost and typicality compared to its sub level competitor. 
 
 Perhaps surprisingly given the previous literature, we did not observe an effect of frequency on sub level term mention. This may have a number of reasons. For instance, the modality of the experiment may have mattered here: the current study was a written production study, while most studies that have identified frequency as a factor governing production choices are spoken production studies (\red{cite cite}). It may be that the cognitive cost of typing longer words may be disproportionately higher than that of producing longer words in speech, thus obscuring a potential effect of frequency. 
 
 \subsection{Model evaluation}
 \label{sec:reflevelmodel}
 
-Here we show that continuous semantics RSA as presented in \sectionref{sec:modifiedmodel} can be straightforwardly extended to modeling the choice of taxonomic level of reference. We include three modifications, while leaving the general framework as is. The first modification concerns the utterance alternatives. The second concerns the elicited typicality values and the resulting fidelity values. The third concerns the cost function. We briefly elaborate on each in turn. 
 
-\paragraph{Utterance alternatives.} Whereas the modifier choice model treats all individual features and feature combinations represented in the display as utterance alternatives, the nominal choice model considers only the three different levels of reference to the target as alternatives, e.g., \emph{dalmatian}, \emph{dog}, \emph{animal}. That is, assuming a German Shepherd as a distractor, \emph{German Shepherd} is \emph{not} considered an alternative. This has consequences for the assumed fidelity values, which we turn to next. \jd{we should probably discuss this in the GD? ie, if we also assumed distractor labels as alternatives, we would have to do the rescaling -- would results be different? or the othe rway round: if we assume in modifier choice only the target's features are available as alternatives, would results be different?}
+We evaluated the continuous semantics RSA model on the obtained production data from Exp.~3. The architecture of the model is almost identical to that of the model presented in \sectionref{sec:colorypicalitymodel}. The only difference is that the set of alternatives contained only the three potential target utterances (i.e., the target's sub, basic, and super label).\footnote{See \tableref{tab:modeldiffs} for an overview of the models reported in the paper.} Whereas the modifier models from the previous sections treats all individual features and feature combinations represented in the display as utterance alternatives, the nominal choice model considers only the three different levels of reference to the target as alternatives, e.g., \emph{dalmatian}, \emph{dog}, \emph{animal}. That is, assuming a German Shepherd as a distractor, \emph{German Shepherd} is \emph{not} considered an alternative.
 
-\paragraph{Fidelity values.} Just as we did for capturing color typicality effects in \sectionref{sec:modelevalcolortypicality}, we elicited empirical typicality values for object-utterance combinations.\footnote{See \appref{app:typicalitynorms2} for details of typicality elicitation experiment.} For each display, we know the typicality of each object in the display as an instance of the three potential target utterances (capturing, for instance, that the word ``dog'' describes a dalmatian better than a grizzly bear, but it also describes a grizzly bear better than a tennis ball). This allows us to use the typicality values as fidelity values directly, without rescaling as was necessary in the modifier choice model.
+Just as we did for capturing color typicality effects in \sectionref{sec:colorypicalitymodel}, we elicited empirical typicality values for object-utterance combinations.\footnote{See \appref{app:typicalitynorms2} for details of typicality elicitation experiment.} For each display, we know the typicality of each object in the display as an instance of the three potential target utterances (capturing, for instance, that the word \emph{dog} describes a dalmatian better than a grizzly bear, but it also describes a grizzly bear better than a tennis ball). This allows us to use the typicality values as semantic values directly.
 
-\paragraph{Cost function.} Recall the pragmatic speaker's utility function from \sectionref{sec:modifiedmodel}, where the weighted informativeness term $\alpha \ln P_{L_0}(o | u)$ traded off against the weighted utterance cost $\beta_c c(u)$. In the modifier model we assumed a constant cost for each added modifier. Because all utterance alternatives in the nominal choice model have word length 1, we update the cost function to be composed of each utterance's length $\hat{c}_l$ and frequency $\hat{c}_f$ (as described in the previous section), weighted by free parameters $\beta_f$ and $\beta_l$ :
-\begin{equation}
-P_{S_1}(u | o) \propto e^{\alpha \ln P_{L_0}(o | u) + \beta_f \hat{c}_f  + \beta_l \hat{c}_l)}
-\end{equation}
 
 To understand the qualitative behavior of the model, we briefly delve into two aspects of the model: first, the effect of typicality on the literal listener (and, in consequence via the pressure to be informative) the speaker. And second, the effect of cost (utterance length and frequency) on the speaker.
 
+\jd{CONTINUE HERE}
+
+
 \subsubsection{Typicality effects}
 
-\paragraph{Literal listener behavior.} The literal listener's probability of choosing the target under different typicalities for the observed utterance are shown in \figref{fig:nominallistenertypicality}. In general: as the target's typicality as an instance of the utterance increases and the distractors' typicality decreases, the probability of the literal listener choosing the target increases. Subordinate level terms tend to fall in the upper right quadrant of this graph. Basic level terms in the \emph{sub necessary} conditions tend to fall in the lower right quadrant, while basic level terms in the \emph{basic sufficient} conditions tend to fall in the upper right quadrant as well.
+\jd{everyone, should we discuss these qualitative effects at all, given that we've already discussed how this works for color typicality?}
+
+\paragraph{Literal listener behavior.} The literal listener's probability of choosing the target under different semantic values for the observed utterance are shown in \figref{fig:nominallistenertypicality}. In general: as the target's typicality as an instance of the utterance increases and the distractors' typicality decreases, the probability of the literal listener choosing the target increases. Subordinate level terms tend to fall in the upper right quadrant of this graph. Basic level terms in the \emph{sub necessary} conditions tend to fall in the lower right quadrant, while basic level terms in the \emph{basic sufficient} conditions tend to fall in the upper right quadrant as well.
 
 \begin{figure}
 \centering
@@ -1018,7 +1024,7 @@ To understand the qualitative behavior of the model, we briefly delve into two a
 
 \begin{table}
 \centering
-\caption{Overview of simulated distractor typicality (fidelity) values for sub, basic, and super level utterances in simulated conditions. In contrast to the actual experimental conditions, we assume equal typicality values for both distractors.}
+\caption{Overview of simulated distractor typicality (semantic) values for sub, basic, and super level utterances in simulated conditions. In contrast to the actual experimental conditions, we assume equal typicality values for both distractors.}
 \begin{tabular}{l l c c c}
 \toprule
 & & \multicolumn{3}{c}{Condition}\\
@@ -1041,41 +1047,62 @@ These patterns mirror the typicality effects obtained via the mixed effects regr
 
 \subsubsection{Cost effects}
 
+\jd{again, do we still need this given that we already include a discussion in previous sections?}
+
 The additional effect of cost on nominal choice is straightforward: the costlier an utterance (relative to its alternatives), the less likely it is to be used. This pattern, too, is one observed in the mixed effects regression. For instance, the (short, less costly) pug is almost three times as likely as the (long, more costly) German Shepherd to be referred to by its subordinate level term in the \emph{basic sufficient} and \emph{super sufficient} conditions, where subordinate level reference is unnecessary. 
 
 \bigskip
 In \sectionref{sec:reflevelmodel} we showed that continuous semantics RSA captures the right kinds of qualitative effects as observed in the mixed effects regression. In the next section we evaluate how well the model captures nominal choice preferences quantitatively.
 
-\subsection{Model evaluation: nominal choice}
-\label{sec:reflevelmodeleval}
 
-In order to evaluate continuous semantics RSA for nominal choice, we repeated the same Bayesian data analysis as reported in \sectionref{sec:modifiermodeleval} and \sectionref{sec:modelevalcolortypicality} to generate model predictions and infer likely parameter values. We did so by conditioning on the observed production data (coded into \emph{sub}, \emph{basic}, and \emph{super} level mentions as described above) and integrating over the three free parameters $\alpha  \sim \mathcal{U}(0,20)$, $\beta_f  \sim \mathcal{U}(0,5)$, $\beta_l  \sim \mathcal{U}(0,5)$.
+\subsubsection{Evaluation}
+
+\jd{XXX -- thus far missing entirely. }
+
+\begin{itemize}
+	\item general procedure (same as for Exp. 2, exclude "other" utterances. same inference algorithm?)
+	\item free parameters: $\alpha$, $\beta_c$, $\beta_F$ -- report priors over params \jd{any others? any sort of weight on typicality?}
+	\item include plots: scatterplot of posterior predictive vs empirical proportions, and posterior over parameters
+	\item report correlations with empirical data at different levels: at individual item (u,o) level collapsing across distractors; maybe collapsing across 3 different typicality bins?
+	\item discuss posteriors over params -- is alpha similar? is cost weight still low but with most weight on length? 
+	\item potential comparison with different models:
+	\begin{itemize}
+		\item should we run a version that includes all the distractor labels as alternatives as well?
+	\end{itemize}
+\end{itemize}
+
+% OLD PROSE
+
+%\subsection{Model evaluation: nominal choice}
+%\label{sec:reflevelmodeleval}
+%
+%In order to evaluate continuous semantics RSA for nominal choice, we repeated the same Bayesian data analysis as reported in \sectionref{sec:modifiermodeleval} and \sectionref{sec:modelevalcolortypicality} to generate model predictions and infer likely parameter values. We did so by conditioning on the observed production data (coded into \emph{sub}, \emph{basic}, and \emph{super} level mentions as described above) and integrating over the three free parameters $\alpha  \sim \mathcal{U}(0,20)$, $\beta_f  \sim \mathcal{U}(0,5)$, $\beta_l  \sim \mathcal{U}(0,5)$.
+%
+%
+%Point-wise maximum a posteriori (MAP) estimates of the model's posterior predictives for each combination of utterance and informativeness condition (collapsing across different items) are compared to empirical data in \figref{fig:exp2results}. The model clearly captures the preference towards sub level mentions in the \emph{sub necessary} conditions and the basic level preference in all other conditions. It also captures the further decrease in sub level mentions in the \emph{super sufficient condition}. However, it does overpredict super level mentions, though not as badly as models that either assume a deterministic semantics or that ignore utterance cost.\footnote{The reader is referred to \appref{app:nominalmodelcomparison} for a comparison of the models containing a) only informativeness with deterministic semantics; b) only informativeness with continuous semantics; c) informativeness with deterministic semantics and cost; d) informativeness with continuous semantics and cost (the current model).} At this level, the model achieves a correlation of $r = .94$. Computing correlations additionally on the by-target level yields a correlation of $r = .84$ (see also the scatterplot in \figref{fig:exp2scatter}). 
+%
+%\begin{figure}
+%\centering
+%% old location: \includegraphics[width=.7\textwidth]{../../../models/old/5d_bda_nom_full/graphs/scatterplot-fulldataset-typicalities-hmc}
+%\includegraphics[width=.7\textwidth]{pics/scatterplot-fulldataset-typicalities-hmc}
+%\caption{Scatterplot of by-target empirical utterance proportions against model posterior predictive MAP estimates. Gray line indicates perfect correlation line.}
+%\label{fig:exp2scatter}
+%\end{figure}
+%
+%Parameter posteriors are shown in \figref{fig:nominalparamposteriors}. Both informativeness and length receive significant weight. In contrast, the effect of frequency appears to be much weaker with a MAP of .1 and the HDIs overlapping with 0. This mirrors the null effect of frequency found in the regression analysis. However, a large number of cases also received a non-zero frequency weight.
+%
+%In order to ascertain whether typicality as incorporated in the continuous semantics was indeed contributing to the explanatory power of the model, we ran an additional Bayesian data analysis with an added typicality weight parameter $\beta_t \in [0, 1]$. This parameter interpolated between empirical typicality values (when $\beta_t = 1$) and deterministic (i.e., 0 or 1) a priori values based on the true taxonomy (when $\beta_t = 0$). We found a MAP estimate for $\beta_t$ of .95, HDI = [0.82,.99], strongly indicating that it is useful to incorporate empirical typicality values and thus providing further support for the value of non-deterministic truth functions in modeling referring expressions.
+%
+%\begin{figure}
+%\centering
+%% old location: \includegraphics[width=.9\textwidth]{../../../models/old/5d_bda_nom_full/graphs/parameterposteriors-fulldataset-typicalities-hmc}
+%\includegraphics[width=.9\textwidth]{pics/parameterposteriors-fulldataset-typicalities-hmc}
+%\caption{Posterior distribution over model parameters. Maximum a posteriori (MAP)  $\beta_f$ = 0.10, 95\% highest density interval (HDI) = [0.002,0.95]; MAP $\beta_l$ = 1.85, HDI = [1.23,2.65]; MAP $\alpha$ = 9.19, HDI = [7.72,10.80].}
+%\label{fig:nominalparamposteriors}
+%\end{figure}
+%
 
 
-Point-wise maximum a posteriori (MAP) estimates of the model's posterior predictives for each combination of utterance and informativeness condition (collapsing across different items) are compared to empirical data in \figref{fig:exp2results}. The model clearly captures the preference towards sub level mentions in the \emph{sub necessary} conditions and the basic level preference in all other conditions. It also captures the further decrease in sub level mentions in the \emph{super sufficient condition}. However, it does overpredict super level mentions, though not as badly as models that either assume a deterministic semantics or that ignore utterance cost.\footnote{The reader is referred to \appref{app:nominalmodelcomparison} for a comparison of the models containing a) only informativeness with deterministic semantics; b) only informativeness with continuous semantics; c) informativeness with deterministic semantics and cost; d) informativeness with continuous semantics and cost (the current model).} At this level, the model achieves a correlation of $r = .94$. Computing correlations additionally on the by-target level yields a correlation of $r = .84$ (see also the scatterplot in \figref{fig:exp2scatter}). 
-
-\begin{figure}
-\centering
-% old location: \includegraphics[width=.7\textwidth]{../../../models/old/5d_bda_nom_full/graphs/scatterplot-fulldataset-typicalities-hmc}
-\includegraphics[width=.7\textwidth]{pics/scatterplot-fulldataset-typicalities-hmc}
-\caption{Scatterplot of by-target empirical utterance proportions against model posterior predictive MAP estimates. Gray line indicates perfect correlation line.}
-\label{fig:exp2scatter}
-\end{figure}
-
-Parameter posteriors are shown in \figref{fig:nominalparamposteriors}. Both informativeness and length receive significant weight. In contrast, the effect of frequency appears to be much weaker with a MAP of .1 and the HDIs overlapping with 0. This mirrors the null effect of frequency found in the regression analysis. However, a large number of cases also received a non-zero frequency weight.
-
-In order to ascertain whether typicality as incorporated in the continuous semantics was indeed contributing to the explanatory power of the model, we ran an additional Bayesian data analysis with an added typicality weight parameter $\beta_t \in [0, 1]$. This parameter interpolated between empirical typicality values (when $\beta_t = 1$) and deterministic (i.e., 0 or 1) a priori values based on the true taxonomy (when $\beta_t = 0$). We found a MAP estimate for $\beta_t$ of .95, HDI = [0.82,.99], strongly indicating that it is useful to incorporate empirical typicality values and thus providing further support for the value of non-deterministic truth functions in modeling referring expressions.
-
-\begin{figure}
-\centering
-% old location: \includegraphics[width=.9\textwidth]{../../../models/old/5d_bda_nom_full/graphs/parameterposteriors-fulldataset-typicalities-hmc}
-\includegraphics[width=.9\textwidth]{pics/parameterposteriors-fulldataset-typicalities-hmc}
-\caption{Posterior distribution over model parameters. Maximum a posteriori (MAP)  $\beta_f$ = 0.10, 95\% highest density interval (HDI) = [0.002,0.95]; MAP $\beta_l$ = 1.85, HDI = [1.23,2.65]; MAP $\alpha$ = 9.19, HDI = [7.72,10.80].}
-\label{fig:nominalparamposteriors}
-\end{figure}
-
-
-%This relationship is motivated by considering the effect of a small difference in typicality on choice probability: in our elicitation experiment a small difference in rating should mean the same thing at the top and bottom of the scale (it is visually equivalent on the slider that participants used). In order for a small difference in typicality rating to have a constant effect on relative choice probability (which is a ratio), the relationship must be exponential. 
 
 
 \section{General Discussion}
