@@ -32,6 +32,6 @@ The fast way is what I did for the paper because in that section we're not inter
 
 **Paper:** Section 5.3?
 
-**Conditions file:** ??? ask Caroline
+**Conditions file:** bdaInput/nominal/unique_conditions_exp3.csv
 
-**Data file:**	??? ask Caroline
+**Data file:**	bdaInput/nominal/bda_data.csv

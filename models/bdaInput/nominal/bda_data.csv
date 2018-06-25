@@ -435,6 +435,7 @@ gameid,roundNum,targetName,alt1Name,alt2Name,refLevel
 4886-d,49,rose,pottedplant,grasses,sub
 4886-d,50,hummingbird,lobster,sparrow,sub
 4886-d,54,goldfish,ivy,bathrobe,basic
+4886-d,62,pigeon,train,lion,basic
 4886-d,64,eagle,lion,iguana,sub
 4886-d,65,coffeetable,sidetable,wardrobe,basic
 4886-d,71,daisy,wardrobe,pig,sub
@@ -457,7 +458,7 @@ gameid,roundNum,targetName,alt1Name,alt2Name,refLevel
 6879-8,32,husky,rabbit,crocodile,basic
 6879-8,34,hawaiishirt,crocodile,socks,basic
 6879-8,35,coffeetable,bed,dress,basic
-6879-8,37,picnictable,popcorn,bathrobe,sub
+6879-8,37,picnictable,popcorn,bathrobe,basic
 6879-8,39,tshirt,gloves,bathrobe,basic
 6879-8,40,dalmatian,pottedplant,bookcase,basic
 6879-8,41,mnms,chips,candycorn,sub
@@ -500,7 +501,7 @@ gameid,roundNum,targetName,alt1Name,alt2Name,refLevel
 0842-a,57,clownfish,pretzels,lamp,basic
 0842-a,58,sunflower,pottedplant,ivy,sub
 0842-a,59,diningtable,bookcase,crocodile,basic
-0842-a,60,picnictable,bed,rhino,sub
+0842-a,60,picnictable,bed,rhino,basic
 0842-a,61,hummingbird,sheep,lion,basic
 0842-a,65,dressshirt,hamster,dress,basic
 0842-a,66,pandabear,iguana,rabbit,sub
@@ -711,7 +712,7 @@ gameid,roundNum,targetName,alt1Name,alt2Name,refLevel
 5611-0,49,skittles,snake,popcorn,sub
 5611-0,51,diningtable,sidetable,bed,basic
 5611-0,55,dressshirt,campshirt,bathrobe,basic
-5611-0,57,picnictable,rosemary,horse,sub
+5611-0,57,picnictable,rosemary,horse,basic
 5611-0,58,pandabear,snake,koalabear,sub
 5611-0,61,coffeetable,lamp,bed,basic
 5611-0,62,polarbear,cow,lobster,sub
@@ -776,7 +777,7 @@ gameid,roundNum,targetName,alt1Name,alt2Name,refLevel
 9554-c,49,hawaiishirt,bathrobe,crocodile,basic
 9554-c,54,pug,pretzels,crocodile,basic
 9554-c,57,pandabear,bison,elephant,sub
-9554-c,58,picnictable,cow,dress,sub
+9554-c,58,picnictable,cow,dress,basic
 9554-c,59,clownfish,rhino,lobster,basic
 9554-c,62,gummybears,rhino,bathrobe,basic
 9554-c,64,blackbear,bookcase,cookies,basic
@@ -833,7 +834,7 @@ gameid,roundNum,targetName,alt1Name,alt2Name,refLevel
 0327-7,12,jellybeans,chips,socks,sub
 0327-7,15,clownfish,cookies,lobster,sub
 0327-7,16,tshirt,bathrobe,campshirt,sub
-0327-7,17,coffeetable,kitten,wardrobe,sub
+0327-7,17,coffeetable,kitten,wardrobe,basic
 0327-7,19,hawaiishirt,lion,bookcase,basic
 0327-7,20,rose,lily,rosemary,sub
 0327-7,21,skittles,pretzels,chips,sub
@@ -872,7 +873,6 @@ gameid,roundNum,targetName,alt1Name,alt2Name,refLevel
 7949-f,22,sportscar,lamp,socks,basic
 7949-f,23,diningtable,lamp,sidetable,basic
 7949-f,24,daisy,bathrobe,lion,basic
-7949-f,25,hawaiishirt,campshirt,dress,basic
 7949-f,28,pigeon,bed,pottedplant,basic
 7949-f,34,germanshepherd,horse,rosemary,basic
 7949-f,35,dressshirt,dress,hamster,basic
@@ -1366,7 +1366,7 @@ gameid,roundNum,targetName,alt1Name,alt2Name,refLevel
 0422-5,61,germanshepherd,firetruck,lamp,basic
 0422-5,63,blackbear,snake,koalabear,sub
 0422-5,64,grizzlybear,bookcase,elephant,basic
-0422-5,65,coffeetable,ivy,horse,sub
+0422-5,65,coffeetable,ivy,horse,basic
 0422-5,67,clownfish,lobster,lion,basic
 0422-5,68,diningtable,wardrobe,bed,basic
 0422-5,69,swordfish,bison,discusfish,sub
@@ -1377,7 +1377,7 @@ gameid,roundNum,targetName,alt1Name,alt2Name,refLevel
 8837-a,7,husky,squirrel,pottedplant,basic
 8837-a,9,coffeetable,wardrobe,bookcase,basic
 9867-6,4,convertible,train,sedan,sub
-9867-6,5,coffeetable,socks,rosemary,sub
+9867-6,5,coffeetable,socks,rosemary,basic
 9867-6,7,sunflower,horse,socks,basic
 9867-6,10,swordfish,pig,cow,sub
 9867-6,12,mnms,rosemary,pretzels,sub
@@ -1432,7 +1432,7 @@ gameid,roundNum,targetName,alt1Name,alt2Name,refLevel
 0244-4,8,gummybears,pretzels,squirrel,sub
 0244-4,12,mnms,dress,squirrel,sub
 0244-4,13,blackbear,horse,squirrel,basic
-0244-4,16,picnictable,bed,wardrobe,sub
+0244-4,16,picnictable,bed,wardrobe,basic
 0244-4,19,suv,bed,train,basic
 0244-4,22,sportscar,bathrobe,rosemary,basic
 0244-4,25,germanshepherd,squirrel,rosemary,basic
@@ -1472,7 +1472,7 @@ gameid,roundNum,targetName,alt1Name,alt2Name,refLevel
 7569-e,72,hummingbird,bison,sparrow,sub
 4509-7,3,pandabear,lobster,koalabear,sub
 4509-7,6,skittles,cookies,rabbit,sub
-4509-7,9,coffeetable,lamp,iguana,sub
+4509-7,9,coffeetable,lamp,iguana,basic
 4509-7,12,tshirt,ambulance,rhino,sub
 4509-7,14,parrot,crocodile,bison,sub
 4509-7,16,pigeon,rabbit,crocodile,sub
@@ -1780,7 +1780,7 @@ gameid,roundNum,targetName,alt1Name,alt2Name,refLevel
 6344-9,32,bedsidetable,popcorn,wardrobe,sub
 6344-9,34,goldfish,discusfish,sheep,sub
 6344-9,35,catfish,grasses,cookies,basic
-6344-9,36,picnictable,wardrobe,bookcase,sub
+6344-9,36,picnictable,wardrobe,bookcase,basic
 6344-9,39,gummybears,candycorn,popcorn,sub
 6344-9,41,rose,ambulance,grasses,sub
 6344-9,43,pug,pig,squirrel,basic
