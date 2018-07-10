@@ -1,5 +1,4 @@
-library(dplyr)
-library(tidyr)
+library(tidyverse)
 library(here)
 
 source(here("analysis","helper_scripts","helpers.R"))
@@ -118,15 +117,20 @@ bda_df$DistractorCombo = as.factor(ifelse(as.character(bda_df$Dist1) < as.charac
 
 bda_df$BDADist1 = sapply(strsplit(as.character(bda_df$DistractorCombo)," "), "[", 1)
 bda_df$BDADist2 = sapply(strsplit(as.character(bda_df$DistractorCombo)," "), "[", 2)
-bda_df$BDADist1Color = sapply(strsplit(as.character(bda_df$BDADist1),"_"), "[", 2)
-bda_df$BDADist1Type = sapply(strsplit(as.character(bda_df$BDADist1),"_"), "[", 1)
-bda_df$BDADist2Color = sapply(strsplit(as.character(bda_df$BDADist2),"_"), "[", 2)
-bda_df$BDADist2Type = sapply(strsplit(as.character(bda_df$BDADist2),"_"), "[", 1)
+bda_df$d1_color = sapply(strsplit(as.character(bda_df$BDADist1),"_"), "[", 2)
+bda_df$d1_item = sapply(strsplit(as.character(bda_df$BDADist1),"_"), "[", 1)
+bda_df$d2_color = sapply(strsplit(as.character(bda_df$BDADist2),"_"), "[", 2)
+bda_df$d2_item = sapply(strsplit(as.character(bda_df$BDADist2),"_"), "[", 1)
+
+bda_df <- bda_df %>% 
+  rename(t_color = clickedColor,
+         t_item = clickedType,
+         response = UttforBDA,
+         condition = context)
 
 # Write Bayesian data analysis files (data and unique conditions)
-write.table(unique(bda_df[,c("context","clickedColor","clickedType","BDADist1Color","BDADist1Type","BDADist2Color","BDADist2Type")]),file=here("models","bdaInput","typicality","unique_conditions_typicality.csv"),sep=",",col.names=F,row.names=F,quote=F)
-
-write.table(bda_df[,c("context","clickedColor","clickedType","BDADist1Color","BDADist1Type","BDADist2Color","BDADist2Type","UttforBDA")],file=here("models","bdaInput","typicality","bda_data_typicality.csv"),sep=",",col.names=F,row.names=F,quote=F)
+write.table(unique(bda_df[,c("condition","t_color","t_item","d1_color","d1_item","d2_color","d2_item")]),file=here("models","bdaInput","typicality","unique_conditions-raw.csv"),sep=",",row.names=F,quote=F)
+write.table(bda_df[,c("condition","t_color","t_item","d1_color","d1_item","d2_color","d2_item","response")],file=here("models","bdaInput","typicality","bda_data-raw.csv"),sep=",",row.names=F,quote=F)
 
 # Write file for regression analysis and visualization
 production$Dist1 = paste(production$Dist1Color, production$Dist1Type, sep="_")
