@@ -132,6 +132,24 @@ bda_df <- bda_df %>%
 write.table(unique(bda_df[,c("condition","t_color","t_item","d1_color","d1_item","d2_color","d2_item")]),file=here("models","bdaInput","typicality","unique_conditions-raw.csv"),sep=",",row.names=F,quote=F)
 write.table(bda_df[,c("condition","t_color","t_item","d1_color","d1_item","d2_color","d2_item","response")],file=here("models","bdaInput","typicality","bda_data-raw.csv"),sep=",",row.names=F,quote=F)
 
+# Construct meanings json for BDA
+typicality_data = read.table(file=here("data","typicality_exp2.csv"),sep=",", header=T) %>%
+  unite(object, Color, Item) %>%
+  mutate(utterance = ifelse(UtteranceType =='color-and-type', 
+                            str_replace(Utterance," ","_"),
+                            as.character(Utterance))) %>%
+  rename(typicality = Typicality) %>%
+  rowwise() %>%
+  mutate(output = paste0('\"', object, '\" : ', typicality)) %>%
+  group_by(utterance) %>%
+  summarize(output = paste(output, collapse = ",\n     ")) %>%
+  mutate(output = paste0('{\n     ', output, '}')) %>%
+  summarize(output = paste0('\"', utterance, '\" : ', output, collapse = ',\n  ')) %>%
+  mutate(output = paste0('{\n  ', output, '}'))
+
+write_file(typicality_data$output,
+           path=here("models","refModule","json","typicality-meanings.json"))
+
 # Write file for regression analysis and visualization
 production$Dist1 = paste(production$Dist1Color, production$Dist1Type, sep="_")
 production$Dist2 = paste(production$Dist2Color, production$Dist2Type, sep="_")
