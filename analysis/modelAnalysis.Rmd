@@ -1,0 +1,195 @@
+---
+title: "Overinformativeness BDA"
+output: html_notebook
+---
+
+# Set up environment
+
+```{r}
+library(tidyverse)
+library(coda)
+library(lme4)
+estimate_mode <- function(s) {
+  d <- density(s)
+  return(d$x[which.max(d$y)])
+}
+HPDhi<- function(s){
+  m <- HPDinterval(mcmc(s))
+  return(m["var1","upper"])
+}
+HPDlo<- function(s){
+  m <- HPDinterval(mcmc(s))
+  return(m["var1","lower"])
+}
+options("scipen"=10) 
+
+source("./helper_scripts/model_helpers.R")
+```
+
+
+### Load in model results
+
+```{r}
+params <- read_csv("../models/typicality-params.csv")
+params %>% group_by(parameter, value) %>% summarize(prob = sum(MCMCprob))
+```
+
+look at MAP, credible intervals...
+
+```{r}
+params %>% 
+  group_by(parameter) %>%
+  summarize(mode = estimate_mode(value),
+            md_lo = round(HPDlo(value), 3),
+            md_hi = round(HPDhi(value), 3))
+```
+
+```{r}
+numSamples = nrow(params)/length(levels(params$parameter))
+params.samples <- params[rep(row.names(params), exp(params$MCMCprob)*numSamples), 1:2]
+
+#pdf(file="../writing/2016/journal-manuscript/figures/AnswererParamPosteriors.pdf",
+        #width = 6, height = 3)
+answererParamPosteriors = ggplot(params.samples, aes(x=value))+
+  #geom_histogram(aes(y=..density..)) +
+  
+    geom_histogram(aes(y=..density..),
+                   data =subset(params.samples, parameter == "alpha" ),
+                   binwidth = .5, colour="black", fill="white") +
+    geom_histogram(aes(y=..density..),
+                   data=subset(params.samples, parameter == "typWeight"),
+                   binwidth = .25, colour="black", fill="white") +
+    geom_histogram(aes(y=..density..),
+                 data =subset(params.samples, parameter == "cost_color" ),
+                 binwidth = .5, colour="black", fill="white") +
+    geom_histogram(aes(y=..density..),
+                 data=subset(params.samples, parameter == "cost_type"),
+                 binwidth = .25, colour="black", fill="white") +
+
+    geom_density(aes(y=..density..),
+                 data =subset(params.samples, parameter == "alpha" ),
+                 adjust = 1, alpha=.2, fill="#FF6666")+
+    geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "typWeight"),
+                 adjust = 5, alpha=.2, fill="#FF6666")+
+    geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "cost_color"),
+                 adjust = 5, alpha=.2, fill="#FF6666")+
+    geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "cost_type"),
+                 adjust = 5, alpha=.2, fill="#FF6666")+
+
+    ggtitle("Parameter Posteriors (500 iterations)") +
+    facet_grid(~parameter, scales = 'free') +
+    theme_bw()
+answererParamPosteriors
+```
+
+Looks like there's a super narrow range where the pragmatic model makes much much better predictions... 
+
+### Predictives
+
+# Import empirical data
+
+```{r}
+empirical = read.csv("../models/bdaInput/typicality/bda_data-raw.csv") %>%
+  mutate(target_item = paste(t_color, t_item, sep = "_")) %>%
+  mutate(color = ifelse(as.character(response) == as.character(t_color),1,0)) %>%
+  mutate(item = ifelse(as.character(response) == as.character(t_item),1,0)) %>%
+  mutate(color_item = ifelse(as.character(response) == as.character(target_item),1,0))
+
+agr = empirical %>%
+  select(color,item,color_item,condition,target_item) %>%
+  gather(utterance,mentioned,-condition,-target_item) %>%
+  group_by(condition,utterance,target_item) %>%
+  summarise(Probability=mean(mentioned),
+            cilow=ci.low(mentioned),
+            cihigh=ci.high(mentioned)) %>%
+  ungroup() %>%
+  mutate(YMax = Probability + cihigh) %>%
+  mutate(YMin = Probability - cilow) %>%
+  select(condition, target_item, utterance, Probability, YMax, YMin)
+agr = as.data.frame(agr)
+```
+
+# Import predictives data
+
+```{r}
+colors <- c("yellow","orange","red","pink", "green","blue","brown","black")
+types <- c('apple', 'avocado', 'banana', 'carrot', 'pear', 'tomato', 'pepper')
+predictive<-read.csv("../models/typicality-predictives.csv") %>%
+  rowwise() %>%
+  mutate(target_item = paste0(c(as.character(t_color), as.character(t_item)), collapse = '_')) %>%
+  filter(response %in% c(as.character(t_color), as.character(t_item), target_item)) %>%
+  mutate(utterance = ifelse(as.character(response) %in% colors, 'color', 
+                            ifelse(as.character(response) %in% types, 'item',
+                                   'color_item'))) %>%
+  group_by(condition, utterance, target_item) %>%
+  summarize(modelProbability=mean(logModelProb)) 
+```
+
+# Plot predictives w/ empirical data
+
+```{r}
+combined <- left_join(agr, predictive)
+answer_plots = (ggplot(combined, aes(x = modelProbability, y = Probability))
+  + geom_errorbar(aes(ymax = YMax, ymin = YMin), alpha = .2) 
+  + geom_point(aes(colour = condition))
+  + geom_abline(intercept = 0, slope = 1, linetype = "dotted")
+  + scale_x_continuous(lim = c(0,1), breaks=c(0,.5,1))
+  + ggtitle("Answerer Posterior Predictive")
+  #+ geom_smooth(method = "lm")
+  + xlab("Model predicted probability")
+  + ylim(0,1)
+  + facet_wrap(~ utterance)
+  #+ geom_text(aes(label=utterance), size = 2)
+  + ylab("Empirical Probability")
+  + theme_bw()   
+  + theme(text = element_text(size = 10),  axis.text.x = element_text(angle=90, vjust=1), aspect.ratio = 1)
+)
+answer_plots
+#dev.off()
+```
+
+Look at R^2
+
+```{r}
+summary(lm(Probability ~ modelProbability, data = combined))
+```
+
+Plot qualitative pattern
+
+```{r}
+typ = read.csv(file="~/cogsci/projects/stanford/projects/overinformativeness/experiments/elisa_paper_relevant/norming_comp_object/results/data/meantypicalities.csv")
+typ = typ[as.character(typ$Item) == as.character(typ$utterance),]
+row.names(typ) = paste(typ$Color,typ$Item,sep="_")
+combined$NounTypicality = typ[as.character(combined$target_item),]$MeanTypicality
+
+ggplot(combined, aes(x=NounTypicality,y=modelProbability,color=Utterance)) +
+  geom_point() +
+  geom_smooth(method="lm") +
+  facet_wrap(~conditionName)
+```
+
+
+Compare predictives with & without emperical lengths/weights
+
+```{r}
+predictiveComparison <-read_csv("./MAPneglCostPredictives.csv") %>%
+  rename(empCostProb = prob) %>%
+  left_join(read_csv("./MAPfixedcostPredictives.csv")) %>%
+  rename(fixedCostProb = prob) %>%
+  rowwise() %>%
+  mutate(target_item = paste0(c(TargetColor, TargetType), collapse = '_')) %>%
+  filter(value %in% c(TargetColor, TargetType, target_item)) %>%
+  mutate(Utterance = ifelse(value %in% colors, 'color', 
+                            ifelse(value %in% types, 'type',
+                                   'color_type'))) %>%
+  rename(conditionName = condition) %>%
+  group_by(conditionName, Utterance, target_item) %>%
+  summarize(empProb=mean(empCostProb), nonEmpProb = mean(fixedCostProb)) 
+
+ggplot(predictiveComparison, aes(x = empProb, y = nonEmpProb)) +
+  geom_point() +
+  geom_text(aes(label=Utterance), size = 2)
+```
