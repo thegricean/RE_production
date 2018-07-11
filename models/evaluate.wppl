@@ -1,0 +1,68 @@
+// simulates model forward with given params/context 
+// webppl simulate.wppl --require ../refModule/ -- --modelVersion colorSize 
+
+var config = {
+  'modelVersion' : argv.modelVersion
+};
+
+// Pull in requested data/conditions 
+var data = refModule.getData(config.modelVersion);
+console.log("Loading data... found" + data.length + " data points");
+
+var conditions = refModule.getConditions(config.modelVersion);
+console.log("Loading unique conditions... found" + conditions.length);
+
+var paramPrior = function() {
+  // Params shared by all versions of the model
+  var baseParams = {
+    alpha : 4.7, //uniformDrift({a: 0, b: 40, w: 40/20}),
+    costWeight : 5.3,//uniformDrift({a: 0, b: 40, w: 40/20}),
+    pragWeight: .99//uniformDrift({a: 0, b: 1, w: 1/20})
+  };
+
+  var specificParams = (config.modelVersion === 'colorSize' ? {
+
+    colorTyp :        .6,//uniformDrift({a: .5, b: 1, w: .5/20}),
+    sizeTyp :         .6,//uniformDrift({a: .5, b: 1, w: .5/20}),
+    colorVsSizeCost : .6,//uniformDrift({a: 0, b: 1, w: 1/20}),
+    typWeight :       1
+    
+  } : _.includes(['typicality', 'nominal'], config.modelVersion) ? {
+
+    lengthVsFreqCost: .41,//uniformDrift({a: 0, b: 1, w: 1/20}),
+    typWeight :       4.4//uniformDrift({a: 0, b: 10, w: 10/20})
+        
+  } : console.error('unknown modelVersion: ' + config.modelVersion));
+
+  return extend(config, baseParams, specificParams);
+};
+
+var modelAnalysis = function() {
+
+  var params = paramPrior();
+  var lexicon = refModule.constructLexicon(params);
+  var speakerModel = initializeModel(extend(params, {lexicon}));
+
+  foreach(conditions, function(c) {
+    // Extract condition information
+    var conditionName = c.condition;
+    var context = c.context;
+    var target = context[0];
+    
+    // Run model
+    var modelOutput = speakerModel(target, context);
+
+    // Store predives
+    foreach(modelOutput.support(), function(s){
+      var key = _.values(_.omit(c, 'context')).concat(s);
+      var newPair = _.zipObject([key], [Math.exp(modelOutput.score(s))]);
+      globalStore.predictives = extend(globalStore.predictives, newPair);
+    });
+  });
+
+  return {output: globalStore.predictives,
+	  version : params.modelVersion + '_predictives:obj'}; //predictive: globalStore.predictives, 
+};
+
+var outputERP = Infer({method:'enumerate', model: modelAnalysis});
+refModule.bayesianErpWriter(outputERP);
