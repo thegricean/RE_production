@@ -48,7 +48,7 @@ var forwardModel = function() {
 	.join(',');
     }, modelOutput.support());
   }, _.keys(contexts));
-  return {simulations : _.flatten(predictives)};
+  return {output : _.flatten(predictives), version : argv.modelVersion + '_simulations:list'};
 };
 
 var outputERP = Infer({method:'enumerate', model: forwardModel});
