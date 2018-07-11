@@ -2,6 +2,41 @@ var _ = require('lodash');
 var fs = require('fs');
 var babyparse = require('babyparse');
 
+var getCostData = function(modelVersion) {
+  // cost files are indexed by experiment number...
+  var expNum = modelVersion == 'typicality' ? 'exp2' : 'exp3';
+  var rawData = readCSV("../data/cost_" + expNum + ".csv");
+
+  // pre-normalize length
+  var maxLength = _.max(_.map(rawData, function(v) {return _.toFinite(v.length);}));
+  var minLength = _.min(_.map(rawData, function(v) {return _.toFinite(v.length);}));
+  var standardizedLengths = _.map(rawData, function(v) {
+    return {label: v.target, length: (v.length - minLength)/(maxLength - minLength)};
+  });
+
+  // pre-normalize freq
+  var maxFreq = _.max(_.map(rawData, function(v) {return _.toFinite(v.freq);}));
+  var minFreq = _.min(_.map(rawData, function(v) {return _.toFinite(v.freq);}));
+
+  var standardizedFreqs = _.map(rawData, function(v) {
+    // unfortunately, exp3 freqs aren't already logged so we have to log everything before
+    // normalizing to [0,1]
+    return {label: v.target,
+	    freq : (expNum == 'exp3' ?
+		    (Math.log(v.freq) - Math.log(minFreq))/(Math.log(maxFreq) - Math.log(minFreq)) :
+		    (v.freq - minFreq)/(maxFreq - minFreq))};
+  });
+
+  return {'freq' : _.keyBy(standardizedFreqs, "label"),
+	  'length' : _.keyBy(standardizedLengths, "label")};
+};
+
+// Preload these...
+var costData = {
+  'typicality' : getCostData('typicality'),
+//  'nominal'    : getCostData('nominal')
+};
+
 function cartesianProductOf(list_of_lists) {
   return _.reduce(list_of_lists, function(a, b) {
     return _.flatten(_.map(a, function(x) {
@@ -38,7 +73,7 @@ var getNominalUtterances = function(object, tax) {
 
 var getTypicalityUtterances = function(context) {
   return _.uniq(_.flatten(_.map(context, function(itemArr) {
-    return [itemArr[0], itemArr[1], itemArr.join('_')];
+    return [itemArr.color, itemArr.item, itemArr.color + '_' + itemArr.item];
   })));
 };
 
@@ -99,11 +134,11 @@ function getTestContexts(modelVersion){
 
 // TODO: these paths could cause problems if we refactor module
 function getData(modelVersion) {
-  return require('../bdaInput/bda_data_' + modelVersion + '.json');
+  return require('../bdaInput/' + modelVersion + '/bda_data.json');
 }
 
 function getConditions(modelVersion) {
-  return require('../bdaInput/unique_conditions_' + modelVersion + '.json');
+  return require('../bdaInput/' + modelVersion + '/unique_conditions.json');
 }
 
 function writeCSV(jsonCSV, filename){
@@ -136,7 +171,7 @@ var writeERP = function(erp, labels, filename, fixed) {
 };
 
 var supportWriter = function(s, p, handle) {
-  var sLst = _.pairs(s);
+  var sLst = _.toPairs(s);
   var l = sLst.length;
 
   for (var i = 0; i < l; i++) {
@@ -151,36 +186,47 @@ var predictiveSupportWriter = function(s, p, handle) {
   }
 };
 
+var getHeader = function(version) {
+  if(version == 'sizeColor_simulation') {
+    return ['context','alpha', "costWeight", 'modelVersion', "colorTyp",
+	    "sizeTyp", "typeTyp", "colorVsSizeCost",
+	    "typWeight", "utterance", "logModelProb"];
+  } else if (version == 'sizeColor_params') {
+    return;
+  } else if (version == 'sizeColor_predictives') {
+    return;
+  } else if (version == 'typicality_params') {
+    return ['alpha', 'costWeight', 'pragWeight', 'lengthVsFreqCost', 'typWeight',
+	    'logLikelihood', 'outputProb'];
+  } else if (version == 'typicality_predictives') {
+    return ['condition','t_color', "t_item", 'd1_color', "d1_item",
+	    "d2_color", "d2_item", "response", "logModelProb"];
+  } else if (version == 'nominal_params') {
+    return;
+  } else if (version == 'nominal_predictives') {
+    return;
+  } else {
+    console.error('unknown version: ' + version[0]);
+  }
+};
+
+
 // Note this is highly specific to a single type of erp
-var bayesianErpWriter = function(erp, filePrefix) {
+var bayesianErpWriter = function(erp) {
+
   var supp = erp.support();
+  var version = supp[0]['version'].split(':');
+  var header = getHeader(version[0]);
 
-  if(_.has(supp[0], 'simulations')) {
-    var predictiveFile = fs.openSync(filePrefix + ".csv", 'w');
-    fs.writeSync(predictiveFile, ['context','alpha', "costWeight", 'modelVersion', "colorTyp",
-				  "sizeTyp", "typeTyp", "colorVsSizeCost",
-				  "typWeight", "utterance",
-				  "logModelProb"] + '\n');
-  }
-  if(_.has(supp[0], 'params')) {
-    var paramFile = fs.openSync(filePrefix + "Params.csv", 'w');
-    fs.writeSync(paramFile, ["perception", "pragmatics", "production", "alpha",
-			     "simScaling", "pragWeight","costWeight",
-			     "logLikelihood", "posteriorProb"] + '\n');
-  }
-
+  var fileHandle = fs.openSync('./bdaOutput/' + version[0] + ".csv", 'w');
+  fs.writeSync(fileHandle, header.join(',') + '\n');
   supp.forEach(function(s) {
-    if(_.has(s, 'simulations'))
-      predictiveSupportWriter(s.simulations, erp.score(s), predictiveFile);
-    if(_.has(s, 'params'))
-      supportWriter(s.params, erp.score(s), paramFile);
+    if(version[1] == 'list')
+      predictiveSupportWriter(s.output, erp.score(s), fileHandle);
+    else if(version[1] == 'obj')
+      supportWriter(s.output, erp.score(s), fileHandle);
   });
-  if(_.has(supp[0], 'predictives')) {
-    fs.closeSync(predictiveFile);
-  }
-  if(_.has(supp[0], 'params')) {
-    fs.closeSync(paramFile);
-  }
+  fs.closeSync(fileHandle);
   console.log('writing complete.');
 };
 
@@ -202,28 +248,44 @@ var locParse = function(filename) {
         skipEmptyLines : true}).data;
 };
 
-var getFrequencyData = function(modelVersion) {
-  return require("./json/" + modelVersion + "-freq.json");
-};
-
-var getLengthData = function(modelVersion) {
-  return require("./json/" + modelVersion + "-length.json");
-};
-
-var standardizeVal = function(data, val) {
-  var maxVal = _.max(_.values(data));
-  var minVal = _.min(_.values(data));
-  return (val - minVal)/(maxVal - minVal);
-};
-
 var getRelativeLogFrequency = function(params, label) {
-  var frequencyData = getFrequencyData(params.modelVersion);
-  return 1-standardizeVal(frequencyData, frequencyData[label]);
+  var frequencyData = costData[params.modelVersion]['freq'];
+  return frequencyData[label]['freq'];
 };
 
 var getRelativeLength = function(params, label) {
-  var lengthData = getLengthData(params.modelVersion);
-  return standardizeVal(lengthData, lengthData[label]);
+  var lengthData = costData[params.modelVersion]['length'];
+  if(_.isUndefined(lengthData[label]))
+    console.log(label);
+  return lengthData[label]['length'];
+};
+
+var meaning = function(utt, object, params) {
+  var objStr = _.values(object).join("_");
+  var lexicalEntry = params.lexicon[utt];
+  return _.has(lexicalEntry, objStr) ? lexicalEntry[objStr] : -100; 
+};
+
+function _logsumexp(a) {
+  var m = Math.max.apply(null, a);
+  var sum = 0;
+  for (var i = 0; i < a.length; ++i) {
+    sum += (a[i] === -Infinity ? 0 : Math.exp(a[i] - m));
+  }
+  return m + Math.log(sum);
+}
+
+// P(target | sketch) = e^{scale * sim(t, s)} / (\sum_{i} e^{scale * sim(t, s)})
+// => log(p) = scale * sim(target, sketch) - log(\sum_{i} e^{scale * sim(t, s)})
+var getL0score = function(target, utt, context, params) {
+  var lexicon = params.lexicon;
+  var scores = [];
+  for(var i=0; i<context.length; i++){
+    var m = meaning(utt, context[i], params);
+    scores.push(params.typWeight * m);
+  }
+  var targetM = meaning(utt, target, params);
+  return params.typWeight * targetM - _logsumexp(scores);
 };
 
 module.exports = {
@@ -231,6 +293,7 @@ module.exports = {
   constructLexicon, powerset, getSubset, 
   bayesianErpWriter, writeERP, writeCSV, readCSV, getTestContexts,
   getData, getConditions, obj_product,
+  getL0score,
   getRelativeLength, getRelativeLogFrequency, getTypSubset,
   colors, sizes
 };
