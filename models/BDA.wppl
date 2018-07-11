@@ -6,47 +6,48 @@
 // Fix some configuration options
 var config = {
   'storePredictives' : false,
-  'outputFileName' : 'bdaOutput-' + argv.modelVersion
+  'modelVersion' : argv.modelVersion
 };
 
 // Pull in requested data/conditions 
-var data = refModule.getData(argv.modelVersion);
+var data = refModule.getData(config.modelVersion);
 console.log("Loading data... found" + data.length + " data points");
 
-var conditions = refModule.getConditions(argv.modelVersion);
+var conditions = refModule.getConditions(config.modelVersion);
 console.log("Loading unique conditions... found" + conditions.length);
 
-var paramPrior = function(modelVersion) {
+var paramPrior = function() {
   // Params shared by all versions of the model
   var baseParams = {
     alpha : uniformDrift({a: 0, b: 40, w: 40/20}),
-    costWeight : uniformDrift({a: 0, b: 1, w: 1/20})
+    costWeight : uniformDrift({a: 0, b: 40, w: 40/20}),
+    pragWeight: uniformDrift({a: 0, b: 1, w: 1/20})
   };
 
-  var specificParams = (modelVersion === 'colorSize' ? {
+  var specificParams = (config.modelVersion === 'colorSize' ? {
 
     colorTyp :        uniformDrift({a: .5, b: 1, w: .5/20}),
     sizeTyp :         uniformDrift({a: .5, b: 1, w: .5/20}),
     colorVsSizeCost : uniformDrift({a: 0, b: 1, w: 1/20}),
     typWeight :       1
     
-  } : _.includes(['typicality', 'nominal'], modelVersion) ? {
+  } : _.includes(['typicality', 'nominal'], config.modelVersion) ? {
 
-    lengthVsFreqCost: uniform( 0,  1),
-    typWeight :       uniform( 0, 10)
+    lengthVsFreqCost: uniformDrift({a: 0, b: 1, w: 1/20}),
+    typWeight :       uniformDrift({a: 0, b: 10, w: 10/20})
         
-  } : console.error('unknown modelVersion: ' + modelVersion));
+  } : console.error('unknown modelVersion: ' + config.modelVersion));
 
   return extend(config, baseParams, specificParams);
 };
 
 var modelAnalysis = function() {
 
-  var params = paramPrior(argv.modelVersion);
+  var params = paramPrior();
   var lexicon = refModule.constructLexicon(params);
   var speakerModel = initializeModel(extend(params, {lexicon}));
 
-  foreach(conditions, function(c) {
+  var likelihood = reduce(function(c, memo) {
     // Extract condition information
     var conditionName = c.condition;
     var context = c.context;
@@ -66,16 +67,20 @@ var modelAnalysis = function() {
     
     // Condition on data
     var itemData = refModule.getSubset(data, _.omit(c, 'context'));
-    mapData({data: itemData}, function(datum) {
-      observe(modelOutput, datum.response);
-    });
-  });
+    return memo + reduce(function(datum, memo) {
+      return memo + modelOutput.score(datum.response);
+    }, 0, itemData);
+  }, 0, conditions);
 
-  return {params : params}; //predictive: globalStore.predictives, 
+  factor(likelihood);
+  console.log(likelihood);
+  var paramsKey = _.values(_.omit(params, ['storePredictives', 'modelVersion'])).join(',');
+  return {
+    output : _.zipObject([paramsKey], [likelihood]),
+    version: params.modelVersion + '_params:obj'
+  }; //predictive: globalStore.predictives, 
 };
 
-var outputERP = Infer({method:'MCMC', //kernel: {HMC: {steps: 10, stepSize: 1}},
-		       samples: 1000, lag: 5, burn: 1000, verbose: true,
-		       onlyMAP: true, model: modelAnalysis});
-console.log(outputERP);
-// refModule.bayesianErpWriter(outputERP, "./bdaOutput/" + config.outputFileName);
+var outputERP = Infer({model: modelAnalysis, method:'MCMC', verbose: true,
+		       samples: 10, lag: 0, burn: 1});
+refModule.bayesianErpWriter(outputERP);

@@ -53,6 +53,12 @@ var initializeModel = function(params) {
     }});
   });
 
+  var informativity = function(target, utt, context, params) {
+    var S0inf = Math.log(meaning(utt, target));
+    var S1inf = refModule.getL0score(target, utt, context, params);
+    return ((1 - params.pragWeight) * S0inf + params.pragWeight * S1inf);
+  };
+  
   // Selects among utterances given informativity in context and cost of production,
   // marginalizing over possible noise in perception of context
   // Timeit note: marginalizing over listener takes about 200-300ms per utt
@@ -60,9 +66,10 @@ var initializeModel = function(params) {
     var utts = possibleUtts(target, context);
     return Infer({method:'enumerate', model: function(){
       var utt = uniformDraw(utts);
-      var utility = ((1-params.costWeight) * literalListener(utt, context).score(target)
+      // this is a fast shortcut for literalListener(utt, context).score(target)
+      var utility = (params.alpha * informativity(target, utt, context, params)
 		     - params.costWeight * uttCost(utt));
-      factor(params.alpha * utility);
+      factor(utility);
       return utt;
     }});
   };
