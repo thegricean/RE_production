@@ -17,14 +17,13 @@ var initializeModel = function(params) {
   // TODO
   // 1. double-check colors, types, sizes
   // 2. make sure length/freq either looks at right json or uses combined json
-  var uttCost = function(utt) {
-    var colorMention = _.intersection(refModule.colors, utt.split('_')).length;
-    var sizeMention = _.intersection(refModule.sizes, utt.split('_')).length;
-    
+  var uttCost = function(utt) {    
     var w = (params.modelVersion === 'colorSize' ?
 	     params.colorVsSizeCost :
 	     params.lengthVsFreqCost);
     if(params.modelVersion === 'colorSize') {
+      var colorMention = _.intersection(refModule.colors, utt.split('_')).length;
+      var sizeMention = _.intersection(refModule.sizes, utt.split('_')).length;
       return (w * colorMention +
 	      (1 - w) * sizeMention);
     } else if (_.includes(['nominal', 'typicality'], params.modelVersion))  {
@@ -36,8 +35,6 @@ var initializeModel = function(params) {
   };
 
   // Looks up meaning in given lexicon
-  // TODO
-  // 1. Fix lexicon for colorSize (currently data says 'size'/'othersize')
   var meaning = function(utt, object) {
     var objStr = _.values(object).join("_");
     var lexicalEntry = params.lexicon[utt];
@@ -53,22 +50,16 @@ var initializeModel = function(params) {
     }});
   });
 
-  var informativity = function(target, utt, context, params) {
-    var S0inf = Math.log(meaning(utt, target));
-    var S1inf = refModule.getL0score(target, utt, context, params);
-    return ((1 - params.pragWeight) * S0inf + params.pragWeight * S1inf);
-  };
-  
   // Selects among utterances given informativity in context and cost of production,
   // marginalizing over possible noise in perception of context
-  // Timeit note: marginalizing over listener takes about 200-300ms per utt
+  // Timeit note: marginalizing over listener takes about 200-300ms per utt; pure js is faster
   var speaker = function(target, context) {
     var utts = possibleUtts(target, context);
     return Infer({method:'enumerate', model: function(){
       var utt = uniformDraw(utts);
       // this is a fast shortcut for literalListener(utt, context).score(target)
-      var utility = (params.alpha * informativity(target, utt, context, params)
-		     - params.costWeight * uttCost(utt));
+      var utility = (params.alpha * refModule.getL0score(target, utt, context, params)
+      		     - params.costWeight * uttCost(utt));
       factor(utility);
       return utt;
     }});
