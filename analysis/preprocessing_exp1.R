@@ -154,8 +154,8 @@ targets$WeirdCases = FALSE
 targets[targets$redBDAUtterance != "other" & targets$CorrectProperty == 0  & !targets$gameid %in% c("3791-8","7569-e"),]$WeirdCases = TRUE
 
 # Write Bayesian data analysis files (data and unique conditions)
-write.csv(targets[targets$redBDAUtterance != "other" & targets$WeirdCases == FALSE,c("gameid","roundNum","condition","BDASize","BDAColor","BDAOtherColor","BDAItem","redBDAUtterance")],file="../models/bdaInput/colorSize/bda_data_colorSize.csv",quote=F,row.names=F)
-write.csv(unique(targets[targets$redBDAUtterance != "other" & targets$WeirdCases == FALSE,c("BDAColor","BDASize","condition","BDAOtherColor","BDAItem")]),file="../models/bdaInput/colorSize/unique_conditions_colorSize.csv",quote=F,row.names=F)
+write.csv(targets[targets$redBDAUtterance != "other" & targets$WeirdCases == FALSE,c("gameid","roundNum","condition","BDASize","BDAColor","BDAOtherColor","BDAItem","redBDAUtterance")],file="../models/bdaInput/colorSize/bda_data.csv",quote=F,row.names=F)
+write.csv(unique(targets[targets$redBDAUtterance != "other" & targets$WeirdCases == FALSE,c("BDAColor","BDASize","condition","BDAOtherColor","BDAItem")]),file="../models/bdaInput/colorSize/unique_conditions.csv",quote=F,row.names=F)
 
 # Write file for regression analysis and visualization (this includes the 6 cases where the insufficient dimension was underinformatively mentioned)
 dd = targets %>%

@@ -133,7 +133,7 @@ tmp = exp3_post_targets[(exp3_post_targets$sub | exp3_post_targets$basic | exp3_
                                   ifelse(super, "super", "other")))) %>%
   select(gameid, roundNum, targetName, alt1Name, alt2Name, refLevel)
 
-write.csv(tmp, "../models/bdaInput/exp3_bdaInput/nominal/bda_data.csv", row.names = F, quote = F)
+write.csv(tmp, "../models/bdaInput/nominal/bda_data.csv", row.names = F, quote = F)
 
 
 
