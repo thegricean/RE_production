@@ -72,8 +72,9 @@ var modelAnalysis = function() {
   }, 0, conditions);
 
   factor(likelihood);
-  console.log(likelihood);
+  //console.log(likelihood);
   var paramsKey = _.values(_.omit(params, ['storePredictives', 'modelVersion'])).join(',');
+  //console.log(_.keys(_.omit(params, ['storePredictives', 'modelVersion'])).join(','));
   return {
     output : _.zipObject([paramsKey], [likelihood]),
     version: params.modelVersion + '_params:obj'
@@ -81,6 +82,6 @@ var modelAnalysis = function() {
 };
 
 var outputERP = Infer({model: modelAnalysis, method:'MCMC', verbose: true,
-		       samples: 5000, lag: 1, burn: 10000});
+		       samples: 2000, lag: 10, burn: 10000});
 
 refModule.bayesianErpWriter(outputERP);
