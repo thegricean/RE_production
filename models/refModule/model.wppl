@@ -18,17 +18,16 @@ var initializeModel = function(params) {
   // 1. double-check colors, types, sizes
   // 2. make sure length/freq either looks at right json or uses combined json
   var uttCost = function(utt) {    
-    var w = (params.modelVersion === 'colorSize' ?
-	     params.colorVsSizeCost :
-	     params.lengthVsFreqCost);
     if(params.modelVersion === 'colorSize') {
       var colorMention = _.intersection(refModule.colors, utt.split('_')).length;
       var sizeMention = _.intersection(refModule.sizes, utt.split('_')).length;
-      return (w * colorMention +
-	      (1 - w) * sizeMention);
+      return (params.colorCost * colorMention +
+	      params.sizeCost * sizeMention);
     } else if (_.includes(['nominal', 'typicality'], params.modelVersion))  {
-      return (w * refModule.getRelativeLength(params, utt) +
-	      (1 - w) * refModule.getRelativeLogFrequency(params, utt));
+      var w = params.lengthVsFreqCost;
+      var val = (w * refModule.getRelativeLength(params, utt) +
+		 (1 - w) * refModule.getRelativeLogFrequency(params, utt));
+      return params.costWeight * val;
     } else {
       return console.error('unknown modelVersion: ' + params.modelVersion);
     }
@@ -59,7 +58,7 @@ var initializeModel = function(params) {
       var utt = uniformDraw(utts);
       // this is a fast shortcut for literalListener(utt, context).score(target)
       var utility = (params.alpha * refModule.getL0score(target, utt, context, params)
-      		     - params.costWeight * uttCost(utt));
+      		     - uttCost(utt));
       factor(utility);
       return utt;
     }});

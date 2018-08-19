@@ -19,19 +19,20 @@ console.log("Loading unique conditions... found" + conditions.length);
 var paramPrior = function() {
   // Params shared by all versions of the model
   var baseParams = {
-    alpha : uniformDrift({a: 0, b: 40, w: 40/20}),
-    costWeight : uniformDrift({a: 0, b: 40, w: 40/20})
+    alpha : uniformDrift({a: 0, b: 40, w: 40/20})
   };
 
   var specificParams = (config.modelVersion === 'colorSize' ? {
 
     colorTyp :        uniformDrift({a: .5, b: 1, w: .5/20}),
     sizeTyp :         uniformDrift({a: .5, b: 1, w: .5/20}),
-    colorVsSizeCost : uniformDrift({a: 0, b: 1, w: 1/20}),
+    colorCost :       uniformDrift({a: 0, b: 40, w: 40/20}),
+    sizeCost :        uniformDrift({a: 0, b: 40, w: 40/20}),    
     typWeight :       1
     
   } : _.includes(['typicality', 'nominal'], config.modelVersion) ? {
 
+    costWeight :      uniformDrift({a: 0, b: 40, w: 40/20}),
     lengthVsFreqCost: uniformDrift({a: 0, b: 1, w: 1/20}),
     typWeight :       uniformDrift({a: 0, b: 10, w: 10/20})
         
