@@ -26,12 +26,50 @@ options("scipen"=10)
 source("./helper_scripts/model_helpers.R")
 ```
 
+# Analyze color-size results
+
+```{r}
+params <- read_csv("../models/bdaOutput/colorSize_params.csv") %>%
+  gather(parameter, value, alpha:typWeight)
+
+params %>% 
+  group_by(parameter) %>%
+  summarize(mode = estimate_mode(value),
+            md_lo = round(HPDlo(value), 3),
+            md_hi = round(HPDhi(value), 3))
+```
+
+```{r}
+numSamples = nrow(params)/length(unique(params$parameter))
+params.samples <- params[rep(row.names(params), exp(params$outputProb)*numSamples), 3:4]
+
+answererParamPosteriors = ggplot(params.samples %>% filter(parameter %in% c('colortyp', 'sizeTyp')), aes(x=value))+
+    geom_histogram(aes(y=..density..),
+                   data=subset(params.samples, parameter == "colortyp"),
+                   binwidth = .005, colour="black", fill="white") +
+    geom_histogram(aes(y=..density..),
+                 data =subset(params.samples, parameter == "sizeTyp" ),
+                 binwidth = .005, colour="black", fill="white") +
+
+    geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "colortyp"),
+                 adjust = 5, alpha=.2, fill="#FF6666")+
+    geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "sizeTyp"),
+                 adjust = 5, alpha=.2, fill="#FF6666")+
+
+    ggtitle("Param Posteriors (2000 samples; lag = 10; burnin=10000)") +
+    facet_grid(parameter ~. , scales = 'free') +
+    theme_bw()
+answererParamPosteriors
+```
+
+# Analyze typicality results
 
 ### Load in model results
 
 ```{r}
 params <- read_csv("../models/typicality-params.csv")
-params %>% group_by(parameter, value) %>% summarize(prob = sum(MCMCprob))
 ```
 
 look at MAP, credible intervals...
@@ -112,7 +150,7 @@ agr = empirical %>%
 agr = as.data.frame(agr)
 ```
 
-# Import predictives data
+## Import predictives data
 
 ```{r}
 colors <- c("yellow","orange","red","pink", "green","blue","brown","black")
@@ -128,7 +166,7 @@ predictive<-read.csv("../models/typicality-predictives.csv") %>%
   summarize(modelProbability=mean(logModelProb)) 
 ```
 
-# Plot predictives w/ empirical data
+## Plot predictives w/ empirical data
 
 ```{r}
 combined <- left_join(agr, predictive)
