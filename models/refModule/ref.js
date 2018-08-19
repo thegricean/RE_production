@@ -80,7 +80,7 @@ var getTypicalityUtterances = function(context) {
 // utterances are only modifiers
 var getColorSizeUtterances = function(context) {
   return _.uniq(_.flattenDeep(_.map(context, function(obj) {
-    return _.map(_.filter(powerset([obj.size, obj.color, obj.type]), v => v != ''),
+    return _.map(_.filter(powerset([obj.size, obj.color]), v => v != ''),
 		 modifier => modifier.join('_'));
   })));
 };
@@ -98,7 +98,7 @@ var getColorSizeUttMeaning = function(params, utt, obj) {
     else if (_.includes(sizes, word))
       return word == obj.size ? params.sizeTyp : 1 - params.sizeTyp;
     else if (_.includes(types, word))
-      return word == obj.type ? params.typeTyp : 1 - params.typeTyp;
+      return word == obj.item ? params.typeTyp : 1 - params.typeTyp;
     else
       console.error('word ' + word + ' not recognized');
   });
@@ -107,10 +107,16 @@ var getColorSizeUttMeaning = function(params, utt, obj) {
 
 var constructLexicon = function(params) {
   if(params.modelVersion === 'colorSize') {
-    var utts = getColorSizeUtterances(params.context);
-    var objs = _.map(params.context, obj => _.values(obj).join("_"));
+    var completeContext = [
+      {size : 'size', color : 'color', item : 'item'},
+      {size : 'othersize', color : 'color', item : 'item'},
+      {size : 'size', color : 'othercolor', item : 'item'},
+      {size : 'othersize', color : 'othercolor', item : 'item'}
+    ];
+    var utts = getColorSizeUtterances(completeContext);
+    var objs = _.map(completeContext, obj => _.values(obj).join("_"));
     return _.zipObject(utts, _.map(utts, function(utt) {
-      return _.zipObject(objs, _.map(params.context, function(obj) {
+      return _.zipObject(objs, _.map(completeContext, function(obj) {
 	return getColorSizeUttMeaning(params, utt, obj);
       }));
     }));
@@ -187,13 +193,14 @@ var predictiveSupportWriter = function(s, p, handle) {
 };
 
 var getHeader = function(version) {
-  if(version == 'sizeColor_simulation') {
+  if(version == 'colorSize_simulation') {
     return ['context','alpha', "costWeight", 'modelVersion', "colorTyp",
 	    "sizeTyp", "typeTyp", "colorVsSizeCost",
 	    "typWeight", "utterance", "logModelProb"];
-  } else if (version == 'sizeColor_params') {
-    return;
-  } else if (version == 'sizeColor_predictives') {
+  } else if (version == 'colorSize_params') {
+    return ['alpha', 'costWeight', 'pragWeight', 'colortyp', 'sizeTyp',
+	    'colorVsSizeCost', 'typWeight'];
+  } else if (version == 'colorSize_predictives') {
     return;
   } else if (version == 'typicality_params') {
     return ['alpha', 'costWeight', 'pragWeight', 'lengthVsFreqCost', 'typWeight',
@@ -206,7 +213,7 @@ var getHeader = function(version) {
   } else if (version == 'nominal_predictives') {
     return;
   } else {
-    console.error('unknown version: ' + version[0]);
+    console.error('unknown version: ' + version);
   }
 };
 
@@ -216,8 +223,10 @@ var bayesianErpWriter = function(erp) {
 
   var supp = erp.support();
   var version = supp[0]['version'].split(':');
+  console.log('version');
+  console.log(version)
   var header = getHeader(version[0]);
-
+  console.log(header);
   var fileHandle = fs.openSync('./bdaOutput/' + version[0] + ".csv", 'w');
   fs.writeSync(fileHandle, header.join(',') + '\n');
   supp.forEach(function(s) {
