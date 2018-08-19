@@ -30,7 +30,9 @@ source("./helper_scripts/model_helpers.R")
 
 ```{r}
 params <- read_csv("../models/bdaOutput/colorSize_params.csv") %>%
-  gather(parameter, value, alpha:typWeight)
+  mutate(costDiff = colorCost - sizeCost) %>%
+  mutate(typDiff = colorTyp - sizeTyp) %>%
+  gather(parameter, value, alpha:typWeight, costDiff, typDiff)
 
 params %>% 
   group_by(parameter) %>%
@@ -43,24 +45,62 @@ params %>%
 numSamples = nrow(params)/length(unique(params$parameter))
 params.samples <- params[rep(row.names(params), exp(params$outputProb)*numSamples), 3:4]
 
-answererParamPosteriors = ggplot(params.samples %>% filter(parameter %in% c('colortyp', 'sizeTyp')), aes(x=value))+
+answererParamPosteriors = ggplot(params.samples %>% filter(parameter %in% c('colorTyp', 'sizeTyp')), aes(x=value))+
     geom_histogram(aes(y=..density..),
-                   data=subset(params.samples, parameter == "colortyp"),
+                   data=subset(params.samples, parameter == "colorTyp"),
                    binwidth = .005, colour="black", fill="white") +
     geom_histogram(aes(y=..density..),
                  data =subset(params.samples, parameter == "sizeTyp" ),
                  binwidth = .005, colour="black", fill="white") +
 
     geom_density(aes(y=..density..),
-                 data=subset(params.samples, parameter == "colortyp"),
-                 adjust = 5, alpha=.2, fill="#FF6666")+
+                 data=subset(params.samples, parameter == "colorTyp"),
+                 adjust = 2.5, alpha=.2, fill="#FF6666")+
     geom_density(aes(y=..density..),
                  data=subset(params.samples, parameter == "sizeTyp"),
-                 adjust = 5, alpha=.2, fill="#FF6666")+
+                 adjust = 2.5, alpha=.2, fill="#FF6666")+
 
     ggtitle("Param Posteriors (2000 samples; lag = 10; burnin=10000)") +
     facet_grid(parameter ~. , scales = 'free') +
-    theme_bw()
+    theme_bw() +
+    xlim(.5, 1)
+answererParamPosteriors
+```
+
+Clearly see that color is much greater than size (basically non-overlapping posteriors)
+
+```{r}
+answererParamPosteriors = ggplot(params.samples %>% filter(parameter %in% c('costDiff')), aes(x=value))+
+    geom_histogram(data=subset(params.samples, parameter == "costDiff"),
+                   binwidth = .05, colour="black", fill="white") +
+
+    ggtitle("Param Posteriors (2000 samples; lag = 10; burnin=10000)") +
+    facet_grid(parameter ~. , scales = 'free') +
+    theme_bw() 
+    #xlim(.5, 1)
+answererParamPosteriors
+```
+
+```{r}
+answererParamPosteriors = ggplot(params.samples %>% filter(parameter %in% c('colorCost', 'sizeCost')), aes(x=value))+
+    geom_histogram(aes(y=..density..),
+                   data=subset(params.samples, parameter == "colorCost"),
+                   binwidth = .05, colour="black", fill="white") +
+    geom_histogram(aes(y=..density..),
+                 data =subset(params.samples, parameter == "sizeCost" ),
+                 binwidth = .05, colour="black", fill="white") +
+
+    geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "colorCost"),
+                 adjust = 2.5, alpha=.2, fill="#FF6666")+
+    geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "sizeCost"),
+                 adjust = 2.5, alpha=.2, fill="#FF6666")+
+
+    ggtitle("Param Posteriors (2000 samples; lag = 10; burnin=10000)") +
+    facet_grid(parameter ~. , scales = 'free') +
+    theme_bw() 
+    #xlim(.5, 1)
 answererParamPosteriors
 ```
 
