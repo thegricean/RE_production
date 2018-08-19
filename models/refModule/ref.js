@@ -198,12 +198,12 @@ var getHeader = function(version) {
 	    "sizeTyp", "typeTyp", "colorVsSizeCost",
 	    "typWeight", "utterance", "logModelProb"];
   } else if (version == 'colorSize_params') {
-    return ['alpha', 'costWeight', 'pragWeight', 'colortyp', 'sizeTyp',
-	    'colorVsSizeCost', 'typWeight'];
+    return ['alpha', 'costWeight', 'colorTyp', 'sizeTyp', 'colorVsSizeCost', 'typWeight',
+	    'logLikelihood', 'outputProb'];
   } else if (version == 'colorSize_predictives') {
     return;
   } else if (version == 'typicality_params') {
-    return ['alpha', 'costWeight', 'pragWeight', 'lengthVsFreqCost', 'typWeight',
+    return ['alpha', 'costWeight', 'lengthVsFreqCost', 'typWeight',
 	    'logLikelihood', 'outputProb'];
   } else if (version == 'typicality_predictives') {
     return ['condition','t_color', "t_item", 'd1_color', "d1_item",
