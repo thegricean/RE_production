@@ -9,6 +9,7 @@ output: html_notebook
 library(tidyverse)
 library(coda)
 library(lme4)
+library(gridExtra)
 estimate_mode <- function(s) {
   d <- density(s)
   return(d$x[which.max(d$y)])
@@ -45,7 +46,8 @@ params %>%
 numSamples = nrow(params)/length(unique(params$parameter))
 params.samples <- params[rep(row.names(params), exp(params$outputProb)*numSamples), 3:4]
 
-answererParamPosteriors = ggplot(params.samples %>% filter(parameter %in% c('colorTyp', 'sizeTyp')), aes(x=value))+
+labels <- c(colorTyp = "color", sizeTyp = "size")
+typParamPosteriors = ggplot(params.samples %>% filter(parameter %in% c('colorTyp', 'sizeTyp')), aes(x=value))+
     geom_histogram(aes(y=..density..),
                    data=subset(params.samples, parameter == "colorTyp"),
                    binwidth = .005, colour="black", fill="white") +
@@ -55,20 +57,69 @@ answererParamPosteriors = ggplot(params.samples %>% filter(parameter %in% c('col
 
     geom_density(aes(y=..density..),
                  data=subset(params.samples, parameter == "colorTyp"),
-                 adjust = 2.5, alpha=.2, fill="#FF6666")+
+                 adjust = 2, alpha=.2, fill="#FF6666")+
     geom_density(aes(y=..density..),
                  data=subset(params.samples, parameter == "sizeTyp"),
-                 adjust = 2.5, alpha=.2, fill="#FF6666")+
+                 adjust = 2, alpha=.2, fill="#FF6666")+
+    # ggtitle("Param Posteriors (2000 samples; lag = 10; burnin=10000)") +
+    facet_grid(parameter ~. , scales = 'free', labeller=labeller(parameter = labels)) +
+    theme_bw() +
+    xlim(.7, 1) +
+  ylab("Density") +
+  xlab("Semantic value")
+typParamPosteriors
+```
+
+Clearly see that color semantic vaue is much greater than size (basically non-overlapping posteriors).
+
+
+```{r}
+labels <- c(colorCost = "color", sizeCost = "size")
+costParamPosteriors = ggplot(params.samples %>% filter(parameter %in% c('colorCost', 'sizeCost')), aes(x=value))+
+    geom_histogram(aes(y=..density..),
+                   data=subset(params.samples, parameter == "colorCost"),
+                   binwidth = .02, colour="black", fill="white") +
+    geom_histogram(aes(y=..density..),
+                 data =subset(params.samples, parameter == "sizeCost" ),
+                 binwidth = .02, colour="black", fill="white") +
+
+    geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "colorCost"),
+                 adjust = 1, alpha=.2, fill="#FF6666")+
+    geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "sizeCost"),
+                 adjust = 1, alpha=.2, fill="#FF6666")+
+    ylab("Density") +
+  xlab("Cost") +
+
+    # ggtitle("Param Posteriors (2000 samples; lag = 10; burnin=10000)") +
+    facet_grid(parameter ~. , scales = 'free', labeller=labeller(parameter = labels)) +
+    theme_bw() 
+    #xlim(.5, 1)
+costParamPosteriors
+```
+
+Stick together semantic value and cost plots for paper.
+```{r}
+pdf(file="../writing/pics/exp1-paramposteriors.pdf",height=3.5,width=8)
+grid.arrange(typParamPosteriors,costParamPosteriors,nrow=1)
+dev.off()
+```
+
+Inferred difference in color and size semantic value always above zero:
+```{r}
+answererParamPosteriors = ggplot(params.samples %>% filter(parameter %in% c('typDiff')), aes(x=value))+
+    geom_histogram(data=subset(params.samples, parameter == "typDiff"),
+                   binwidth = .003, colour="black", fill="white") +
 
     ggtitle("Param Posteriors (2000 samples; lag = 10; burnin=10000)") +
     facet_grid(parameter ~. , scales = 'free') +
-    theme_bw() +
-    xlim(.5, 1)
+    theme_bw() 
+    #xlim(.5, 1)
 answererParamPosteriors
 ```
 
-Clearly see that color is much greater than size (basically non-overlapping posteriors)
-
+Inferred difference in color and size cost around zero:
 ```{r}
 answererParamPosteriors = ggplot(params.samples %>% filter(parameter %in% c('costDiff')), aes(x=value))+
     geom_histogram(data=subset(params.samples, parameter == "costDiff"),
@@ -81,28 +132,6 @@ answererParamPosteriors = ggplot(params.samples %>% filter(parameter %in% c('cos
 answererParamPosteriors
 ```
 
-```{r}
-answererParamPosteriors = ggplot(params.samples %>% filter(parameter %in% c('colorCost', 'sizeCost')), aes(x=value))+
-    geom_histogram(aes(y=..density..),
-                   data=subset(params.samples, parameter == "colorCost"),
-                   binwidth = .05, colour="black", fill="white") +
-    geom_histogram(aes(y=..density..),
-                 data =subset(params.samples, parameter == "sizeCost" ),
-                 binwidth = .05, colour="black", fill="white") +
-
-    geom_density(aes(y=..density..),
-                 data=subset(params.samples, parameter == "colorCost"),
-                 adjust = 2.5, alpha=.2, fill="#FF6666")+
-    geom_density(aes(y=..density..),
-                 data=subset(params.samples, parameter == "sizeCost"),
-                 adjust = 2.5, alpha=.2, fill="#FF6666")+
-
-    ggtitle("Param Posteriors (2000 samples; lag = 10; burnin=10000)") +
-    facet_grid(parameter ~. , scales = 'free') +
-    theme_bw() 
-    #xlim(.5, 1)
-answererParamPosteriors
-```
 
 # Analyze typicality results
 
