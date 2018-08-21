@@ -147,6 +147,10 @@ function getConditions(modelVersion) {
   return require('../bdaInput/' + modelVersion + '/unique_conditions.json');
 }
 
+function getParamPosterior(modelVersion) {
+  return readCSV('./bdaOutput/' + modelVersion + '_params.csv');
+}
+
 function writeCSV(jsonCSV, filename){
   fs.writeFileSync(filename, babyparse.unparse(jsonCSV) + '\n');
 }
@@ -201,7 +205,7 @@ var getHeader = function(version) {
     return ['alpha', 'costWeight', 'colorTyp', 'sizeTyp', 'colorVsSizeCost', 'typWeight',
 	    'logLikelihood', 'outputProb'];
   } else if (version == 'colorSize_predictives') {
-    return;
+    return ['color', 'size', 'condition', 'othercolor', 'item', 'utt', 'prob'];
   } else if (version == 'typicality_params') {
     return ['alpha', 'costWeight', 'lengthVsFreqCost', 'typWeight',
 	    'logLikelihood', 'outputProb'];
@@ -301,7 +305,8 @@ module.exports = {
   getNominalUtterances, getColorSizeUtterances, getTypicalityUtterances,
   constructLexicon, powerset, getSubset, 
   bayesianErpWriter, writeERP, writeCSV, readCSV, getTestContexts,
-  getData, getConditions, obj_product,
+  getData, getConditions, getParamPosterior,
+  obj_product,
   getL0score,
   getRelativeLength, getRelativeLogFrequency, getTypSubset,
   colors, sizes
