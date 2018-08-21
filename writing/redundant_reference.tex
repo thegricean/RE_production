@@ -46,14 +46,14 @@
 
 \VerbatimFootnotes
 
-\title{Over overinformativeness: rationally redundant referring expressions}
+\title{Over `overinformativeness': rationally redundant referring expressions}
 
 %\acknowledgments{Adele Goldberg, Florian Jaeger, Sarah Brown-Schmidt, Michael Franke, Herb Clark, audiences at CogSci 2016, CUNY 2017, Colloquia in Tuebingen, OSU Linguistics, Stanford Linguistics, CMU Philosophy, UC Davis Linguistics, Berkeley Psychology, Dartmouth Linguistics, CoCoLab, IMBS Quantitative Approaches to Language, Irvine}
  
-\author{{\large \bf Judith Degen, Robert X.D.~Hawkins, Caroline Graf, Elisa Kreiss, \& Noah D.~Goodman} \\
-  \{jdegen\}@stanford.edu\\
-  Department of Psychology, 450 Serra Mall \\
-  Stanford, CA 94305 USA}
+ \author{Judith Degen \and Robert X.D.~Hawkins \and Caroline Graf \and Elisa Kreiss \and Noah D.~Goodman}
+%   jdegen@stanford.edu\\
+%  Department of Linguistics, 450 Serra Mall \\
+%  Stanford, CA 94305 USA
 
 \begin{document}
 
@@ -64,7 +64,7 @@
 Referring is one of the most basic and prevalent uses of language. How do speakers choose from the wealth of referring expressions at their disposal? Rational theories of language use have come under attack for decades for not being able to account for the seemingly irrational overinformativeness ubiquitous in referring expressions. Here we present a novel production model of referring expressions within the Rational Speech Act framework that treats speakers as agents that rationally trade off cost and informativeness of utterances. Crucially, the assumption of deterministic meanings is relaxed. This allows us to capture a large number of seemingly disparate phenomena within one unified framework: the basic asymmetry in speakers' propensity to overmodify with color rather than size; the increase in overmodification in complex scenes; the increase in overmodification with atypical features; and the preference for basic level reference in nominal reference. The findings cast a new light on the production of referring expressions: rather than being wastefully overinformative, reference is rationally redundant. This implicates a production system geared towards communicative efficiency.
 
 \textbf{Keywords:} 
-reference; referring expressions; informativeness; probabilistic pragmatics; experimental pragmatics
+reference; referring expressions; informativeness; overinformativeness; adjectives; probabilistic pragmatics; experimental pragmatics
 \end{abstract}
 
 \tableofcontents
@@ -541,7 +541,8 @@ Proportions of redundant \emph{color-and-size} and minimal \emph{color} or \emph
 \centering
 %\includegraphics[width=\textwidth]{../../../models/1a_bda_basic/results_bda/graphs/scenevariation-fixed-reducedconditions}
 %old location: \includegraphics[width=.7\textwidth]{../../../models/old/1a_bda_basic/results_bda/graphs/scenevariation-fixed-reducedconditions-unlogged}
-\includegraphics[width=\textwidth]{pics/scenevariation-fixed-reducedconditions-unlogged}
+%\includegraphics[width=\textwidth]{pics/scenevariation-fixed-reducedconditions-unlogged}
+\includegraphics[width=.9\textwidth]{pics/exp1-empirical-predictives}
 \caption{Empirical utterance proportions  (red)  alongside point-wise maximum a posteriori (MAP) estimates of the RSA model's posterior predictives for utterance probability (blue) as a function of scene variation. Rows indicate the sufficient dimension, columns the produced utterance. Here and in all following plots, error bars indicate 95\% bootstrapped confidence intervals.}
 \label{fig:exp1results}
 \end{figure}
@@ -559,15 +560,16 @@ We observed a main effect of sufficient property, such that speakers were more l
 In order to evaluate RSA with non-deterministic truth functions, we asked how well it captures the empirical data. To this end we conducted a Bayesian data analysis.  This allowed us to  simultaneously generate model predictions and infer likely parameter values, by conditioning on the observed production data (coded into \emph{size}, \emph{color}, and \emph{size-and-color} utterances as described above) and integrating over the following free parameters: semantic value for color $x_{\textrm{color}}$, semantic value for size $x_{\textrm{size}}$, color cost $c(u_{\textrm{color}})$, size cost $c(u_{\textrm{size}})$, cost weight $\beta_c$, and speaker rationality parameter $\alpha$. We assumed uniform priors for each parameter: $x_{\textrm{color}} \sim \mathcal{U}(0,1)$, $x_{\textrm{size}} \sim \mathcal{U}(0,1)$, $c(u_{\textrm{color}}) \sim \mathcal{U}(0,2)$, $c(u_{\textrm{size}}) \sim \mathcal{U}(0,2)$, $\beta_c \sim \mathcal{U}(0,10)$, $\alpha  \sim \mathcal{U}(0,40)$.
 Inference for the cognitive model was exact. We used Markov Chain Monte Carlo (MCMC) to infer posteriors for the six free parameters.
 
-\begin{figure}
-\centering
-%old location: \includegraphics[width=.7\textwidth]{../../../models/old/1a_bda_basic/results_bda/graphs/predictives-collapsed-fixed-reducedconditions-unlogged}
-\includegraphics[width=.7\textwidth]{pics/predictives-collapsed-fixed-reducedconditions-unlogged}
-\caption{Scatterplot of point-wise maximum a posteriori (MAP) estimates of the RSA model's posterior predictives against empirical proportions ($r=$.85). \jd{update this plot once bda run}}
-\label{fig:modelexp1scatter}
-\end{figure}
+% JD: throwing out the scatterplot because it doesn't add anything
+%\begin{figure}
+%\centering
+%%old location: \includegraphics[width=.7\textwidth]{../../../models/old/1a_bda_basic/results_bda/graphs/predictives-collapsed-fixed-reducedconditions-unlogged}
+%\includegraphics[width=.7\textwidth]{pics/predictives-collapsed-fixed-reducedconditions-unlogged}
+%\caption{Scatterplot of point-wise maximum a posteriori (MAP) estimates of the RSA model's posterior predictives against empirical proportions ($r=$.85). \jd{update this plot once bda run}}
+%\label{fig:modelexp1scatter}
+%\end{figure}
 
-Point-wise maximum a posteriori (MAP) estimates of the model's posterior predictives for each combination of utterance, sufficient dimension, number of distractors, and number of different distractors (collapsing across different items) are compared to empirical data in \figref{fig:modelexp1scatter}. At this level, the model achieves a correlation of $r = .99$. Looking at results additionally on the by-item level yields a correlation of $r = .85$. The model thus does a very good job of capturing the quantitative patterns in the data. This can also be seen in \figref{fig:exp1results}, where model predictions are plotted alongside the empirical proportions by condition. %The only clear flaw is that the model predicts greater redundant adjective use than empirically observed when there is no scene variation at all. \jd{Though this is a pretty minor thing. Noah, can you add a sentence on why, given that you've thought about this for the negation case as well? Or should we just leave it out?}.
+Point-wise maximum a posteriori (MAP) estimates of the model's posterior predictives for each combination of utterance, sufficient dimension, number of distractors, and number of different distractors (collapsing across different items) are compared to empirical data in \figref{fig:exp1results}. At this level, the model achieves a correlation of $r = .99$. Looking at results additionally on the by-item level yields a correlation of $r = .85$. The model thus does a very good job of capturing the quantitative patterns in the data. %The only clear flaw is that the model predicts greater redundant adjective use than empirically observed when there is no scene variation at all. \jd{Though this is a pretty minor thing. Noah, can you add a sentence on why, given that you've thought about this for the negation case as well? Or should we just leave it out?}.
 
 
 
@@ -1124,7 +1126,6 @@ In \sectionref{sec:reflevelmodel} we showed that continuous semantics RSA captur
 
 \textbf{\jd{Collected notes from email:}}
 
-\jd{Kennedy McNally 1999 for color terms degree semantics}
 
 \jd{Yaron's thesis for color adjectives}
 
@@ -1142,7 +1143,6 @@ In \sectionref{sec:reflevelmodel} we showed that continuous semantics RSA captur
 
 \jd{\cite{Clark2004}'s notion of "salience against the common ground" picks up Sarah B-S's comment at CUNY: "I'm calling it 'the blue banana' because the banana is frickin blue!". also: "originally treated as an autonomous, one-shot act by the speaker to enable a listener to identify the intended referent. It was viewed as addressee-blind or at least addressee-myopic. But with the arguments of Grice and Lewis, it came to be viewed as a cooperative, or coordinated, act that required speakers to consider their addressees" p. 45}
 
-\jd{"free gratis" -- include example?}
 
 \begin{table}
 \caption{Overview of the models used for the three different production datasets Color/size (Exp.~1), Color typicality (Exp.~2), and Nominal choice (Exp.~3).}

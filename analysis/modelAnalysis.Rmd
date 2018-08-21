@@ -29,6 +29,9 @@ source("./helper_scripts/model_helpers.R")
 
 # Analyze color-size results
 
+## Parameters
+
+Read parameter data from BDA and compute MAPs and HDIs.
 ```{r}
 params <- read_csv("../models/bdaOutput/colorSize_params.csv") %>%
   mutate(costDiff = colorCost - sizeCost) %>%
@@ -131,6 +134,145 @@ answererParamPosteriors = ggplot(params.samples %>% filter(parameter %in% c('cos
     #xlim(.5, 1)
 answererParamPosteriors
 ```
+
+## Predictives
+
+Load empirical data and get into right format.
+
+```{r}
+emp = read.csv("../models/bdaInput/colorSize/bda_data.csv")
+colnames(emp) = c("ID","Trial","Condition","Size","Color","OtherColor","Item","Utterance")
+empirical = emp %>%
+  mutate(CondLength = nchar(as.character(Condition))) %>%
+  mutate(SufficientDimension = 
+           case_when( CondLength == 7 ~ "color",
+                      CondLength == 6 ~ "size",
+                      TRUE ~ "error"),
+         NumDistractors = as.numeric(as.character(str_sub(Condition,CondLength-1,CondLength-1))),
+         NumSameDistractors = as.numeric(as.character(str_sub(Condition,CondLength,CondLength))),
+         NumDiffDistractors = NumDistractors-NumSameDistractors,
+         Variation = NumDiffDistractors/NumDistractors) %>%
+  select(SufficientDimension,NumDistractors,Variation,Utterance) %>%
+  mutate(Color = Utterance == "color",
+         Size = Utterance == "size",
+         Size_Color = Utterance == "size_color") %>%
+  group_by(SufficientDimension,NumDistractors,Variation) %>%
+  summarize(ProbColor = mean(Color),ProbSize = mean(Size),ProbSize_Color = mean(Size_Color),CILowC=ci.low(Color),CIHighC=ci.high(Color),CILowS=ci.low(Size),CIHighS=ci.high(Size),CILowSC=ci.low(Size_Color),CIHighSC=ci.high(Size_Color)) %>%
+  ungroup() %>%
+  mutate(YMinSize=ProbSize-CILowS,YMaxSize=ProbSize+CIHighS,YMinColor=ProbColor-CILowC,YMaxColor=ProbColor+CIHighC,YMinSize_Color=ProbSize_Color-CILowSC,YMaxSize_Color=ProbSize_Color+CIHighSC)
+
+tmp_prob = empirical %>%
+  select(SufficientDimension,NumDistractors,Variation,ProbColor,ProbSize,ProbSize_Color) %>%
+  gather(Utterance, Probability,-SufficientDimension,-NumDistractors,-Variation) %>%
+  mutate(Utterance=gsub("Prob","",as.character(Utterance)))
+
+tmp_ymin = empirical %>%
+  select(SufficientDimension,NumDistractors,Variation,YMinColor,YMinSize,YMinSize_Color) %>%
+  gather(Utterance, YMin,-SufficientDimension,-NumDistractors,-Variation) %>%
+  mutate(Utterance=gsub("YMin","",as.character(Utterance)))
+
+tmp_ymax = empirical %>%
+  select(SufficientDimension,NumDistractors,Variation,YMaxColor,YMaxSize,YMaxSize_Color) %>%
+  gather(Utterance, YMax,-SufficientDimension,-NumDistractors,-Variation) %>%
+  mutate(Utterance=gsub("YMax","",as.character(Utterance)))
+
+empirical = tmp_prob %>%
+  left_join(tmp_ymin,by=c("SufficientDimension","NumDistractors","Variation","Utterance")) %>%
+  left_join(tmp_ymax,by=c("SufficientDimension","NumDistractors","Variation","Utterance")) %>%
+  mutate(Utterance = tolower(Utterance),
+         Data = "empirical")
+```
+
+Load predictives and get into right format.
+```{r}
+pred = read.csv("../models/bdaOutput/colorSize_predictives.csv",quote="")
+colnames(pred)=c("Color","Size","Condition","OtherColor","Item","Utterance","Probability","Zero")
+predictives = pred %>%
+  mutate(CondLength = nchar(as.character(Condition))) %>%
+  mutate(SufficientDimension = 
+           case_when( CondLength == 7 ~ "color",
+                      CondLength == 6 ~ "size",
+                      TRUE ~ "error"),
+         NumDistractors = as.numeric(as.character(str_sub(Condition,CondLength-1,CondLength-1))),
+         NumSameDistractors = as.numeric(as.character(str_sub(Condition,CondLength,CondLength))),
+         NumDiffDistractors = NumDistractors-NumSameDistractors,
+         Variation = NumDiffDistractors/NumDistractors,
+         Probability = exp(Probability)) %>%
+  filter(Utterance %in% c("size","color","size_color")) %>%
+  select(SufficientDimension,NumDistractors,Variation,Utterance,Probability) %>%
+  mutate(Data = "model",
+         YMin = NA,
+         YMax = NA)
+```
+
+Bind empirical and predictives and plot (Fig 8 in paper).
+```{r}
+d = rbind(empirical,predictives)
+
+ggplot(d, aes(x=Variation,y=Probability,color=Data)) +
+  geom_errorbar(aes(ymin=YMin,ymax=YMax)) +
+  geom_point(aes(shape=as.character(NumDistractors))) +
+  xlab("Scene variation") +
+  ylab("Utterance probability") +
+  labs(shape="Number of\ndistractors") +
+  facet_grid(SufficientDimension~Utterance)
+ggsave("../writing/pics/exp1-empirical-predictives.pdf",height=3.5,width=6.7)
+```
+
+
+
+FIXME CONTINUE HERE WITH THE OTHER TWO MODEL ANALYSES
+
+
+## Import predictives data
+
+```{r}
+colors <- c("yellow","orange","red","pink", "green","blue","brown","black")
+types <- c('apple', 'avocado', 'banana', 'carrot', 'pear', 'tomato', 'pepper')
+predictive<-read.csv("../models/typicality-predictives.csv") %>%
+  rowwise() %>%
+  mutate(target_item = paste0(c(as.character(t_color), as.character(t_item)), collapse = '_')) %>%
+  filter(response %in% c(as.character(t_color), as.character(t_item), target_item)) %>%
+  mutate(utterance = ifelse(as.character(response) %in% colors, 'color', 
+                            ifelse(as.character(response) %in% types, 'item',
+                                   'color_item'))) %>%
+  group_by(condition, utterance, target_item) %>%
+  summarize(modelProbability=mean(logModelProb)) 
+```
+
+## Plot predictives w/ empirical data
+
+```{r}
+combined <- left_join(agr, predictive)
+answer_plots = (ggplot(combined, aes(x = modelProbability, y = Probability))
+  + geom_errorbar(aes(ymax = YMax, ymin = YMin), alpha = .2) 
+  + geom_point(aes(colour = condition))
+  + geom_abline(intercept = 0, slope = 1, linetype = "dotted")
+  + scale_x_continuous(lim = c(0,1), breaks=c(0,.5,1))
+  + ggtitle("Answerer Posterior Predictive")
+  #+ geom_smooth(method = "lm")
+  + xlab("Model predicted probability")
+  + ylim(0,1)
+  + facet_wrap(~ utterance)
+  #+ geom_text(aes(label=utterance), size = 2)
+  + ylab("Empirical Probability")
+  + theme_bw()   
+  + theme(text = element_text(size = 10),  axis.text.x = element_text(angle=90, vjust=1), aspect.ratio = 1)
+)
+answer_plots
+#dev.off()
+```
+
+Look at R^2
+
+```{r}
+summary(lm(Probability ~ modelProbability, data = combined))
+```
+
+
+
+
+
 
 
 # Analyze typicality results
