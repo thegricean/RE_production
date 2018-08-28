@@ -207,7 +207,7 @@ var getHeader = function(version) {
   } else if (version == 'colorSize_predictives') {
     return ['color', 'size', 'condition', 'othercolor', 'item', 'utt', 'prob'];
   } else if (version == 'typicality_params') {
-    return ['alpha', 'costWeight', 'lengthVsFreqCost', 'typWeight',
+    return ['alpha', 'lengthCost', 'freqCost', 'typWeight',
 	    'logLikelihood', 'outputProb'];
   } else if (version == 'typicality_predictives') {
     return ['condition','t_color', "t_item", 'd1_color', "d1_item",
@@ -288,6 +288,52 @@ function _logsumexp(a) {
   return m + Math.log(sum);
 }
 
+var uttCost = function(params, utt) {    
+  if(params.modelVersion === 'colorSize') {
+    var colorMention = _.intersection(colors, utt.split('_')).length;
+    var sizeMention = _.intersection(sizes, utt.split('_')).length;
+    return (params.colorCost * colorMention +
+	    params.sizeCost * sizeMention);
+  } else if (_.includes(['nominal', 'typicality'], params.modelVersion))  {
+    return (params.lengthCost * getRelativeLength(params, utt) +
+	    params.freqCost * getRelativeLogFrequency(params, utt));
+  } else {
+    return console.error('unknown modelVersion: ' + params.modelVersion);
+  }
+};
+
+var getSpeakerUtility = function(target, utt, context, params) {
+  var inf = params.alpha * getL0score(target, utt, context, params);
+  var cost = uttCost(params, utt);
+  return inf - cost; 
+}
+
+var getPossibleUtts = function(params, target, context) {
+  if (params.modelVersion === 'colorSize') {
+    return getColorSizeUtterances(context);
+  } else if(params.modelVersion === 'nominal') {
+    return getNominalUtterances(target[0], params.lexicon);
+  } else if(params.modelVersion === 'typicality') {
+    return getTypicalityUtterances(context);
+  } else {
+    return console.error('unknown modelVersion: ' + params.modelVersion);
+  }
+};
+
+var getSpeakerScore = function(trueUtt, target, context, params) {
+  var possibleUtts = getPossibleUtts(params, target, context);
+  var scores = [];
+  // note: could memoize this for moderate optimization...
+  // (only needs to be computed once per context per param, not for every utt)
+  for(var i=0; i<possibleUtts.length; i++){
+    var utt = possibleUtts[i];
+    var utility = getSpeakerUtility(target, utt, context, params);
+    scores.push(utility);//Math.log(Math.max(utility, Number.EPSILON)));
+  }
+  var trueUtility = getSpeakerUtility(target, trueUtt, context, params);
+  return trueUtility - _logsumexp(scores); // softmax subtraction bc log space,
+};
+
 // P(target | sketch) = e^{scale * sim(t, s)} / (\sum_{i} e^{scale * sim(t, s)})
 // => log(p) = scale * sim(target, sketch) - log(\sum_{i} e^{scale * sim(t, s)})
 var getL0score = function(target, utt, context, params) {
@@ -307,7 +353,7 @@ module.exports = {
   bayesianErpWriter, writeERP, writeCSV, readCSV, getTestContexts,
   getData, getConditions, getParamPosterior,
   obj_product,
-  getL0score,
+  getL0score,getSpeakerScore,
   getRelativeLength, getRelativeLogFrequency, getTypSubset,
   colors, sizes
 };

@@ -22,12 +22,10 @@ var initializeModel = function(params) {
       var colorMention = _.intersection(refModule.colors, utt.split('_')).length;
       var sizeMention = _.intersection(refModule.sizes, utt.split('_')).length;
       return (params.colorCost * colorMention +
-	      params.sizeCost * sizeMention);
+  	      params.sizeCost * sizeMention);
     } else if (_.includes(['nominal', 'typicality'], params.modelVersion))  {
-      var w = params.lengthVsFreqCost;
-      var val = (w * refModule.getRelativeLength(params, utt) +
-		 (1 - w) * refModule.getRelativeLogFrequency(params, utt));
-      return params.costWeight * val;
+      return (params.lengthCost * refModule.getRelativeLength(params, utt) +
+  		 params.freqCost * refModule.getRelativeLogFrequency(params, utt));
     } else {
       return console.error('unknown modelVersion: ' + params.modelVersion);
     }
@@ -48,7 +46,7 @@ var initializeModel = function(params) {
       return object;
     }});
   });
-
+  
   // Selects among utterances given informativity in context and cost of production,
   // marginalizing over possible noise in perception of context
   // Timeit note: marginalizing over listener takes about 200-300ms per utt; pure js is faster
@@ -57,7 +55,7 @@ var initializeModel = function(params) {
     return Infer({method:'enumerate', model: function(){
       var utt = uniformDraw(utts);
       // this is a fast shortcut for literalListener(utt, context).score(target)
-      var utility = (params.alpha * refModule.getL0score(target, utt, context, params)
+      var utility = (params.alpha * literalListener(utt, context).score(target)
       		     - uttCost(utt));
       factor(utility);
       return utt;
