@@ -129,8 +129,8 @@ bda_df <- bda_df %>%
          condition = context)
 
 # Write Bayesian data analysis files (data and unique conditions)
-write.table(unique(bda_df[,c("condition","t_color","t_item","d1_color","d1_item","d2_color","d2_item")]),file=here("models","bdaInput","typicality","unique_conditions-raw.csv"),sep=",",row.names=F,quote=F)
-write.table(bda_df[,c("condition","t_color","t_item","d1_color","d1_item","d2_color","d2_item","response")],file=here("models","bdaInput","typicality","bda_data-raw.csv"),sep=",",row.names=F,quote=F)
+write.table(unique(bda_df[,c("condition","t_color","t_item","d1_color","d1_item","d2_color","d2_item")]),file=here("models","bdaInput","typicality","unique_conditions.csv"),sep=",",row.names=F,quote=F)
+write.table(bda_df[,c("condition","t_color","t_item","d1_color","d1_item","d2_color","d2_item","response")],file=here("models","bdaInput","typicality","bda_data.csv"),sep=",",row.names=F,quote=F)
 
 # Construct meanings json for BDA
 typicality_data = read.table(file=here("data","typicality_exp2.csv"),sep=",", header=T) %>%

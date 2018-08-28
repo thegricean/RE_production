@@ -1,9 +1,9 @@
 # Automatic preprocessing of data from Exp. 3
 library(tidyverse)
-source("helper_scripts/helpers.R")
+source("analysis/helper_scripts/helpers.R")
 
 # Read raw data
-d = read.table(file="../data/raw/production_exp1_exp3/rawdata_exp1_exp3.csv",sep="\t", header=T, quote="")
+d = read.table(file="data/raw/production_exp1_exp3/rawdata_exp1_exp3.csv",sep="\t", header=T, quote="")
 
 # Get only trials from Exp. 3
 exp3_raw = droplevels(d[d$trialType == "subSuperTrial",])
@@ -34,13 +34,13 @@ exp3_raw$theMentioned = ifelse(grepl("the |a |an ", exp3_raw$refExp, ignore.case
 summary(exp3_raw)
 
 # Write this dataset for manual correction of typos like "dalmation"
-write.table(exp3_raw, file="../data/raw/production_exp1_exp3/data_exp3_preManualTypoCorrection.csv", sep="\t",quote=F,row.names=F)
+write.table(exp3_raw, file="data/raw/production_exp1_exp3/data_exp3_preManualTypoCorrection.csv", sep="\t",quote=F,row.names=F)
 
 ###########################################################################################
 
 
 # Read CG's manually corrected dataset for further preprocessing
-exp3_post = read.table(file="../data/raw/production_exp1_exp3/data_exp3_postManualTypoCorrection.csv",sep=",", header=T, quote="") 
+exp3_post = read.table(file="data/raw/production_exp1_exp3/data_exp3_postManualTypoCorrection.csv",sep=",", header=T, quote="") 
 ### Note that 6 trials of participants with game-id 2370-c were excluded during manual processing due to speaker non-compliance (i.e., missing speaker utterances while correctly selecting target objects)
 
 head(exp3_post)
@@ -90,7 +90,7 @@ nrow(final_d)
 final_d$redCondition = as.factor(ifelse(final_d$condition == "basic12","sub_necessary",ifelse(final_d$condition == "basic33","super_sufficient","basic_sufficient")))
 final_d$binaryCondition = as.factor(ifelse(final_d$condition == "basic12","sub_necessary","nonsub_sufficient"))
 
-write.table(final_d, file="../data/data_exp3.csv",sep="\t",quote=F,row.names=F)
+write.table(final_d, file="data/data_exp3.csv",sep="\t",quote=F,row.names=F)
 
 
 
@@ -131,9 +131,10 @@ tmp = exp3_post_targets[(exp3_post_targets$sub | exp3_post_targets$basic | exp3_
   mutate(refLevel = ifelse(sub, "sub",
                            ifelse(basic, "basic",
                                   ifelse(super, "super", "other")))) %>%
-  select(gameid, roundNum, targetName, alt1Name, alt2Name, refLevel)
+  select(gameid, roundNum, condition, targetName, alt1Name, alt2Name, refLevel)
 
-write.csv(tmp, "../models/bdaInput/nominal/bda_data.csv", row.names = F, quote = F)
+write.csv(tmp, "models/bdaInput/nominal/bda_data.csv", row.names = F, quote = F)
+write.csv(tmp %>% select(-gameid, -roundNum, -refLevel) %>% distinct(), "models/bdaInput/nominal/unique_conditions_new.csv", row.names = F, quote = F)
 
 
 
