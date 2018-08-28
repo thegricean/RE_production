@@ -5,7 +5,6 @@
 
 // Fix some configuration options
 var config = {
-  'storePredictives' : false,
   'modelVersion' : argv.modelVersion
 };
 
@@ -32,9 +31,9 @@ var paramPrior = function() {
     
   } : _.includes(['typicality', 'nominal'], config.modelVersion) ? {
 
-    costWeight :      uniformDrift({a: 0, b: 40, w: 40/20}),
-    lengthVsFreqCost: uniformDrift({a: 0, b: 1, w: 1/20}),
-    typWeight :       uniformDrift({a: 0, b: 10, w: 10/20})
+    lengthCost : uniformDrift({a: 0, b: 40, w: 40/20}),
+    freqCost :   uniformDrift({a: 0, b: 40, w: 40/20}),
+    typWeight :  uniformDrift({a: 0, b: 10, w: 10/20})
         
   } : console.error('unknown modelVersion: ' + config.modelVersion));
 
@@ -45,44 +44,36 @@ var modelAnalysis = function() {
 
   var params = paramPrior();
   var lexicon = refModule.constructLexicon(params);
-  var speakerModel = initializeModel(extend(params, {lexicon}));
-
+  var modelParams = extend(params, {lexicon});
   var likelihood = reduce(function(c, memo) {
     // Extract condition information
-    var conditionName = c.condition;
     var context = c.context;
     var target = context[0];
-    
-    // Run model
-    var modelOutput = speakerModel(target, context);
-
-    // Store predives
-    if(config.storePredictives) {
-      foreach(modelOutput.support(), function(s){
-  	var key = _.values(c).concat(s);
-  	var newPair = _.zipObject([key], [Math.exp(modelOutput.score(s))]);
-  	globalStore.predictives = extend(globalStore.predictives, newPair);
-      });
-    }
     
     // Condition on data
     var itemData = refModule.getSubset(data, _.omit(c, 'context'));
     return memo + reduce(function(datum, memo) {
-      return memo + modelOutput.score(datum.response);
+      return memo + refModule.getSpeakerScore(datum.response, target, context, modelParams);
     }, 0, itemData);
   }, 0, conditions);
 
   factor(likelihood);
-  //console.log(likelihood);
-  var paramsKey = _.values(_.omit(params, ['storePredictives', 'modelVersion'])).join(',');
-  //console.log(_.keys(_.omit(params, ['storePredictives', 'modelVersion'])).join(','));
+  console.log(likelihood);
+  var paramsKey = _.values(_.omit(params, ['modelVersion'])).join(',');
   return {
     output : _.zipObject([paramsKey], [likelihood]),
     version: params.modelVersion + '_params:obj'
-  }; //predictive: globalStore.predictives, 
+  };
 };
 
-var outputERP = Infer({model: modelAnalysis, method:'MCMC', verbose: true,
-		       samples: 2000, lag: 10, burn: 10000});
+// Some versions take longer to run than others, so we tune settings to match
+var inferenceSettings = {
+  model: modelAnalysis, method:'MCMC', verbose: true,
+  samples: config.modelVersion == 'colorSize' ? 2000 : 1000,
+  lag: config.modelVersion == 'colorSize' ? 10 : 1,
+  burn: config.modelVersion == 'colorSize' ? 10000 : 7500
+};
+
+var outputERP = Infer(inferenceSettings);
 
 refModule.bayesianErpWriter(outputERP);
