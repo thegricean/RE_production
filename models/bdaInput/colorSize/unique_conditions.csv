@@ -1,4 +1,4 @@
-BDAColor,BDASize,condition,BDAOtherColor,BDAItem
+color,size,condition,othercolor,item
 color,size,color42,othercolor,item
 color,size,color31,othercolor,item
 color,size,size32,othercolor,item

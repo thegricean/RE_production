@@ -1,4 +1,4 @@
-gameid,roundNum,condition,BDASize,BDAColor,BDAOtherColor,BDAItem,redBDAUtterance
+gameid,roundNum,condition,size,color,othercolor,item,response
 2298-c,1,color42,size,color,othercolor,item,color
 2298-c,3,color31,size,color,othercolor,item,color
 2298-c,4,size32,size,color,othercolor,item,size_color

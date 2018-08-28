@@ -1,6 +1,11 @@
 var fs = require('fs');
 var _ = require('lodash');
-var refModule = require('../refModule');
+var babyparse = require('babyparse');
+
+function readCSV(filename){
+  return babyparse.parse(fs.readFileSync(filename, 'utf8'),
+			 {header:true, keepEmptyRows:false,     skipEmptyLines: true}).data;
+};
 
 var constructWholeContext = function(c) {
   var context = [];
@@ -10,7 +15,7 @@ var constructWholeContext = function(c) {
   var numDiff = numDistractors - numShared;
   // var othersize = size === "big" ? "small" : "big";
   var othersize = "othersize";
-  // var othercolor = "othercolor";    
+  // var othercolor = "othercolor";
   context.push(_.pick(c, ['size','color','item'])); //add the target to the context
 
   var buildUp = function(n,s,c,i) {
@@ -34,13 +39,16 @@ var constructWholeContext = function(c) {
 };
 
 // TODO: read in from raw data
-var data = refModule.readCSV("bda_data_colorSize.csv");
+var data = readCSV("./bda_data.csv");
+var data_with_contexts = _.map(data, function(datum) {
+  return constructWholeContext(datum);
+});
+
 fs.writeFileSync('./bda_data.json',
-		 JSON.stringify(data, null, 2));
+		 JSON.stringify(data_with_contexts, null, 2));
 
 // TODO: create from raw data?
-var conditions = refModule.readCSV("./unique_conditions_colorSize.csv");
-
+var conditions = readCSV("./unique_conditions.csv");
 var contexts = _.map(conditions, function(condition) {
   return constructWholeContext(condition);
 });
