@@ -1,4 +1,4 @@
-gameid,roundNum,condition,targetName,alt1Name,alt2Name,refLevel
+gameid,roundNum,condition,targetName,alt1Name,alt2Name,response
 2298-c,2,basic23,suv,ambulance,pottedplant,sub
 2298-c,9,basic22,dressshirt,dress,socks,basic
 2298-c,14,basic12,picnictable,sidetable,bed,sub
