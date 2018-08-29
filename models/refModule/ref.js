@@ -34,8 +34,9 @@ var getCostData = function(modelVersion) {
 // Preload these...
 var costData = {
   'typicality' : getCostData('typicality'),
-//  'nominal'    : getCostData('nominal')
+  'nominal'    : getCostData('nominal')
 };
+
 
 function cartesianProductOf(list_of_lists) {
   return _.reduce(list_of_lists, function(a, b) {
@@ -205,17 +206,19 @@ var getHeader = function(version) {
     return ['alpha', 'costWeight', 'colorTyp', 'sizeTyp', 'colorVsSizeCost', 'typWeight',
 	    'logLikelihood', 'outputProb'];
   } else if (version == 'colorSize_predictives') {
-    return ['color', 'size', 'condition', 'othercolor', 'item', 'utt', 'prob'];
+    return ['color', 'size', 'condition', 'othercolor', 'item', 'utt', 'prob',  "zeros"];
   } else if (version == 'typicality_params') {
     return ['alpha', 'lengthCost', 'freqCost', 'typWeight',
 	    'logLikelihood', 'outputProb'];
   } else if (version == 'typicality_predictives') {
     return ['condition','t_color', "t_item", 'd1_color', "d1_item",
-	    "d2_color", "d2_item", "response", "logModelProb"];
+	    "d2_color", "d2_item", "response", "logModelProb",  "zeros"];
   } else if (version == 'nominal_params') {
-    return;
+    return ['alpha', 'lengthCost', 'freqCost', 'typWeight',
+	    'logLikelihood', 'outputProb'];
   } else if (version == 'nominal_predictives') {
-    return;
+    return ['condition',"target_item", 'd1_item', "d2_item",
+	    "response", "logModelProb", "zeros"];
   } else {
     console.error('unknown version: ' + version);
   }
@@ -227,8 +230,6 @@ var bayesianErpWriter = function(erp) {
 
   var supp = erp.support();
   var version = supp[0]['version'].split(':');
-  console.log('version');
-  console.log(version)
   var header = getHeader(version[0]);
   console.log(header);
   var fileHandle = fs.openSync('./bdaOutput/' + version[0] + ".csv", 'w');
@@ -312,7 +313,7 @@ var getPossibleUtts = function(params, target, context) {
   if (params.modelVersion === 'colorSize') {
     return getColorSizeUtterances(context);
   } else if(params.modelVersion === 'nominal') {
-    return getNominalUtterances(target[0], params.lexicon);
+    return getNominalUtterances(target.item, params.lexicon);
   } else if(params.modelVersion === 'typicality') {
     return getTypicalityUtterances(context);
   } else {
@@ -322,6 +323,7 @@ var getPossibleUtts = function(params, target, context) {
 
 var getSpeakerScore = function(trueUtt, target, context, params) {
   var possibleUtts = getPossibleUtts(params, target, context);
+
   var scores = [];
   // note: could memoize this for moderate optimization...
   // (only needs to be computed once per context per param, not for every utt)
@@ -330,7 +332,7 @@ var getSpeakerScore = function(trueUtt, target, context, params) {
     var utility = getSpeakerUtility(target, utt, context, params);
     scores.push(utility);//Math.log(Math.max(utility, Number.EPSILON)));
   }
-  var trueUtility = getSpeakerUtility(target, trueUtt, context, params);
+    var trueUtility = getSpeakerUtility(target, trueUtt, context, params);
   return trueUtility - _logsumexp(scores); // softmax subtraction bc log space,
 };
 
