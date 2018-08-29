@@ -1,0 +1,77 @@
+// run using:
+// webppl BDA.wppl --require ./refModule/ -- --modelVersion colorSize
+
+// model version can be <colorSize> <typicality> <nominal>
+
+// Fix some configuration options
+var config = {
+  'modelVersion' : argv.modelVersion
+};
+
+// Pull in requested data/conditions 
+var data = refModule.getData(config.modelVersion);
+console.log("Loading data... found" + data.length + " data points");
+
+var conditions = refModule.getConditions(config.modelVersion);
+console.log("Loading unique conditions... found" + conditions.length);
+
+var sampleSpecificParams = function() {
+  if(config.modelVersion == 'colorSize') {
+    var colorTyp = uniform({a: .5, b: 1});
+    var sizeTyp = (config.constraint == 'yokeTyps' ? colorTyp :
+		   uniform({a: .5, b: 1}));
+    var colorCost = uniform({a: 0, b: 40});
+    var sizeCost = (config.constraint == 'yokeCosts' ? colorTyp :
+		   uniform({a: .5, b: 1}));
+    return {
+      colorTyp, sizeTyp, colorCost, sizeCost,
+      typWeight : 1
+    };
+  } else if ( _.includes(['typicality', 'nominal'], config.modelVersion) {
+
+    var lengthCost = uniformDrift({a: 0, b: 40, w: 40/20});
+    var freqCost =   uniformDrift({a: 0, b: 40, w: 40/20});
+    var typWeight =  uniformDrift({a: 0, b: 10, w: 10/20});
+    var lexicon = 'empirical'; // can also use typical
+    
+  } else {
+    console.error('unknown modelVersion: ' + config.modelVersion);
+  }
+};
+
+var paramPrior = function() {
+  // Params shared by all versions of the model
+  var baseParams = {
+    alpha : uniform({a: 0, b: 40})
+  };
+
+  var specificParams = sampleSpecificParams();
+
+  return extend(config, baseParams, specificParams);
+};
+
+var modelAnalysis = function() {
+
+  var params = paramPrior();
+  var lexicon = refModule.constructLexicon(params);
+  var modelParams = extend(params, {lexicon});
+  var likelihood = reduce(function(datum, memo) {
+    // Extract condition information
+    var context = datum.context;
+    var target = context[0];
+    
+    // Condition on data
+    return memo + refModule.getSpeakerScore(datum.response, target, context, modelParams);
+  }, 0, data);
+
+  factor(likelihood);
+  //console.log(likelihood);
+  var paramsKey = _.values(_.omit(params, ['modelVersion'])).join(',');
+  return {
+    output : _.zipObject([paramsKey], [likelihood]),
+    version: params.modelVersion + '_params:obj'
+  };
+};
+
+var a = AIS(modelAnalysis, {samples: 5, steps: 2000, verbose: true})
+console.log('a : ' + a);

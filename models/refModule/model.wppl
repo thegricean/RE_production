@@ -5,7 +5,7 @@ var initializeModel = function(params) {
     if (params.modelVersion === 'colorSize') {
       return refModule.getColorSizeUtterances(context);
     } else if(params.modelVersion === 'nominal') {
-      return refModule.getNominalUtterances(target[0], params.lexicon);
+      return refModule.getNominalUtterances(target.item, params.lexicon);
     } else if(params.modelVersion === 'typicality') {
       return refModule.getTypicalityUtterances(context);
     } else {
