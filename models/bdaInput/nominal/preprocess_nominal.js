@@ -10,7 +10,8 @@ function readCSV(filename){
 
 var getConditions = function(c) {
   var newResponseName = (_.has(c, 'response') ?
-			 {response: lookupTable[c.targetName][c.response]} :
+			 {response: lookupTable[c.targetName][c.response],
+			  responseLevel : c.response} :
 			 {});
   return _.extend(c, newResponseName, {context: [
     {item: c.targetName},
