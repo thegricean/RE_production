@@ -1,6 +1,7 @@
 // run using:
 // webppl BDA.wppl --require ./refModule/ -- --modelVersion colorSize
 // webppl BDA.wppl --require ./refModule/ -- --modelVersion colorSize --constraint yokeCosts
+// webppl BDA.wppl --require ./refModule/ -- --modelVersion colorSize --constraint yokeTyps
 
 // model version can be <colorSize> <typicality> <nominal>
 
@@ -12,10 +13,10 @@ var config = {
 
 // Pull in requested data/conditions 
 var data = refModule.getData(config.modelVersion);
-console.log("Loading data... found" + data.length + " data points");
+//console.log("Loading data... found" + data.length + " data points");
 
 var conditions = refModule.getConditions(config.modelVersion);
-console.log("Loading unique conditions... found" + conditions.length);
+// console.log("Loading unique conditions... found" + conditions.length);
 
 var sampleSpecificParams = function() {
   if(config.modelVersion == 'colorSize') {
@@ -56,25 +57,27 @@ var paramPrior = function() {
 var modelAnalysis = function() {
 
   var params = paramPrior();
+  //console.log(params);
   var lexicon = refModule.constructLexicon(params);
   var modelParams = extend(params, {lexicon});
-  var likelihood = reduce(function(datum, memo) {
+  map(function(datum) {
     // Extract condition information
     var context = datum.context;
     var target = context[0];
     
     // Condition on data
-    return memo + refModule.getSpeakerScore(datum.response, target, context, modelParams);
-  }, 0, data);
+    var score = refModule.getSpeakerScore(datum.response, target, context, modelParams)
+    //console.log(score);
+    factor(score);
+  }, data);
 
-  factor(likelihood);
-  //console.log(likelihood);
-  var paramsKey = _.values(_.omit(params, ['modelVersion'])).join(',');
+//  factor(likelihood);
+//
+  //  var paramsKey = _.values(_.omit(params, ['modelVersion'])).join(',');
   return {
-    output : _.zipObject([paramsKey], [likelihood]),
+    //output : _.zipObject([paramsKey], [likelihood]),
     version: params.modelVersion + '_params:obj'
   };
 };
 
-var a = AIS(modelAnalysis, {samples: 5, steps: 2000, verbose: true})
-console.log('a : ' + a);
+AIS(modelAnalysis, {samples: 1, steps: 2000})
