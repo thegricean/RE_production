@@ -1,11 +1,13 @@
 // run using:
 // webppl BDA.wppl --require ./refModule/ -- --modelVersion colorSize
+// webppl BDA.wppl --require ./refModule/ -- --modelVersion colorSize --constraint yokeCosts
 
 // model version can be <colorSize> <typicality> <nominal>
 
 // Fix some configuration options
 var config = {
-  'modelVersion' : argv.modelVersion
+  'modelVersion' : argv.modelVersion,
+  'constraint' : argv.constraint
 };
 
 // Pull in requested data/conditions 
@@ -27,13 +29,14 @@ var sampleSpecificParams = function() {
       colorTyp, sizeTyp, colorCost, sizeCost,
       typWeight : 1
     };
-  } else if ( _.includes(['typicality', 'nominal'], config.modelVersion) {
-
+  } else if ( _.includes(['typicality', 'nominal'], config.modelVersion)) {
     var lengthCost = uniformDrift({a: 0, b: 40, w: 40/20});
-    var freqCost =   uniformDrift({a: 0, b: 40, w: 40/20});
+    var freqCost =  uniformDrift({a: 0, b: 40, w: 40/20});
     var typWeight =  uniformDrift({a: 0, b: 10, w: 10/20});
     var lexicon = 'empirical'; // can also use typical
-    
+    return {
+      lengthCost, freqCost, typWeight, lexicon
+    };
   } else {
     console.error('unknown modelVersion: ' + config.modelVersion);
   }
