@@ -220,8 +220,124 @@ ggsave("../writing/pics/exp1-empirical-predictives.pdf",height=3.5,width=6.7)
 ```
 
 
+# Analyze color typicality results
 
-FIXME CONTINUE HERE WITH THE OTHER TWO MODEL ANALYSES
+## Parameters
+
+Read parameter data from BDA and compute MAPs and HDIs.
+```{r}
+params <- read_csv("../models/bdaOutput/typicality_params.csv") %>%
+  gather(parameter, value, alpha:typWeight)
+
+params %>% 
+  group_by(parameter) %>%
+  summarize(mode = estimate_mode(value),
+            md_lo = round(HPDlo(value), 3),
+            md_hi = round(HPDhi(value), 3))
+```
+
+```{r}
+numSamples = nrow(params)/length(unique(params$parameter))
+params.samples <- params[rep(row.names(params), exp(params$outputProb)*numSamples), 3:4]
+
+typParamPosteriors = ggplot(params.samples, aes(x=value))+
+    geom_histogram(aes(y=..density..),
+                   data=subset(params.samples, parameter == "alpha"),
+                   binwidth = .1, colour="black", fill="white") +
+    geom_histogram(aes(y=..density..),
+                 data =subset(params.samples, parameter == "lengthCost" ),
+                 binwidth = .05, colour="black", fill="white") +
+      geom_histogram(aes(y=..density..),
+                   data=subset(params.samples, parameter == "freqCost"),
+                   binwidth = .05, colour="black", fill="white") +
+    geom_histogram(aes(y=..density..),
+                 data =subset(params.samples, parameter == "typWeight" ),
+                 binwidth = .05, colour="black", fill="white") +
+
+    geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "alpha"),
+                 adjust = 1, alpha=.2, fill="#FF6666")+
+    geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "lengthCost"),
+                 adjust = 1, alpha=.2, fill="#FF6666")+
+      geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "freqCost"),
+                 adjust = 1, alpha=.2, fill="#FF6666")+
+    geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "typWeight"),
+                 adjust = 1, alpha=.2, fill="#FF6666")+
+    # ggtitle("Param Posteriors (2000 samples; lag = 10; burnin=10000)") +
+    facet_wrap( ~ parameter, scales = 'free') +
+    theme_bw() +
+  ylab("Density") 
+typParamPosteriors
+```
+
+
+## Predictives
+
+Load empirical data and get into right format.
+
+JD: CONTINUE HERE LOADING THE RIGHT EMPIRICAL AND PREDICTIVES DATA (AND MERGE IN TYPICALITY VALUES)
+
+```{r}
+emp = read.csv("../models/bdaInput/typicality/bda_data.csv")
+colnames(emp) = c("Condition","TargetColor","TargetItem","Dist1Color","Dist1Item","Dist2Color","Dist2Item","Utterance")
+
+
+tmp_prob = empirical %>%
+  select(SufficientDimension,NumDistractors,Variation,ProbColor,ProbSize,ProbSize_Color) %>%
+  gather(Utterance, Probability,-SufficientDimension,-NumDistractors,-Variation) %>%
+  mutate(Utterance=gsub("Prob","",as.character(Utterance)))
+
+tmp_ymin = empirical %>%
+  select(SufficientDimension,NumDistractors,Variation,YMinColor,YMinSize,YMinSize_Color) %>%
+  gather(Utterance, YMin,-SufficientDimension,-NumDistractors,-Variation) %>%
+  mutate(Utterance=gsub("YMin","",as.character(Utterance)))
+
+tmp_ymax = empirical %>%
+  select(SufficientDimension,NumDistractors,Variation,YMaxColor,YMaxSize,YMaxSize_Color) %>%
+  gather(Utterance, YMax,-SufficientDimension,-NumDistractors,-Variation) %>%
+  mutate(Utterance=gsub("YMax","",as.character(Utterance)))
+
+empirical = tmp_prob %>%
+  left_join(tmp_ymin,by=c("SufficientDimension","NumDistractors","Variation","Utterance")) %>%
+  left_join(tmp_ymax,by=c("SufficientDimension","NumDistractors","Variation","Utterance")) %>%
+  mutate(Utterance = tolower(Utterance),
+         Data = "empirical")
+```
+
+Load predictives and get into right format.
+```{r}
+pred = read.csv("../models/bdaOutput/typicality_predictives.csv",quote="")
+colnames(pred)=c("Condition","TargetColor","TargetItem","Dist1Color","Dist1Item","Dist2Color","Dist2Item","Utterance","logProbability","Zero")
+predictives = pred %>%
+  mutate(Probability = exp(logProbability)) %>%
+  select(Condition,TargetColor,TargetItem,Dist1Color,Dist1Item,Dist2Color,Dist2Item,Utterance,Probability) %>%
+  mutate(Data = "model",
+         YMin = NA,
+         YMax = NA)
+```
+
+Bind empirical and predictives and plot (Fig 8 in paper).
+```{r}
+d = rbind(empirical,predictives)
+
+ggplot(d, aes(x=Variation,y=Probability,color=Data)) +
+  geom_errorbar(aes(ymin=YMin,ymax=YMax)) +
+  geom_point(aes(shape=as.character(NumDistractors))) +
+  xlab("Scene variation") +
+  ylab("Utterance probability") +
+  labs(shape="Number of\ndistractors") +
+  facet_grid(SufficientDimension~Utterance)
+ggsave("../writing/pics/exp1-empirical-predictives.pdf",height=3.5,width=6.7)
+```
+
+
+
+
+
+
 
 
 ## Import predictives data

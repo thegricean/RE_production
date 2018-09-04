@@ -651,9 +651,9 @@ Inputting these contexts and semantic values into the RSA model used thus far, w
 
 So far we have shown that continuous semantics RSA can capture typicality effects in principle if we assume that semantic values do not operate at the adjective type level but instead captures the typicality of an object for the (minimal and redundant) referring expressions. If an object is more typical for the redundant expression than for the minimal expression, then the bigger the difference in typicality, the greater the relative informativeness of the redundant expression, and the greater the probability of it being produced. 
 
-This example is somewhat oversimplified. In practice, speakers sometimes just mention an object's color, without mentioning the noun. In the contexts presented in \figref{fig:bananaexamples} this does not make much sense because there is always a competitor of the same color present. In contrast, in the contexts in \figref{fig:condInf} and \figref{fig:condOverinf}, color alone disambiguates the target. This suggests that we should consider among the set of utterance alternatives not just the simple type mentions (e.g., \emph{banana}) and color-and-type mentions (e.g., \emph{yellow banana}), but also simple color mentions (e.g., \emph{yellow}). The dynamics of the model proceed as before.
+This example is somewhat oversimplified. In practice, speakers sometimes just mention an object's color without mentioning the noun. In the contexts presented in \figref{fig:bananaexamples} this does not make much sense because there is always a competitor of the same color present. In contrast, in the contexts in \figref{fig:condInf} and \figref{fig:condOverinf}, color alone disambiguates the target. This suggests that we should consider among the set of utterance alternatives not just the simple type mentions (e.g., \emph{banana}) and color-and-type mentions (e.g., \emph{yellow banana}), but also simple color mentions (e.g., \emph{yellow}). The dynamics of the model proceed as before.
 
-We can now ask whether taking into account this more fine-grained notion of a continuous semantics affects the probability of redundantly mentioning color. Because the stimuli for Exp.~1 were specifically designed to be realistic objects with low color-diagnosticity, they do not include objects with low typicality values or large degrees of variation in typicality. This makes the dataset from Exp.~1 not well-suited for investigating typicality effects.\footnote{We did elicit typicality norms for the items in Exp.~1 and replicated the previously documented typicality effects on the four items that did exhibit variation in typicality. See \appref{sec:exp1typicality} for details.} We therefore conducted a separate production experiment in the same paradigm but with two broad changes: first, objects' color varied in typicality; and second, we did not manipulate object size, focusing only on color mention. This allows us to ask two question: first, do we replicate the typicality effects reported in the literature -- that is, are less color-typical objects more likely to lead to redundant color use than more color-typical objects? Second, does RSA with empirically elicited typicality values as proxy for a continuous semantics capture speakers' behavior better than just typicality alone? \jd{do we actually evaluate the latter?}
+We can now ask whether taking into account this more fine-grained notion of a continuous semantics affects the probability of redundantly mentioning color. Because the stimuli for Exp.~1 were specifically designed to be realistic objects with low color-diagnosticity, they do not include objects with low typicality values or large degrees of variation in typicality. This makes the dataset from Exp.~1 not well-suited for investigating typicality effects.\footnote{We did elicit typicality norms for the items in Exp.~1 and replicated the previously documented typicality effects on the four items that did exhibit variation in typicality. See \appref{sec:exp1typicality} for details.} We therefore conducted a separate production experiment in the same paradigm but with two broad changes: first, objects' color varied in typicality; and second, we did not manipulate object size, focusing only on color mention. This allows us to ask two question: first, do we replicate the typicality effects reported in the literature -- that is, are less color-typical objects more likely to lead to redundant color use than more color-typical objects? Second, does RSA with empirically elicited typicality values as proxy for a continuous semantics capture speakers' behavior?
 
 Additionally, the proposed RSA model allows us to ask questions that have not been addressed previously. In particular, it allows us to test for complex interactions of contextual informativeness of color and type, by manipulating both whether there is a distractor of the same type present and whether there is a distractor of the same color present. 
 
@@ -720,11 +720,11 @@ We refer to the different context conditions  as ``informative'', ``informative-
 		\caption{overinformative-cc (with color competitor)}
 		\label{fig:condOverinfcc}
 	\end{subfigure}
-	\caption{The four different context conditions in Exp.~2. They differed in the presence of an object of the same type (informative vs.~overinformative) and in the presence of another object of the same color as the target (with color competitor vs.~without color competitor). The green border marks the intended referent.}
+	\caption{Examples of the four different context conditions in Exp.~2. They differed in the presence of an object of the same type (informative vs.~overinformative) and in the presence of another object of the same color as the target (with color competitor vs.~without color competitor). The green border marks the intended referent.}
 	\label{fig:conditions}
 \end{figure}
 
-In the end, each participant saw 42 different contexts. Each of the 21 items (color-type combinations) was the target exactly twice, but the context in which they occurred was drawn randomly from the four possible conditions mentioned above. In total, there were 84 different possible configurations (seven target food items, each of them in three colors, where each could occur in four contexts). Trial order was randomized.
+Each participant saw 42 different contexts. Each of the 21 items (color-type combinations) was the target exactly twice, but the context in which they occurred was drawn randomly from the four possible conditions mentioned above. In total, there were 84 different possible configurations (seven target food items, each of them in three colors, where each could occur in four contexts). Trial order was randomized.
 
 
 \subsubsection{Data pre-processing and exclusion}
@@ -815,7 +815,7 @@ Proportions of type-only (\emph{banana}), color-and-type (\emph{yellow banana}),
 \begin{figure}[h!]
 \centering
 \includegraphics[width=.8\textwidth]{pics/empiricalProportions_typ.png}
-\caption{For each target, proportion of color-only (\emph{yellow}), type-only (\emph{banana}), color-and-type (\emph{yellow banana}), and other (\emph{funky carrot}) utterances as a function of mean object typicality for the type-only utterance (e.g., \emph{banana}), across conditions. \emph{\textsc{color} banana} cases are circled in their respective color.}
+\caption{For each target, proportion of color-only (\emph{yellow}), type-only (\emph{banana}), color-and-type (\emph{yellow banana}), and other (\emph{funky carrot}) utterances as a function of mean object typicality for the type-only utterance (e.g., \emph{banana}), across conditions. Modified utterance data points for the banana items are circled in the banana's respective color.}
 \label{fig:proportions}
 \end{figure}
 
@@ -831,11 +831,12 @@ There was also a main effect of informativeness, such that color mention was les
 \subsection{Model evaluation}
 \label{sec:colorypicalitymodel}
 
-We evaluated the continuous semantics RSA model on the obtained production data from Exp.~2. While the architecture of the model remained the same as that of the model presented in \sectionref{sec:modifiedmodel}, we briefly review the minor necessary changes, some of which we already mentioned at the beginning of this section. These changes concerned the lexicon and the cost function.\footnote{See \tableref{tab:modeldiffs} for an overview of the models reported in the paper.} We elaborate on each in turn. 
+
+We evaluated the continuous semantics RSA model on the obtained production data from Exp.~2. While the architecture of the model remained the same as that of the model presented in \sectionref{sec:modifiedmodel}, we briefly review the minor necessary changes, some of which we already mentioned at the beginning of this section. These changes concerned the lexicon and the cost function.\footnote{See \tableref{tab:modeldiffs} for an overview of the models reported in the paper.} We elaborate on each in turn before turning to the model evaluation. 
 
 \subsubsection{Lexicon}
 
-Whereas for the purpose of evaluating the model in \sectionref{sec:rsaevaluationbasicscene}  we only considered the utterance alternatives \emph{color}, \emph{size}, and \emph{color-size}, we included in this lexicon each color adjective, type noun, and combination of the two. This substantially increased the size of the lexicon to 37 unique utterances. For each combination of utterance $u$ and object $o$ that occurred in the experiment, we included a separate semantic value $x_{u,o}$, elicited in the norming experiments described in \sectionref{sec:typicalitynormingcolor} (rather than inferred as done for Exp.~1).\footnote{Ideally, one would like to derive the semantic values for the modified utterances from the semantic values of the individual lexical items.  Unfortunately, the compositionality of continuous values is a recognized problem \cite{kamp1995} and not one we aim to solve here. For our purposes it was therefore sufficient that we had access to the semantic values of the modified utterances elicited experimentally.} For any given context, we assumed the utterance alternatives that correspond to the individually present features and their combinations. For example, for the context in \figref{fig:condOverinfcc}, the set of utterance alternatives was \emph{yellow, green, pear, banana, avocado, yellow pear, green pear, yellow banana, green banana, yellow avocado}, and \emph{green avocado}. \jd{elisa, is this true? \ek{I'm not sure how it is handled in the unified model and when I want to look into it, I get an error. Robert can probably say more to this.}}
+Whereas for the purpose of evaluating the model in \sectionref{sec:rsaevaluationbasicscene}  we only considered the utterance alternatives \emph{color}, \emph{size}, and \emph{color-size}, we included in this lexicon each color adjective, type noun, and combination of the two. This substantially increased the size of the lexicon to 37 unique utterances. For each combination of utterance $u$ and object $o$ that occurred in the experiment, we included a separate semantic value $x_{u,o}$, elicited in the norming experiments described in \sectionref{sec:typicalitynormingcolor} (rather than inferred as done for Exp.~1, to avoid overfitting).\footnote{Ideally, one would like to derive the semantic values for the modified utterances from the semantic values of the individual lexical items.  Unfortunately, the compositionality of continuous values is a recognized problem \cite{kamp1995} and not one we aim to solve here. For our purposes it was therefore sufficient that we had access to the semantic values of the modified utterances elicited experimentally.} For any given context, we assumed the utterance alternatives that correspond to the individually present features and their combinations. For example, for the context in \figref{fig:condOverinfcc}, the set of utterance alternatives was \emph{yellow, green, pear, banana, avocado, yellow pear, yellow banana}, and \emph{green avocado}. \jd{elisa, is this true? \ek{I'm not sure how it is handled in the unified model and when I want to look into it, I get an error. Robert can probably say more to this.}}
 
 \subsubsection{Cost function}
 
@@ -848,18 +849,45 @@ Here, $p(u)$ is utterance frequency as estimated from the Google Books corpus (y
 
 \subsubsection{Evaluation}
 
-\jd{XXX -- thus far missing entirely. elisa, robert, what is the status of the bda? see the list below for what needs to go here}
 
+To evaluate the model we employed the same Bayesian data analysis procedure as reported in \sectionref{sec:modifiedmodel}. We integrated over the following free parameters: \jd{XXX adjust to follow structure in 3.2}
+
+Posteriors over parameters are shown in \figref{fig:typparamposteriors}. \jd{XXX discuss}
+
+\begin{figure}
+\centering
+%\includegraphics[width=\textwidth]{../../../models/1a_bda_basic/results_bda/graphs/parameterposteriors-fixed-reducedconditions}
+% old location \includegraphics[width=\textwidth]{../../../models/old/1a_bda_basic/results_bda/graphs/parameterposteriors-fixed-reducedconditions-unlogged}
+%\includegraphics[width=\textwidth]{pics/parameterposteriors-fixed-reducedconditions-unlogged}
+%\includegraphics[width=\textwidth]{pics/exp1-paramposteriors}
+\caption{\jd{XXX UPDATE Posterior model parameter distributions for semantic value (left column) and cost (right column), separately for color (top row) and size (bottom row). Maximum a posteriori (MAP)  $x_{\textrm{size}}$ = 0.79, 95\% highest density interval (HDI) = [0.76,0.80]; MAP $x_{\textrm{color}}$ = 0.88, HDI = [0.85,0.92]; MAP $c(u_{\textrm{size}})$ = .02, HDI = [0, 0.26]; MAP $c(u_{\textrm{color}})$ = 0.03, HDI = [0,0.45].}}
+\label{fig:typparamposteriors}
+\end{figure}
+
+A scatterplot of empirical utterance proportions agains model predictions are shown in \figref{fig:typpredictives}. \jd{XXX discuss}
+
+
+\begin{figure}
+\centering
+%\includegraphics[width=\textwidth]{../../../models/1a_bda_basic/results_bda/graphs/parameterposteriors-fixed-reducedconditions}
+% old location \includegraphics[width=\textwidth]{../../../models/old/1a_bda_basic/results_bda/graphs/parameterposteriors-fixed-reducedconditions-unlogged}
+%\includegraphics[width=\textwidth]{pics/parameterposteriors-fixed-reducedconditions-unlogged}
+%\includegraphics[width=\textwidth]{pics/exp1-paramposteriors}
+\caption{\jd{XXX UPDATE scatterplot}}
+\label{fig:typpredictives}
+\end{figure}
+
+\jd{report:}
 \begin{itemize}
 	\item general procedure (same as for Exp. 1, exclude "other" utterances. same inference algorithm?)
-	\item free parameters: $\alpha$, $\beta_c$, $\beta_F$ -- report priors over params \jd{any others? any sort of weight on typicality?}
+	\item free parameters
 	\item include plots: scatterplot of posterior predictive vs empirical proportions, and posterior over parameters
-	\item report correlations with empirical data at different levels: at individual item (u,o) level collapsing across distractors; maybe collapsing across 3 different typicality bins, inspired by elisa's BSc thesis Fig 9? \jd{which others?}
-	\item discuss posteriors over params -- is alpha similar? is cost weight still low but with most weight on length? 
-	\item potential comparison with different models:
+	\item report correlations with empirical data at different levels: at individual item (u,o) level collapsing across distractors
+	\item discuss posteriors over params
+	\item comparison with different models:
 	\begin{itemize}
-		\item should we run a version that has 2 inferred but constant cost terms, one for color and one for type, to justify the more complex cost function?
-		\item should we run a version that has 2 inferred but constant semantic values, one for color and one for type, to compare with the empirically elicited values? this should do worse because you can't get the typicality effects without varying semantic values
+		\item cost-only
+		\item typicality-only
 	\end{itemize}
 \end{itemize}
 
@@ -1153,7 +1181,7 @@ strangers.}
 
 \begin{table}
 \caption{Overview of the models used for the three different production datasets Color/size (Exp.~1), Color typicality (Exp.~2), and Nominal choice (Exp.~3).}
-\begin{tabular}{l p{3.9cm} p{3.9cm} p{3.9cm} }
+\begin{tabular}{p{4.2cm} p{3.9cm} p{3.9cm} p{3.9cm} }
 \toprule
 & Color/size & Color typicality & Nominal choice \\
 \midrule
@@ -1161,13 +1189,19 @@ Lexicon $\mathcal{L}(u,o)$ size & 2 (color, size) & 1 for each $u,o$ combination
 \midrule
 Semantic values were\dots & inferred & elicited experimentally & elicited experimentally\\
 \midrule
-Compositionality & $\mathcal{L}(u_{\text{size}},o) \times \mathcal{L}(u_{\text{color}},o)$ & $\mathcal{L}(u_{\text{color}},o) \times \mathcal{L}(u_{\text{type}},o)$ & NA \\
+Compositionality & $\mathcal{L}(u_{\text{size}},o) \times \mathcal{L}(u_{\text{color}},o)$ & $\mathcal{L}(u_{\text{color}},o) \times \mathcal{L}(u_{\text{type}},o)$ \jd{this can't be right. we took the elicited values for modified utterances, no?} & NA \\
 \midrule
 Cost function $c(u)$ & 2 constant values (1 each for color and size) & $\beta_Fp(u) + (1-\beta_F)l(u)$ & $\beta_Fp(u) + (1-\beta_F)l(u)$ \\
 \midrule
 Costs were\dots & inferred & estimated: $l(u)$  from production data and $p(u)$  from corpora & estimated: $l(u)$  from production data and $p(u)$  from corpora \\
 \midrule
-Set of alternatives & all contextually available feature combinations (color, size) & all contextually available feature combinations (type, color) & 3 target alternatives (level of reference) \\
+Contextual set of alternatives & all contextually available feature combinations (color, size) & all contextually available feature combinations (type, color) & 3 target alternatives (level of reference) \\
+\midrule
+Size of contextual set of alternatives & 8 & 8 or 9 & 3 \\
+\midrule
+Size of lexicon & 8 & 1491 & \jd{XXX} \\
+\midrule
+Free parameters inferred in BDA & $x_{\textrm{color}}$, $x_{\textrm{size}}$, $c(u_{\textrm{color}})$,  $c(u_{\textrm{size}})$, $\beta_c$, $\alpha$ & $\beta_c$, $\alpha$ & \jd{XXX} \\
 \midrule
 %Grammatical penalty & none & \jd{negative type cost param?} & none \\
 %\midrule
