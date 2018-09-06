@@ -11,20 +11,22 @@ var getCostData = function(modelVersion) {
   var maxLength = _.max(_.map(rawData, function(v) {return _.toFinite(v.length);}));
   var minLength = _.min(_.map(rawData, function(v) {return _.toFinite(v.length);}));
   var standardizedLengths = _.map(rawData, function(v) {
-    return {label: v.target, length: (v.length - minLength)/(maxLength - minLength)};
+    return {label: v.target, lengthCost: (v.length - minLength)/(maxLength - minLength)};
   });
 
   // pre-normalize freq
-  var maxFreq = _.max(_.map(rawData, function(v) {return _.toFinite(v.freq);}));
-  var minFreq = _.min(_.map(rawData, function(v) {return _.toFinite(v.freq);}));
 
-  var standardizedFreqs = _.map(rawData, function(v) {
-    // unfortunately, exp3 freqs aren't already logged so we have to log everything before
-    // normalizing to [0,1]
+  // unfortunately, exp3 freqs aren't already logged so we have to log everything before
+  // normalizing to [0,1] with higher frequencies closer to 0
+  var flippedFreqs = _.map(rawData, function(v) {
+    var freq = expNum == 'exp3' ? Math.log(v.freq) : v.freq;
+    return -1 * _.toFinite(freq);
+  });
+  var maxFreq = _.max(flippedFreqs);
+  var minFreq = _.min(flippedFreqs);
+  var standardizedFreqs = _.map(rawData, function(v, i) {
     return {label: v.target,
-	    freq : (expNum == 'exp3' ?
-		    (Math.log(v.freq) - Math.log(minFreq))/(Math.log(maxFreq) - Math.log(minFreq)) :
-		    (v.freq - minFreq)/(maxFreq - minFreq))};
+	    freqCost : (flippedFreqs[i] - minFreq)/(maxFreq - minFreq)};
   });
 
   return {'freq' : _.keyBy(standardizedFreqs, "label"),
@@ -208,7 +210,7 @@ var getHeader = function(version) {
   } else if (version == 'colorSize_predictives') {
     return ['color', 'size', 'condition', 'othercolor', 'item', 'utt', 'prob',  "zeros"];
   } else if (version == 'typicality_params') {
-    return ['alpha', 'lengthCost', 'freqCost', 'typWeight',
+    return ['infWeight', 'lengthCostWeight', 'freqCostWeight', 'typWeight',
 	    'logLikelihood', 'outputProb'];
   } else if (version == 'typicality_predictives') {
     return ['condition','t_color', "t_item", 'd1_color', "d1_item",
@@ -264,20 +266,26 @@ var locParse = function(filename) {
 
 var getRelativeLogFrequency = function(params, label) {
   var frequencyData = costData[params.modelVersion]['freq'];
-  return frequencyData[label]['freq'];
+  return frequencyData[label]['freqCost'];
 };
 
 var getRelativeLength = function(params, label) {
   var lengthData = costData[params.modelVersion]['length'];
   if(_.isUndefined(lengthData[label]))
     console.log(label);
-  return lengthData[label]['length'];
+  return lengthData[label]['lengthCost'];
 };
 
+// NOTE: this is 0, not -Infinity or -100 or something
+// because we collected empirical values where the minimum is 0
+// and it doesn't make sense to have a huge gap between something
+// we put into that experiment that got a low score and
+// something we purposefully didn't put in that expt because we expected it to
+// have a low score (eg for nominal: how typical is this iguana for a sunflower?)
 var meaning = function(utt, object, params) {
   var objStr = _.values(object).join("_");
   var lexicalEntry = params.lexicon[utt];
-  return _.has(lexicalEntry, objStr) ? lexicalEntry[objStr] : -100; 
+  return _.has(lexicalEntry, objStr) ? lexicalEntry[objStr] : 0; 
 };
 
 function _logsumexp(a) {
@@ -304,8 +312,14 @@ var uttCost = function(params, utt) {
 };
 
 var getSpeakerUtility = function(target, utt, context, params) {
+  // console.log(utt);
+  // console.log(getL0score(target, utt, context, params));
   var inf = params.alpha * getL0score(target, utt, context, params);
   var cost = uttCost(params, utt);
+  
+  // console.log(utt);
+  // console.log('inf' + inf);
+  // console.log('cost' + cost);
   return inf - cost; 
 }
 
@@ -342,6 +356,9 @@ var getL0score = function(target, utt, context, params) {
   var lexicon = params.lexicon;
   var scores = [];
   for(var i=0; i<context.length; i++){
+    // console.log('object')
+    // console.log(context[i]);
+    // console.log('fitness' + meaning(utt, context[i], params));    
     var m = meaning(utt, context[i], params);
     scores.push(params.typWeight * m);
   }

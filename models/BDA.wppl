@@ -18,9 +18,9 @@ console.log("Loading unique conditions... found" + conditions.length);
 var paramPrior = function() {
   // Params shared by all versions of the model
   var baseParams = {
-    alpha : uniformDrift({a: 0, b: 40, w: 40/20})
+    alpha : uniformDrift({a: 0, b: 20, w: 3})
   };
-
+  
   var specificParams = (config.modelVersion === 'colorSize' ? {
 
     colorTyp :        uniformDrift({a: .5, b: 1, w: .5/20}),
@@ -30,10 +30,10 @@ var paramPrior = function() {
     typWeight :       1
     
   } : _.includes(['typicality', 'nominal'], config.modelVersion) ? {
-
-    lengthCost : uniformDrift({a: 0, b: 40, w: 40/20}),
-    freqCost :   uniformDrift({a: 0, b: 40, w: 40/20}),
-    typWeight :  uniformDrift({a: 0, b: 10, w: 10/20})
+    
+    lengthCost : uniformDrift({a: 0, b: 5, w: 1}),
+    freqCost :   0,//uniformDrift({a: 0, b: 5, w: 1}),
+    typWeight :  uniformDrift({a: 0, b: 5, w: 1})
         
   } : console.error('unknown modelVersion: ' + config.modelVersion));
 
@@ -59,6 +59,7 @@ var modelAnalysis = function() {
 
   factor(likelihood);
   console.log(likelihood);
+  
   var paramsKey = _.values(_.omit(params, ['modelVersion'])).join(',');
   return {
     output : _.zipObject([paramsKey], [likelihood]),
@@ -70,10 +71,11 @@ var modelAnalysis = function() {
 var inferenceSettings = {
   model: modelAnalysis, method:'MCMC', verbose: true,
   samples: config.modelVersion == 'colorSize' ? 2000 : 1000,
-  lag: config.modelVersion == 'colorSize' ? 10 : 1,
+  lag: config.modelVersion == 'colorSize' ? 10 : 5,
   burn: config.modelVersion == 'colorSize' ? 10000 : 7500
 };
 
+//modelAnalysis();
 var outputERP = Infer(inferenceSettings);
 
 refModule.bayesianErpWriter(outputERP);
