@@ -771,7 +771,7 @@ On each trial, participants saw one of the stimuli used in the production experi
 		\bottomrule
 	\end{tabular}
 	\vspace{2mm}
-	\caption{Overview of typicality norming studies; the value in brackets shows the number of items including \textit{fruit}, \textit{vegetable} and \textit{cup}.}
+	\caption{Overview of typicality norming studies; the value in brackets shows the number of items including \textit{fruit}, \textit{vegetable} and \textit{cup}. \jd{elisa, can you say in the main body what an "item" is?}}
 	\label{tab:normingoverview}
 \end{table}
 
@@ -836,7 +836,7 @@ We evaluated the continuous semantics RSA model on the obtained production data 
 
 \subsubsection{Lexicon}
 
-Whereas for the purpose of evaluating the model in \sectionref{sec:rsaevaluationbasicscene}  we only considered the utterance alternatives \emph{color}, \emph{size}, and \emph{color-size}, we included in this lexicon each color adjective, type noun, and combination of the two. This substantially increased the size of the lexicon to 37 unique utterances. For each combination of utterance $u$ and object $o$ that occurred in the experiment, we included a separate semantic value $x_{u,o}$, elicited in the norming experiments described in \sectionref{sec:typicalitynormingcolor} (rather than inferred as done for Exp.~1, to avoid overfitting).\footnote{Ideally, one would like to derive the semantic values for the modified utterances from the semantic values of the individual lexical items.  Unfortunately, the compositionality of continuous values is a recognized problem \cite{kamp1995} and not one we aim to solve here. For our purposes it was therefore sufficient that we had access to the semantic values of the modified utterances elicited experimentally.} For any given context, we assumed the utterance alternatives that correspond to the individually present features and their combinations. For example, for the context in \figref{fig:condOverinfcc}, the set of utterance alternatives was \emph{yellow, green, pear, banana, avocado, yellow pear, yellow banana}, and \emph{green avocado}. \jd{elisa, is this true? \ek{I'm not sure how it is handled in the unified model and when I want to look into it, I get an error. Robert can probably say more to this.}}
+Whereas for the purpose of evaluating the model in \sectionref{sec:rsaevaluationbasicscene}  we only considered the utterance alternatives \emph{color}, \emph{size}, and \emph{color-size}, we included in this lexicon each color adjective, type noun, and combination of the two. This substantially increased the size of the lexicon to 37 unique utterances. For each combination of utterance $u$ and object $o$ that occurred in the experiment, we included a separate semantic value $x_{u,o}$, elicited in the norming experiments described in \sectionref{sec:typicalitynormingcolor} (rather than inferred as done for Exp.~1, to avoid overfitting).\footnote{Ideally, one would like to derive the semantic values for the modified utterances from the semantic values of the individual lexical items.  Unfortunately, the compositionality of continuous values is a recognized problem \cite{kamp1995} and not one we aim to solve here. For our purposes it was therefore sufficient that we had access to the semantic values of the modified utterances elicited experimentally.} For any given context, we assumed the utterance alternatives that correspond to the individually present features and their combinations. For example, for the context in \figref{fig:condOverinfcc}, the set of utterance alternatives was \emph{yellow, green, pear, banana, avocado, yellow pear, yellow banana}, and \emph{green avocado}. 
 
 \subsubsection{Cost function}
 
@@ -1199,7 +1199,7 @@ Contextual set of alternatives & all contextually available feature combinations
 \midrule
 Size of contextual set of alternatives & 8 & 8 or 9 & 3 \\
 \midrule
-Size of lexicon & 8 & 1491 & \jd{XXX} \\
+Size of lexicon & 8 & 1491 \jd{elisa, can you check total lexicon size?} & \jd{XXX} \\
 \midrule
 Free parameters inferred in BDA & $x_{\textrm{color}}$, $x_{\textrm{size}}$, $c(u_{\textrm{color}})$,  $c(u_{\textrm{size}})$, $\beta_c$, $\alpha$ & $\beta_c$, $\alpha$ & \jd{XXX} \\
 \midrule
