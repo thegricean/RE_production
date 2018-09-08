@@ -965,7 +965,7 @@ This context manipulation served as a manipulation of utterance informativeness:
 
 \subsubsection{Data pre-processing and exclusion}
 
-We collected 2193 referring expressions. To determine the level of reference for each trial, we followed the following procedure. First, speakers' and listeners' messages were parsed automatically; the referring expression used by the speaker was extracted for each trial and checked for whether it contained the current target's correct \emph{sub}(ordinate), \emph{basic}, or \emph{super}(ordinate) level term using a simple grep search. In this way, 71.4\% of trials were labelled as mentioning a pre-coded level of reference. In the next step, remaining utterances were checked manually by one of the authors (CG) to determine whether they contained a correct level of reference term which was not detected by the grep search due to typos or grammatical modification of the expression. In this way, meaning-equivalent alternatives such as \emph{doggie} for \emph{dog}, or reduced forms such as \emph{gummi}, \emph{gummies} and \emph{bears} for \emph{gummy bears} were counted as containing the corresponding level of reference term. This covered another 15.0\% of trials. 41 trials on which the listener selected the wrong referent were excluded, leading to the elimination of 2.1\% of trials. Six trials were excluded, because the speaker did not produce any utterances. Additionally, a total of 12.5\% of correct trials were excluded because the utterance consisted only of an attribute of the superclass (\emph{the living thing} for \emph{animal}), of the basic level (\emph{can fly} for \emph{bird}), of the subcategory (\emph{barks} for \emph{dog}) or of the particular instance (\emph{the thing facing left}) rather than a category noun. These kinds of attributes were also mentioned in addition to the noun on trials which were included in the analysis for 8.9\% of sub level terms, 18.9\% of basic level terms, and 60.9\% of super level terms. On 1.2\% of trials two different levels of reference were mentioned; in this case the more specific level of reference was counted as being mentioned in this trial. After all exclusion and pre-processing, 1872 cases classified as one of \emph{sub}, \emph{basic}, or \emph{super} entered into the analysis.
+We collected 2193 referring expressions. To determine the level of reference for each trial, we followed the following procedure. First, speakers' and listeners' messages were parsed automatically; the referring expression used by the speaker was extracted for each trial and checked for whether it contained the current target's correct \emph{sub}(ordinate), \emph{basic}, or \emph{super}(ordinate) level term using a simple grep search. In this way, 71.4\% of trials were labelled as mentioning a pre-coded level of reference. In the next step, remaining utterances were checked manually by one of the authors (CG) to determine whether they contained a correct level of reference term which was not detected by the grep search due to typos or grammatical modification of the expression. In this way, meaning-equivalent alternatives such as \emph{doggie} for \emph{dog}, or reduced forms such as \emph{gummi}, \emph{gummies} and \emph{bears} for \emph{gummy bears} were counted as containing the corresponding level of reference term. This covered another 15.0\% of trials. 41 trials on which the listener selected the wrong referent were excluded, leading to the elimination of 2.1\% of trials. Six trials were excluded because the speaker did not produce any utterances. Additionally, a total of 12.5\% of correct trials were excluded because the utterance consisted only of an attribute of the superclass (\emph{the living thing} for \emph{animal}), of the basic level (\emph{can fly} for \emph{bird}), of the subcategory (\emph{barks} for \emph{dog}) or of the particular instance (\emph{the thing facing left}) rather than a category noun. These kinds of attributes were also mentioned in addition to the noun on trials which were included in the analysis for 8.9\% of sub level terms, 18.9\% of basic level terms, and 60.9\% of super level terms. On 1.2\% of trials two different levels of reference were mentioned; in this case the more specific level of reference was counted as being mentioned in this trial. After all exclusion and pre-processing, 1872 cases classified as one of \emph{sub}, \emph{basic}, or \emph{super} entered into the analysis.
 
 
 \subsubsection{Results and discussion}
@@ -1028,78 +1028,108 @@ We thus replicated the well-documented preference to refer to objects at the bas
 
 Perhaps surprisingly, we did not observe an effect of frequency on sub level term mention. This is likely due to the modality of the experiment: the current study was a written production study, while most studies that have identified frequency as a factor governing production choices are spoken production studies. It may be that the cognitive cost of typing longer words may be disproportionately higher than that of producing longer words in speech, thus obscuring a potential effect of frequency. Support for this hypothesis comes from studies comparing written and spoken language, which has found that spoken descriptions are likely to be longer than written descriptions and, in English, seem to have a lower propositional information density than written descriptions \cite{VanMiltenburg2018}.
 
+
+
 \subsection{Model evaluation}
 \label{sec:reflevelmodel}
 
 
-We evaluated the continuous semantics RSA model on the obtained production data from Exp.~3. The architecture of the model is almost identical to that of the model presented in \sectionref{sec:colorypicalitymodel}. The only difference is that the set of alternatives contained only the three potential target utterances (i.e., the target's sub, basic, and super label).\footnote{See \tableref{tab:modeldiffs} for an overview of the models reported in the paper.} Whereas the modifier models from the previous sections treats all individual features and feature combinations represented in the display as utterance alternatives, the nominal choice model considers only the three different levels of reference to the target as alternatives, e.g., \emph{dalmatian}, \emph{dog}, \emph{animal}. That is, assuming a German Shepherd as a distractor, \emph{German Shepherd} is \emph{not} considered an alternative.
+We evaluated the continuous semantics RSA model on the obtained production data from Exp.~3. The architecture of the model is almost identical to that of the model presented in \sectionref{sec:colorypicalitymodel}. The only difference is that the set of alternatives contained only the three potential target utterances (i.e., the target's sub, basic, and super label).\footnote{See \tableref{tab:modeldiffs} for an overview of the models reported in the paper.} Whereas the modifier models from the previous sections treat all individual features and feature combinations represented in the display as utterance alternatives, the nominal choice model considers only the three different levels of reference to the target as alternatives, e.g., \emph{dalmatian}, \emph{dog}, \emph{animal}. That is, assuming a German Shepherd as a distractor, \emph{German Shepherd} is \emph{not} considered an alternative.
 
-Just as we did for capturing color typicality effects in \sectionref{sec:colorypicalitymodel}, we elicited empirical typicality values for object-utterance combinations.\footnote{See \appref{app:typicalitynorms2} for details of typicality elicitation experiment.} For each display, we know the typicality of each object in the display as an instance of the three potential target utterances (capturing, for instance, that the word \emph{dog} describes a dalmatian better than a grizzly bear, but it also describes a grizzly bear better than a tennis ball). This allows us to use the typicality values as semantic values directly.
-
-
-To understand the qualitative behavior of the model, we briefly delve into two aspects of the model: first, the effect of typicality on the literal listener (and, in consequence via the pressure to be informative) the speaker. And second, the effect of cost (utterance length and frequency) on the speaker.
-
-\jd{CONTINUE HERE}
+Just as we did for capturing color typicality effects in \sectionref{sec:colorypicalitymodel}, we elicited empirical typicality values for object-utterance combinations and used those values as the semantic values in the model.\footnote{See \appref{app:typicalitynorms2} for details of typicality elicitation experiment.} 
 
 
-\subsubsection{Typicality effects}
+To evaluate the model we employed the same Bayesian data analysis procedure as reported in the previous section. We integrated over the following free parameters: \jd{XXX adjust to follow structure in 3.2}
 
-\jd{everyone, should we discuss these qualitative effects at all, given that we've already discussed how this works for color typicality?}
-
-\paragraph{Literal listener behavior.} The literal listener's probability of choosing the target under different semantic values for the observed utterance are shown in \figref{fig:nominallistenertypicality}. In general: as the target's typicality as an instance of the utterance increases and the distractors' typicality decreases, the probability of the literal listener choosing the target increases. Subordinate level terms tend to fall in the upper right quadrant of this graph. Basic level terms in the \emph{sub necessary} conditions tend to fall in the lower right quadrant, while basic level terms in the \emph{basic sufficient} conditions tend to fall in the upper right quadrant as well.
+Posteriors over parameters are shown in \figref{fig:nomparamposteriors}. \jd{XXX discuss}
 
 \begin{figure}
 \centering
-% old location: \includegraphics[width=.6\textwidth]{../../../models/old/6_qualitative_nom_L0/L0probs.png}
-\includegraphics[width=.6\textwidth]{pics/L0probs.png}
-\caption{Literal listener probability of choosing the target under different typicalities of the target (x-axis) or the distractors (y-axis for the observed utterance. For simplicity we assume equal typicality of both distractors. The remaining probability mass for each case is thus uniformly distributed over both distractors.\jd{say where sub/basic/super level terms tend to fall in heatmap once you've regenerated plot}}
-\label{fig:nominallistenertypicality}
+%\includegraphics[width=\textwidth]{../../../models/1a_bda_basic/results_bda/graphs/parameterposteriors-fixed-reducedconditions}
+% old location \includegraphics[width=\textwidth]{../../../models/old/1a_bda_basic/results_bda/graphs/parameterposteriors-fixed-reducedconditions-unlogged}
+%\includegraphics[width=\textwidth]{pics/parameterposteriors-fixed-reducedconditions-unlogged}
+%\includegraphics[width=\textwidth]{pics/exp1-paramposteriors}
+\caption{\jd{XXX UPDATE Posterior model parameter distributions for semantic value (left column) and cost (right column), separately for color (top row) and size (bottom row). Maximum a posteriori (MAP)  $x_{\textrm{size}}$ = 0.79, 95\% highest density interval (HDI) = [0.76,0.80]; MAP $x_{\textrm{color}}$ = 0.88, HDI = [0.85,0.92]; MAP $c(u_{\textrm{size}})$ = .02, HDI = [0, 0.26]; MAP $c(u_{\textrm{color}})$ = 0.03, HDI = [0,0.45].}}
+\label{fig:nomparamposteriors}
 \end{figure}
 
-\paragraph{Pragmatic speaker behavior.} To understand the effect of typicality on the speaker's behavior it is useful to think about the problem of deciding which taxonomic level to refer at in terms of typicality gain, as we did in \sectionref{sec:colortypicality} for the choice between modified and unmodified expression. There, we found that relatively large target (compared to distractor) typicality gains in going from unmodified to modified expressions compared resulted in greater probability of overmodification. Here we observe the same effect in going from a higher (less specific) to a lower (more specific) taxonomic level. This can be seen in \figref{fig:nominalspeakertypicality}, which shows the probability of each utterance (sub, basic, or super) as a function of absolute target typicality as well as target typicality gain. Target typicality gain is the difference between the target's sub level typicality and the target's basic level typicality. Probabilities are shown for contexts with three items, always assuming $\alpha = 7$, but manipulating distractor typicality to simulate conditions analogous to our experimental conditions \emph{sub necessary}, \emph{basic sufficient}, and \emph{super sufficient}. Simulated distractor typicalities for sub, basic, and super level reference are shown in \tableref{tab:simulatedtyps}.
+A scatterplot of empirical utterance proportions agains model predictions are shown in \figref{fig:nompredictives}. \jd{XXX discuss}
+
 
 \begin{figure}
 \centering
-% old location: \includegraphics[width=\textwidth]{../../../models/old/7_qualitative_nom_S1_typ/S1probs_typgainmap_alpha7.png}
-\includegraphics[width=\textwidth]{pics/S1probs_typgainmap_alpha7.png}
-\caption{Pragmatic speaker probability of choosing each utterance (sub, basic, super) under varying absolute target sub typicalities (x-axis) and target typicality gains (difference between sub and basic level term typicality, y-axis), assuming equal typicality values for both distractors. Rows indicate different simulated conditions.\jd{go back into script to see how you computed typicality gain here}}
-\label{fig:nominalspeakertypicality}
+%\includegraphics[width=\textwidth]{../../../models/1a_bda_basic/results_bda/graphs/parameterposteriors-fixed-reducedconditions}
+% old location \includegraphics[width=\textwidth]{../../../models/old/1a_bda_basic/results_bda/graphs/parameterposteriors-fixed-reducedconditions-unlogged}
+%\includegraphics[width=\textwidth]{pics/parameterposteriors-fixed-reducedconditions-unlogged}
+%\includegraphics[width=\textwidth]{pics/exp1-paramposteriors}
+\caption{\jd{XXX UPDATE scatterplot}}
+\label{fig:nompredictives}
 \end{figure}
 
-\begin{table}
-\centering
-\caption{Overview of simulated distractor typicality (semantic) values for sub, basic, and super level utterances in simulated conditions. In contrast to the actual experimental conditions, we assume equal typicality values for both distractors.}
-\begin{tabular}{l l c c c}
-\toprule
-& & \multicolumn{3}{c}{Condition}\\
-& & sub necessary & basic sufficient & super sufficient\\
-\midrule
-\multirow{3}{*}{Utterance} & sub & 0 & 0 & 0 \\
-& basic & .8 & .1 & 0 \\
-& super & .8 & .8 & 0\\
-\bottomrule
-\end{tabular}
-\label{tab:simulatedtyps}
-\end{table}
-
-The blue areas in the graph indicate highest-probability regions. For example, as expected in the \emph{sub necessary} condition, the sub level term is the most likely one. However, in certain cases the basic level term also receives non-zero probability, notably when the target is a better instance of the basic than the sub level term, or (not pictured) when the typicality of the distractor as an instance of the basic level term is very low  (e.g., the typicality of the koala bear as an instance of "bear" was only 0.50). Indeed, the grizzly (with high typicality for basic level ``bear'', .97) is referred to as ``bear'' rather than ``grizzly bear'' in 85\% of \emph{sub necessary} conditions when the koala is the distractor. 
-
-In the \emph{basic sufficient} conditions, sub level reference is nevertheless strongly predicted when target sub typicality gain is positive (i.e., when the target is a much better instance of the sub than of the basic level term). An example of such a case is the panda bear, who received a sub level typicality of .98 and a basic level typicality of only .75. Indeed, even when basic level reference was sufficient, the panda was referred to as the ``panda'' 81\% of the time.
-
-These patterns mirror the typicality effects obtained via the mixed effects regression.
 
 
-\subsubsection{Cost effects}
-
-\jd{again, do we still need this given that we already include a discussion in previous sections?}
-
-The additional effect of cost on nominal choice is straightforward: the costlier an utterance (relative to its alternatives), the less likely it is to be used. This pattern, too, is one observed in the mixed effects regression. For instance, the (short, less costly) pug is almost three times as likely as the (long, more costly) German Shepherd to be referred to by its subordinate level term in the \emph{basic sufficient} and \emph{super sufficient} conditions, where subordinate level reference is unnecessary. 
-
-\bigskip
-In \sectionref{sec:reflevelmodel} we showed that continuous semantics RSA captures the right kinds of qualitative effects as observed in the mixed effects regression. In the next section we evaluate how well the model captures nominal choice preferences quantitatively.
 
 
-\subsubsection{Evaluation}
+% DON'T NEED QUALITATIVE EXAMPLE?
+%To understand the qualitative behavior of the model, we briefly delve into two aspects of the model: first, the effect of typicality on the literal listener (and, in consequence via the pressure to be informative) the speaker. And second, the effect of cost (utterance length and frequency) on the speaker.
+
+
+
+% DON'T NEED TO EXPLAIN AGAIN?
+%\subsubsection{Typicality effects}
+%
+%\paragraph{Literal listener behavior.} The literal listener's probability of choosing the target under different semantic values for the observed utterance are shown in \figref{fig:nominallistenertypicality}. In general: as the target's typicality as an instance of the utterance increases and the distractors' typicality decreases, the probability of the literal listener choosing the target increases. Subordinate level terms tend to fall in the upper right quadrant of this graph. Basic level terms in the \emph{sub necessary} conditions tend to fall in the lower right quadrant, while basic level terms in the \emph{basic sufficient} conditions tend to fall in the upper right quadrant as well.
+%
+%\begin{figure}
+%\centering
+%% old location: \includegraphics[width=.6\textwidth]{../../../models/old/6_qualitative_nom_L0/L0probs.png}
+%\includegraphics[width=.6\textwidth]{pics/L0probs.png}
+%\caption{Literal listener probability of choosing the target under different typicalities of the target (x-axis) or the distractors (y-axis for the observed utterance. For simplicity we assume equal typicality of both distractors. The remaining probability mass for each case is thus uniformly distributed over both distractors.\jd{say where sub/basic/super level terms tend to fall in heatmap once you've regenerated plot}}
+%\label{fig:nominallistenertypicality}
+%\end{figure}
+%
+%\paragraph{Pragmatic speaker behavior.} To understand the effect of typicality on the speaker's behavior it is useful to think about the problem of deciding which taxonomic level to refer at in terms of typicality gain, as we did in \sectionref{sec:colortypicality} for the choice between modified and unmodified expression. There, we found that relatively large target (compared to distractor) typicality gains in going from unmodified to modified expressions compared resulted in greater probability of overmodification. Here we observe the same effect in going from a higher (less specific) to a lower (more specific) taxonomic level. This can be seen in \figref{fig:nominalspeakertypicality}, which shows the probability of each utterance (sub, basic, or super) as a function of absolute target typicality as well as target typicality gain. Target typicality gain is the difference between the target's sub level typicality and the target's basic level typicality. Probabilities are shown for contexts with three items, always assuming $\alpha = 7$, but manipulating distractor typicality to simulate conditions analogous to our experimental conditions \emph{sub necessary}, \emph{basic sufficient}, and \emph{super sufficient}. Simulated distractor typicalities for sub, basic, and super level reference are shown in \tableref{tab:simulatedtyps}.
+%
+%\begin{figure}
+%\centering
+%% old location: \includegraphics[width=\textwidth]{../../../models/old/7_qualitative_nom_S1_typ/S1probs_typgainmap_alpha7.png}
+%\includegraphics[width=\textwidth]{pics/S1probs_typgainmap_alpha7.png}
+%\caption{Pragmatic speaker probability of choosing each utterance (sub, basic, super) under varying absolute target sub typicalities (x-axis) and target typicality gains (difference between sub and basic level term typicality, y-axis), assuming equal typicality values for both distractors. Rows indicate different simulated conditions.\jd{go back into script to see how you computed typicality gain here}}
+%\label{fig:nominalspeakertypicality}
+%\end{figure}
+%
+%\begin{table}
+%\centering
+%\caption{Overview of simulated distractor typicality (semantic) values for sub, basic, and super level utterances in simulated conditions. In contrast to the actual experimental conditions, we assume equal typicality values for both distractors.}
+%\begin{tabular}{l l c c c}
+%\toprule
+%& & \multicolumn{3}{c}{Condition}\\
+%& & sub necessary & basic sufficient & super sufficient\\
+%\midrule
+%\multirow{3}{*}{Utterance} & sub & 0 & 0 & 0 \\
+%& basic & .8 & .1 & 0 \\
+%& super & .8 & .8 & 0\\
+%\bottomrule
+%\end{tabular}
+%\label{tab:simulatedtyps}
+%\end{table}
+%
+%The blue areas in the graph indicate highest-probability regions. For example, as expected in the \emph{sub necessary} condition, the sub level term is the most likely one. However, in certain cases the basic level term also receives non-zero probability, notably when the target is a better instance of the basic than the sub level term, or (not pictured) when the typicality of the distractor as an instance of the basic level term is very low  (e.g., the typicality of the koala bear as an instance of "bear" was only 0.50). Indeed, the grizzly (with high typicality for basic level ``bear'', .97) is referred to as ``bear'' rather than ``grizzly bear'' in 85\% of \emph{sub necessary} conditions when the koala is the distractor. 
+%
+%In the \emph{basic sufficient} conditions, sub level reference is nevertheless strongly predicted when target sub typicality gain is positive (i.e., when the target is a much better instance of the sub than of the basic level term). An example of such a case is the panda bear, who received a sub level typicality of .98 and a basic level typicality of only .75. Indeed, even when basic level reference was sufficient, the panda was referred to as the ``panda'' 81\% of the time.
+%
+%These patterns mirror the typicality effects obtained via the mixed effects regression.
+
+
+%\subsubsection{Cost effects}
+%
+%The additional effect of cost on nominal choice is straightforward: the costlier an utterance (relative to its alternatives), the less likely it is to be used. This pattern, too, is one observed in the mixed effects regression. For instance, the (short, less costly) pug is almost three times as likely as the (long, more costly) German Shepherd to be referred to by its subordinate level term in the \emph{basic sufficient} and \emph{super sufficient} conditions, where subordinate level reference is unnecessary. 
+%
+%\bigskip
+%In \sectionref{sec:reflevelmodel} we showed that continuous semantics RSA captures the right kinds of qualitative effects as observed in the mixed effects regression. In the next section we evaluate how well the model captures nominal choice preferences quantitatively.
+
+
+
 
 \jd{XXX -- thus far missing entirely. }
 
@@ -1559,7 +1589,7 @@ The following table lists all items used in Exp.~3 and the mean empirical uttera
 \section{Typicality norms for Experiment 3}
 \label{app:typicalitynorms2}
 
-Analogous to the color typicality norms elicited for utterances in Exps.~1-2, we elicited typicality norms for utterances in Exp.~3. The elicited typicalities were used in the Bayesian Data Analysis reported in \sectionref{sec:reflevelmodeleval}.
+Analogous to the color typicality norms elicited for utterances in Exps.~1-2, we elicited typicality norms for utterances in Exp.~3. The elicited typicalities were used in the Bayesian Data Analysis reported in \sectionref{sec:reflevelmodel}.
 
 \subsubsection{Methods}
 

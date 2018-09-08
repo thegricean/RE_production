@@ -246,13 +246,13 @@ typParamPosteriors = ggplot(params.samples, aes(x=value))+
                    binwidth = .1, colour="black", fill="white") +
     geom_histogram(aes(y=..density..),
                  data =subset(params.samples, parameter == "lengthCost" ),
-                 binwidth = .05, colour="black", fill="white") +
+                 binwidth = .1, colour="black", fill="white") +
       geom_histogram(aes(y=..density..),
                    data=subset(params.samples, parameter == "freqCost"),
-                   binwidth = .05, colour="black", fill="white") +
+                   binwidth = .1, colour="black", fill="white") +
     geom_histogram(aes(y=..density..),
                  data =subset(params.samples, parameter == "typWeight" ),
-                 binwidth = .05, colour="black", fill="white") +
+                 binwidth = .1, colour="black", fill="white") +
 
     geom_density(aes(y=..density..),
                  data=subset(params.samples, parameter == "alpha"),
@@ -267,18 +267,85 @@ typParamPosteriors = ggplot(params.samples, aes(x=value))+
                  data=subset(params.samples, parameter == "typWeight"),
                  adjust = 1, alpha=.2, fill="#FF6666")+
     # ggtitle("Param Posteriors (2000 samples; lag = 10; burnin=10000)") +
-    facet_wrap( ~ parameter, scales = 'free') +
+    facet_wrap( ~ parameter, scales = 'free',nrow=1) +
     theme_bw() +
   ylab("Density") 
 typParamPosteriors
+ggsave(file="../writing/pics/exp2-paramposteriors.pdf",width=10,height=3)
 ```
+
+
+
+
+
+
+
+# Analyze color typicality results
+
+## Parameters
+
+Read parameter data from BDA and compute MAPs and HDIs.
+```{r}
+params <- read_csv("../models/bdaOutput/nominal_params.csv") %>%
+  gather(parameter, value, alpha:typWeight)
+
+params %>% 
+  group_by(parameter) %>%
+  summarize(mode = estimate_mode(value),
+            md_lo = round(HPDlo(value), 3),
+            md_hi = round(HPDhi(value), 3))
+```
+
+```{r}
+numSamples = nrow(params)/length(unique(params$parameter))
+params.samples <- params[rep(row.names(params), exp(params$outputProb)*numSamples), 3:4]
+
+nomParamPosteriors = ggplot(params.samples, aes(x=value))+
+    geom_histogram(aes(y=..density..),
+                   data=subset(params.samples, parameter == "alpha"),
+                   binwidth = .1, colour="black", fill="white") +
+    geom_histogram(aes(y=..density..),
+                 data =subset(params.samples, parameter == "lengthCost" ),
+                 binwidth = .1, colour="black", fill="white") +
+      geom_histogram(aes(y=..density..),
+                   data=subset(params.samples, parameter == "freqCost"),
+                   binwidth = .1, colour="black", fill="white") +
+    geom_histogram(aes(y=..density..),
+                 data =subset(params.samples, parameter == "typWeight" ),
+                 binwidth = .1, colour="black", fill="white") +
+
+    geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "alpha"),
+                 adjust = 1, alpha=.2, fill="#FF6666")+
+    geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "lengthCost"),
+                 adjust = 1, alpha=.2, fill="#FF6666")+
+      geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "freqCost"),
+                 adjust = 1, alpha=.2, fill="#FF6666")+
+    geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "typWeight"),
+                 adjust = 1, alpha=.2, fill="#FF6666")+
+    # ggtitle("Param Posteriors (2000 samples; lag = 10; burnin=10000)") +
+    facet_wrap( ~ parameter, scales = 'free',nrow=1) +
+    theme_bw() +
+  ylab("Density") 
+nomParamPosteriors
+ggsave(file="../writing/pics/exp3-paramposteriors.pdf",width=10,height=3)
+```
+
+
+JD: CONTINUE HERE LOADING THE RIGHT EMPIRICAL AND PREDICTIVES DATA FOR EXP 2 AND 3 (AND MERGE IN TYPICALITY VALUES)
+
+
+
 
 
 ## Predictives
 
 Load empirical data and get into right format.
 
-JD: CONTINUE HERE LOADING THE RIGHT EMPIRICAL AND PREDICTIVES DATA (AND MERGE IN TYPICALITY VALUES)
+
 
 ```{r}
 emp = read.csv("../models/bdaInput/typicality/bda_data.csv")
