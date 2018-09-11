@@ -1035,22 +1035,19 @@ Perhaps surprisingly, we did not observe an effect of frequency on sub level ter
 \label{sec:reflevelmodel}
 
 
-We evaluated the continuous semantics RSA model on the obtained production data from Exp.~3. The architecture of the model is almost identical to that of the model presented in \sectionref{sec:colorypicalitymodel}. The only difference is that the set of alternatives contained only the three potential target utterances (i.e., the target's sub, basic, and super label).\footnote{See \tableref{tab:modeldiffs} for an overview of the models reported in the paper.} Whereas the modifier models from the previous sections treat all individual features and feature combinations represented in the display as utterance alternatives, the nominal choice model considers only the three different levels of reference to the target as alternatives, e.g., \emph{dalmatian}, \emph{dog}, \emph{animal}. That is, assuming a German Shepherd as a distractor, \emph{German Shepherd} is \emph{not} considered an alternative.
+We evaluated the continuous semantics RSA model on the obtained production data from Exp.~3. The architecture of the model is identical to that of the model presented in \sectionref{sec:colorypicalitymodel}. The only difference is that the set of alternatives contained only the three potential target utterances (i.e., the target's sub, basic, and super label).\footnote{See \tableref{tab:modeldiffs} for an overview of the models reported in the paper.} Whereas the modifier models from the previous sections treat all individual features and feature combinations represented in the display as utterance alternatives, the nominal choice model considers only the three different levels of reference to the target as alternatives, e.g., \emph{dalmatian}, \emph{dog}, \emph{animal}. That is, assuming a German Shepherd as a distractor, \emph{German Shepherd} is \emph{not} considered an alternative.
 
 Just as we did for capturing color typicality effects in \sectionref{sec:colorypicalitymodel}, we elicited empirical typicality values for object-utterance combinations and used those values as the semantic values in the model.\footnote{See \appref{app:typicalitynorms2} for details of typicality elicitation experiment.} 
 
 
-To evaluate the model we employed the same Bayesian data analysis procedure as reported in the previous section. We integrated over the following free parameters: \jd{XXX adjust to follow structure in 3.2}
+To evaluate the model we employed the same Bayesian data analysis procedure as reported in the previous section. We used Markov Chain Monte Carlo (MCMC) with a burn-in of \jd{robert? XXX} and lag of \jd{robert? XXX} to draw 970 samples from the joint posteriors on the four free parameters  $\beta_i  \sim \mathcal{U}(0,20)$,  $\beta_{c(\textrm{freq})} \sim \mathcal{U}(0,5)$, $\beta_{c(\textrm{len})} \sim \mathcal{U}(0,5)$,, $\beta_t  \sim \mathcal{U}(0,5)$.
 
 Posteriors over parameters are shown in \figref{fig:nomparamposteriors}. \jd{XXX discuss}
 
 \begin{figure}
 \centering
-%\includegraphics[width=\textwidth]{../../../models/1a_bda_basic/results_bda/graphs/parameterposteriors-fixed-reducedconditions}
-% old location \includegraphics[width=\textwidth]{../../../models/old/1a_bda_basic/results_bda/graphs/parameterposteriors-fixed-reducedconditions-unlogged}
-%\includegraphics[width=\textwidth]{pics/parameterposteriors-fixed-reducedconditions-unlogged}
-%\includegraphics[width=\textwidth]{pics/exp1-paramposteriors}
-\caption{\jd{XXX UPDATE Posterior model parameter distributions for semantic value (left column) and cost (right column), separately for color (top row) and size (bottom row). Maximum a posteriori (MAP)  $x_{\textrm{size}}$ = 0.79, 95\% highest density interval (HDI) = [0.76,0.80]; MAP $x_{\textrm{color}}$ = 0.88, HDI = [0.85,0.92]; MAP $c(u_{\textrm{size}})$ = .02, HDI = [0, 0.26]; MAP $c(u_{\textrm{color}})$ = 0.03, HDI = [0,0.45].}}
+\includegraphics[width=\textwidth]{pics/exp3-paramposteriors}
+\caption{Posterior model parameter distributions for informativity weight ($\beta_i$), frequency cost weight  ($\beta_{c(\textrm{freq})}$), length cost weight ($\beta_{c(\textrm{len})}$), and typicality weight ($\beta_t $). Maximum a posteriori (MAP)  $\beta_i$ = 6.16, 95\% highest density interval (HDI) = [5.45,6.37]; MAP $\beta_{c(\textrm{freq})}$ = 0.69, HDI = [0.16,0.84]; MAP $\beta_{c(\textrm{len})}$ = 2.26, HDI = [1.95, 2.68]; MAP $\beta_t $ = 1.56, HDI = [1.43,1.77].}
 \label{fig:nomparamposteriors}
 \end{figure}
 
@@ -1199,15 +1196,19 @@ How do speakers choose a referring expression? Here we have shown that they do s
 
 
 \begin{table}
-\caption{Overview of the models used for the three different production datasets Color/size (Exp.~1), Color typicality (Exp.~2), and Nominal choice (Exp.~3). \red{[rh: still need to explain typicality weight in text; for others editing, this is the soft-max temp. inside L0 that stretches/compresses the empirically elicited typicality values]}
+\caption{Overview of the models used for the three different production datasets Color/size (Exp.~1), Color typicality (Exp.~2), and Nominal choice (Exp.~3). Parameter names:  $x_{\textrm{color}}$: semantic value of color; $x_{\textrm{size}}$: semantic value of size; $\beta_{c(\textrm{color})}$: cost of color;  $\beta_{c(\textrm{size})}$: cost of size; $\beta_i$: weight on informativity; $\beta_{c(\textrm{freq})}$: weight on cost (as estimated by utterance frequency); $\beta_{c(\textrm{len})}$: weight on cost (as estimated by utterance length); $\beta_t$: weight on elicited typicality values \red{[rh: still need to explain typicality weight in text; for others editing, this is the soft-max temp. inside L0 that stretches/compresses the empirically elicited typicality values]}
 }
-\begin{tabular}{p{4.2cm} p{3.9cm} p{3.9cm} p{3.9cm} }
+\begin{tabular}{p{4cm} p{3.9cm} p{3.9cm} p{3.9cm} }
 \toprule
 & Color/size & Color typicality & Nominal choice \\
 \midrule
-Lexicon $\mathcal{L}(u,o)$ size & 2 (color, size) & 1 for each $u,o$ combination & 1 for each $u,o$ combination \\
-\midrule
 Semantic values were\dots & inferred & elicited experimentally & elicited experimentally\\
+\midrule
+Size of lexicon $\mathcal{L}(u,o)$  & 8 (all combinations of \emph{size}, \emph{color}, \emph{othersize}, and \emph{othercolor}) & 1491 (1 for each $u,o$ combination) \jd{elisa, can you check total lexicon size?} & \jd{XXX} (1 for each $u,o$ combination)\\
+\midrule
+Contextual set of alternatives & all contextually available feature combinations & all contextually available feature combinations (type, color) & 3 target alternatives (level of reference) \\
+\midrule
+Size of contextual set of alternatives & 8 & 8 or 9 & 3 \\
 \midrule
 Compositionality & $\mathcal{L}(u_{\text{size}},o) \times \mathcal{L}(u_{\text{color}},o)$ & elicited experimentally & NA \\
 \midrule
@@ -1215,17 +1216,11 @@ Cost function & $\beta_{c(\textrm{color})}\mathbbm{1}_{color}(u)+\beta_{c(\textr
 \midrule
 Costs were\dots & 1 when property mentioned, otherwise 0 & estimated: $l(u)$  from production data and $p(u)$  from corpora & estimated: $l(u)$  from production data and $p(u)$  from corpora \\
 \midrule
-Contextual set of alternatives & all contextually available feature combinations (color, size) & all contextually available feature combinations (type, color) & 3 target alternatives (level of reference) \\
-\midrule
-Size of contextual set of alternatives & 8 & 8 or 9 & 3 \\
-\midrule
-Size of lexicon \red{[rh: how is this diff. from top row?]} & 8 & 1491 \jd{elisa, can you check total lexicon size?} & \jd{XXX} \\
-\midrule
-Free parameters inferred in BDA & $x_{\textrm{color}}$, $x_{\textrm{size}}$, $\beta_{c(\textrm{color})}$,  $\beta_{c(\textrm{size})}$, $\beta_i$ & $\beta_{c(\textrm{freq})}$, $\beta_{c(\textrm{len})}$, $\beta_i$ & $\beta_{c(\textrm{freq})}$, $\beta_{c(\textrm{len})}$, $\beta_i$ \\
+Free parameters inferred in BDA & $x_{\textrm{color}}$, $x_{\textrm{size}}$, $\beta_{c(\textrm{color})}$,  $\beta_{c(\textrm{size})}$, $\beta_i$ & $\beta_{c(\textrm{freq})}$, $\beta_{c(\textrm{len})}$, $\beta_i$, $\beta_t$ & $\beta_{c(\textrm{freq})}$, $\beta_{c(\textrm{len})}$, $\beta_i$, $\beta_t$ \\
 \midrule
 %Grammatical penalty & none & \jd{negative type cost param?} & none \\
 %\midrule
-Typicality weight & none & yes & yes\\
+%Typicality weight & none & yes & yes\\
 \bottomrule
 \end{tabular}
 \label{tab:modeldiffs}
@@ -1233,6 +1228,8 @@ Typicality weight & none & yes & yes\\
 
 
 We have thus shown that with one key innovation -- a continuous semantics  -- one can retain the assumption that speakers rationally trade off informativeness and cost of utterances in language production. Rather than being wastefully overinformative, adding redundant modifiers or referring at a lower taxonomic level than strictly necessary \emph{is} in fact informative when the prima facie sufficiently informative expression is substantially noisier than its redundant/overly specific counterpart. This innovation thus not only provides a unified explanation for a number of key patterns within the overinformative referring expression literature that have thus far eluded a unified explanation; it also extends to the domain of nominal choice.
+
+\jd{say how this is an iimprovement over previous computational models}
 
 In the following we discuss a number of intriguing questions this work raises and avenues for future research that it suggests.
 
