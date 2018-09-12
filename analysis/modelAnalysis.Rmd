@@ -276,6 +276,7 @@ ggsave(file="../writing/pics/exp2-paramposteriors.pdf",width=10,height=3)
 
 
 
+JD: CONTINUE HERE LOADING THE RIGHT EMPIRICAL AND PREDICTIVES DATA FOR EXP 2 (AND MERGE IN TYPICALITY VALUES)
 
 
 
@@ -335,70 +336,102 @@ nomParamPosteriors
 ggsave(file="../writing/pics/exp3-paramposteriors.pdf",width=8,height=2)
 ```
 
-
-JD: CONTINUE HERE LOADING THE RIGHT EMPIRICAL AND PREDICTIVES DATA FOR EXP 2 AND 3 (AND MERGE IN TYPICALITY VALUES)
-
-
-
-
-
 ## Predictives
 
 Load empirical data and get into right format.
 
-
-
 ```{r}
-emp = read.csv("../models/bdaInput/typicality/bda_data.csv")
-colnames(emp) = c("Condition","TargetColor","TargetItem","Dist1Color","Dist1Item","Dist2Color","Dist2Item","Utterance")
+emp = read.csv("../models/bdaInput/nominal/bda_data.csv")
+colnames(emp) = c("Pair","Trial","Cond","Target","Dist1","Dist2","Utterance")
 
+empirical = emp %>%
+  mutate(Condition = 
+           case_when(Cond == "basic12" ~ "sub necessary",
+                     Cond == "basic33" ~ "super sufficient",
+                     TRUE ~ "basic sufficient"),
+         sub = Utterance == "sub",
+         basic = Utterance == "basic",
+         super = Utterance == "super") %>%
+  group_by(Condition, Target) %>%
+  summarize(ProbSub = mean(sub),ProbBasic = mean(basic),ProbSuper = mean(super),CILowSub=ci.low(sub),CIHighSub=ci.high(sub),CILowBasic=ci.low(basic),CIHighBasic=ci.high(basic),CILowSuper=ci.low(super),CIHighSuper=ci.high(super)) %>%
+  ungroup() %>%
+  mutate(YMinSub=ProbSub-CILowSub,YMaxSub=ProbSub+CIHighSub,YMinBasic=ProbBasic-CILowBasic,YMaxBasic=ProbBasic+CIHighBasic,YMinSuper=ProbSuper-CILowSuper,YMaxSuper=ProbSuper+CIHighSuper) 
 
 tmp_prob = empirical %>%
-  select(SufficientDimension,NumDistractors,Variation,ProbColor,ProbSize,ProbSize_Color) %>%
-  gather(Utterance, Probability,-SufficientDimension,-NumDistractors,-Variation) %>%
+  select(Condition,Target,ProbSub,ProbBasic,ProbSuper) %>%
+  gather(Utterance, Probability, -Condition, -Target) %>%
   mutate(Utterance=gsub("Prob","",as.character(Utterance)))
 
 tmp_ymin = empirical %>%
-  select(SufficientDimension,NumDistractors,Variation,YMinColor,YMinSize,YMinSize_Color) %>%
-  gather(Utterance, YMin,-SufficientDimension,-NumDistractors,-Variation) %>%
+  select(Condition,Target,YMinSub,YMinBasic,YMinSuper) %>%
+  gather(Utterance, YMin,-Condition,-Target) %>%
   mutate(Utterance=gsub("YMin","",as.character(Utterance)))
 
 tmp_ymax = empirical %>%
-  select(SufficientDimension,NumDistractors,Variation,YMaxColor,YMaxSize,YMaxSize_Color) %>%
-  gather(Utterance, YMax,-SufficientDimension,-NumDistractors,-Variation) %>%
+  select(Condition,Target,YMaxSub,YMaxBasic,YMaxSuper) %>%
+  gather(Utterance, YMax,-Condition,-Target) %>%
   mutate(Utterance=gsub("YMax","",as.character(Utterance)))
 
 empirical = tmp_prob %>%
-  left_join(tmp_ymin,by=c("SufficientDimension","NumDistractors","Variation","Utterance")) %>%
-  left_join(tmp_ymax,by=c("SufficientDimension","NumDistractors","Variation","Utterance")) %>%
-  mutate(Utterance = tolower(Utterance),
-         Data = "empirical")
+  left_join(tmp_ymin,by=c("Condition","Target","Utterance")) %>%
+  left_join(tmp_ymax,by=c("Condition","Target","Utterance")) %>%
+  mutate(Utterance = tolower(Utterance))
 ```
 
 Load predictives and get into right format.
 ```{r}
-pred = read.csv("../models/bdaOutput/typicality_predictives.csv",quote="")
-colnames(pred)=c("Condition","TargetColor","TargetItem","Dist1Color","Dist1Item","Dist2Color","Dist2Item","Utterance","logProbability","Zero")
+pred = read.csv("../models/bdaOutput/nominal_predictives.csv",quote="")
+colnames(pred)=c("Cond","Target","Dist1","Dist2","Utt","logProbability","Zero") 
 predictives = pred %>%
-  mutate(Probability = exp(logProbability)) %>%
-  select(Condition,TargetColor,TargetItem,Dist1Color,Dist1Item,Dist2Color,Dist2Item,Utterance,Probability) %>%
-  mutate(Data = "model",
-         YMin = NA,
-         YMax = NA)
+    mutate(Condition = 
+           case_when(Cond == "basic12" ~ "sub necessary",
+                     Cond == "basic33" ~ "super sufficient",
+                     TRUE ~ "basic sufficient"),
+           Probability = exp(logProbability),
+           Utterance = 
+             case_when(Utt %in% c("vehicle","clothing","furniture","animal","snack","plant") ~ "super",
+                       Utt %in% c("bear","bird","candy","car","dog","fish","flower","shirt","table") ~ "basic",
+                       TRUE ~ "sub")) %>%
+  select(Condition,Target,Utterance,Probability) %>%
+  group_by(Condition,Target,Utterance) %>%
+  summarize(ModelProb=mean(Probability),CILow=ci.low(Probability),CIHigh=ci.high(Probability)) %>%
+  ungroup() %>%
+  mutate(ModelYMin=ModelProb-CILow,ModelYMax=ModelProb+CIHigh) %>%
+  select(-CILow,-CIHigh)
 ```
 
-Bind empirical and predictives and plot (Fig 8 in paper).
+Bind empirical and predictives and plot (like Fig 8 in paper).
 ```{r}
-d = rbind(empirical,predictives)
+d = left_join(empirical,predictives,by=c("Condition","Target","Utterance"))
 
-ggplot(d, aes(x=Variation,y=Probability,color=Data)) +
+ggplot(d, aes(x=ModelProb,y=Probability,color=relevel(as.factor(Utterance),"sub"))) +
   geom_errorbar(aes(ymin=YMin,ymax=YMax)) +
-  geom_point(aes(shape=as.character(NumDistractors))) +
-  xlab("Scene variation") +
-  ylab("Utterance probability") +
-  labs(shape="Number of\ndistractors") +
-  facet_grid(SufficientDimension~Utterance)
-ggsave("../writing/pics/exp1-empirical-predictives.pdf",height=3.5,width=6.7)
+  geom_errorbarh(aes(xmin=ModelYMin,xmax=ModelYMax)) +
+  geom_point() +
+  xlab("Model predicted probability") +
+  ylab("Empirical utterance proportion") +
+  facet_wrap(~Condition) +
+  # facet_wrap(~relevel(as.factor(Condition),"sub necessary")) +
+  guides(color=guide_legend(title="Utterance"))
+ggsave("../writing/pics/exp3-empirical-predictives.pdf",height=4,width=11)
+```
+Plot just model predictions. First add typicality values, then make same plot as Fig 19 but with model predictions instead of empirical
+```{r}
+typs = read.table("../data/typicality_exp3.csv",header=T,quote="",sep=",")
+ttyps = droplevels(subset(typs, itemtype == "target"))
+row.names(ttyps) = paste(ttyps$labeltype, ttyps$item)
+d$typ_sub = ttyps[paste("sub",as.character(d$Target)),]$meanresponse
+d$typ_basic = ttyps[paste("basic",as.character(d$Target)),]$meanresponse
+d$typ_super = ttyps[paste("super",as.character(d$Target)),]$meanresponse
+
+ggplot(d, aes(x=typ_sub,y=ModelProb,color=relevel(as.factor(Utterance),"sub"))) +
+  geom_point() +
+  geom_smooth(method="lm") +
+  # geom_text(aes(label=item),nudge_y=.04) +
+  ylab("Model predicted utterance probability") +
+  xlab("Typicality of object for subordinate level utterance") +
+  facet_wrap(~relevel(as.factor(Condition),"sub necessary")) +
+  guides(color=guide_legend(title="Utterance"))
 ```
 
 
@@ -408,7 +441,7 @@ ggsave("../writing/pics/exp1-empirical-predictives.pdf",height=3.5,width=6.7)
 
 
 
-## Import predictives data
+## Import predictives data XXX NOT UP TO DATE COLOR TYPICALITY BUSINESS
 
 ```{r}
 colors <- c("yellow","orange","red","pink", "green","blue","brown","black")
