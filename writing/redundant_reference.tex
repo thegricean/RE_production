@@ -112,7 +112,7 @@ Here we revisit this claim and show that systematically relaxing the requirement
 \label{sec:modified}
 
 
-Most of the literature on overinformative referring expressions has been devoted to the use of overinformative modifiers in modified referring expressions. The prevalent observation is that speakers frequently do not include only the minimal modifiers required for establishing reference, but often also include redundant modifiers \cite{Pechmann1989, nadig2002, Maes2004, Engelhardt2006, Arts2011, Koolen2011}. However, not all modifiers are created equal: there are systematic differences in the overmodification patterns observed for size adjectives (e.g., \emph{big, small}), color adjectives (e.g., \emph{blue, red}), material adjectives (e.g., \emph{plastic, wooden}), and others \cite{sedivy2003a}. Here we review some key patterns of overmodification that have plagued that literature, before spelling out our account of these phenomena in \sectionref{sec:models}.
+Most of the literature on overinformative referring expressions has been devoted to the use of overinformative modifiers in modified referring expressions. The prevalent observation is that speakers frequently do not include only the minimal modifiers required for establishing reference, but often also include redundant modifiers \cite{Pechmann1989, nadig2002, Maes2004, Engelhardt2006, Arts2011, Koolen2011}. However, not all modifiers are created equal: there are systematic differences in the overmodification patterns observed for size adjectives (e.g., \emph{big, small}), color adjectives (e.g., \emph{blue, red}), material adjectives (e.g., \emph{plastic, wooden}), and others \cite{sedivy2003a}. Here we review some key patterns of overmodification that have been observed, before spelling out our account of these phenomena in \sectionref{sec:models}.
 
 
 
@@ -148,7 +148,7 @@ Another explanation for the asymmetry is that speakers try to produce modifiers 
 
 There have been various attempts to capture the color-size asymmetry in computational natural language generation models. The earliest contenders for models of definite referring expressions like the Full Brevity algorithm \cite{Dale1989} or the Greedy algorithm \cite{Dale1989} focused only on discriminatory value -- that is, an utterance's informativeness -- in generating referring expressions. This is equivalent to the very simple interpretation of Grice laid out above, and consequently these models demonstrated the same inability to capture the color-size asymmetry: they only produced the minimally specified expressions. Subsequently, the Incremental algorithm \cite{dale1995} incorporated a preference order on features, with color ranked higher than size. The order is traversed and each encountered feature included in the expression if it serves to exclude at least one further distractor. This results in the production of overinformative color but not size adjectives. However, the resulting asymmetry is much greater than that evident in human speakers, and is deterministic rather than exhibiting the probabilistic production patterns that human speakers exhibit. More recently, the PRO model \cite{GattEtAl2013} has sought to integrate the observation that speakers seem to have a preference for including color terms with the observation that a preference does not imply the deterministic inclusion of said color term. The model is specifically designed to capture the color-size asymmetry: in a first step, the uniquely distinguishing property (if there is one) is first selected deterministically. In a second step, an additional property is added probabilistically, depending on both a salience parameter associated with the additional property and a parameter capturing speakers' eagerness to overmodify. If both properties are uniquely distinguishing, a property is selected probabilistically depending on its associated salience parameter. The second step proceeds as before.
 
-However, while the PRO model -- the most state-of-the-art computational model of human production of modified referring expressions -- can capture the color-size asymmetry in and of itself, it is neither flexible enough to be extended straightforwardly to other modifiers beyond color and size, nor can it straightforwardly be extended to capture the more subtle systematicity with which the preference to overmodify with color changes based on various features of context. We delve into these more subtle patterns in the next two sections before presenting our alternative model within the Rational Speech Act framework.
+However, while the PRO model -- the most state-of-the-art computational model of human production of modified referring expressions -- can capture the color-size asymmetry in and of itself, it is neither flexible enough to be extended straightforwardly to other modifiers beyond color and size, nor can it straightforwardly be extended to capture the more subtle systematicity with which the preference to overmodify with color changes based on various features of context. 
 
 \subsubsection{Scene variation}
 \label{sec:scenevariation}
@@ -157,9 +157,11 @@ So far we have portrayed speakers' propensity to overmodify with color as a fixe
 
 The effect of scene variation on propensity to overmodify has typically been explained as the result of the demands imposed on visual search: in low-variation scenes, it is easier to discern the discriminating dimensions than in high-variation scenes, where it may be easier to simply start naming features of the target that are salient \cite{Koolen2013}. 
 
-The PRO model does not have a straightforward way of capturing the effect of scene variation on probability of overmodification. One way of doing so is to make the salience and overmodification parameters directly dependent on the amount of variation in the scene. However, this requires additional free parameters and makes the model prone to overfitting.
+The PRO model does not have a straightforward way of capturing the effect of scene variation on probability of overmodification. One way of doing so is to make the salience and overmodification parameters directly dependent on the amount of variation in the scene. However, this requires additional free parameters -- PRO can accommodate but not explain the effect.
 
-We show in \sectionref{sec:models} how scene variation effects fall straightforwardly out of our proposed model by capturing the intuition that color becomes an increasingly good property for speakers to mention as it becomes contextually more informative.
+\ndg{say something about other kinds of scene variation? and the need to capture them all.}
+
+%We show in \sectionref{sec:models} how scene variation effects fall straightforwardly out of our proposed model by capturing the intuition that color becomes an increasingly good property for speakers to mention as it becomes contextually more informative.
 
 \subsubsection{Feature typicality}
 \label{sec:colortypicalityintro}
@@ -183,7 +185,13 @@ Modifier type and amount of scene variation are not the only factors determining
 
 Whether speakers are more likely to mention atypical properties over typical properties because they are more salient to \emph{them} or because they are trying to make reference resolution easier for the listener, for whom presumably these properties are also salient, is an open question \cite{Westerbeek2015}. Some support for the audience design account comes from a study by \citeA{Huettig2011}, who found that listeners, after hearing a noun with a diagnostic color (e.g., \emph{frog}), are more likely to fixate objects of that diagnostic color (green), indicating that typical object features are rapidly activated and aid visual search. Similarly, \citeA{Arts2011} showed that overspecified expressions result in faster referent identification.  Nevertheless, the benefit for listeners and the salience for speakers might simply be a happy coincidence and speakers might not, in fact, be designing their utterances for their addressees. We will remain agnostic about the underlying reason for typicality effects for the time being and will return to this issue in the General Discussion. % \jd{will we, though? the model assumes that typicality affects the literal listener, who speakers reason about, so in a sense we're making a strong audience design claim.}
 
-Irrespective of the source of typicality effects, it is unclear how the PRO model could accommodate them. In addition, one is left with the task of explaining how scene variation and typicality should interact. We show in \sectionref{sec:colortypicality} that the production model we propose straightforwardly accounts for these typicality effects in a principled way. In addition, we provide a principled way in which distractor typicality can be taken into account in modifier choice.
+
+
+%Irrespective of the source of typicality effects, it is unclear how the PRO model could accommodate them. 
+%In addition to explaining typicality effects themselves, we would like to explain how scene variation and typicality should interact. 
+%We show in \sectionref{sec:colortypicality} that the production model we propose straightforwardly accounts for these typicality effects in a principled way. In addition, we provide a principled way in which distractor typicality can be taken into account in modifier choice.
+
+\ndg{i tried to remove repetitive "we will show later" remarks. let's just get the phenomena out and then we can show... also decreased discussion of PRO that is just badmouthing.}
 
 \subsection{Nominal referring expressions}
 \label{sec:nominalintro}
@@ -213,7 +221,9 @@ Contextual informativeness is another factor that has been shown to affect speak
 \subsection{Summary}
 \label{sec:introsummary}
 
-In sum, the production of modified and simple nominal referring expressions is governed by a rich interplay of many factors, including an utterance's informativeness, its cost relative to alternative utterances, and the typicality of an object or its features. In the next section, we provide an explicit computational account of how these different factors interact, with a focus on cases where speakers appear to be overinformative -- either by adding more modifiers or by referring at a more specific level than necessary for establishing unique reference. A summary of the effects we will focus on in the remainder of the paper is provided in \tableref{tab:effects}.
+In sum, the production of modified and simple nominal referring expressions is governed by many factors, including an utterance's informativeness, its cost relative to alternative utterances, and the typicality of an object or its features. 
+Critically, these factors are all in play at once, potentially interacting in rich and complex ways.
+In the next section, we provide an explicit computational account of these different factors and how they interact, with a focus on cases where speakers appear to be overinformative -- either by adding more modifiers or by referring at a more specific level than necessary for establishing unique reference. A summary of the effects we will focus on in the remainder of the paper is provided in \tableref{tab:effects}.
 
 \begin{table}
 \caption{List of effects a theory of referring expression production should account for and paper section(s) in which they are treated.}
@@ -235,7 +245,7 @@ Section & Effect & Description \\ %& Reported by \\
 \end{table}
 
 
-To date, there is no theory to account for all of these different phenomena; and no model has attempted to unify overinformativeness in the domain of modified and nominal referring expressions. We touched on some of the explanations that have been proposed for these phenomena. We also highlighted where computational models have been proposed for individual phenomena, and how they fall short. In the next section, we present the Rational Speech Act modeling framework, within which we will provide precisely the kind of theory that can account for at least all of the phenomena listed here and holds great promise for scaling up to many other overinformativeness phenomena.  
+To date, there is no theory to account for all of these different phenomena; and no model has attempted to unify overinformativeness in the domain of modified and nominal referring expressions. We touched on some of the explanations that have been proposed for these phenomena. We also highlighted where computational models have been proposed for individual phenomena, and how they fall short. In the next section, we present the Rational Speech Act modeling framework, which we then use to capture these disparate phenomena in one model.
 
 
 \section{Modeling speakers' choice of referring expression}
