@@ -10,6 +10,55 @@ source(here("analysis","helper_scripts","helpers.r"))
 
 production = read.table(file=here("data","data_exp2.csv"),sep="\t", header=T, quote="")
 
+############################
+# Mixed effects regression #
+############################
+
+# Read cost file
+cost = read.csv(here("data","cost_exp2.csv"),header=TRUE)
+row.names(cost) = cost$target
+
+production = droplevels(production[production$UttforBDA != "other",])
+
+# 
+# production$ColTypeLength = cost[as.character(production$Target),]$length
+# # This is a LogProbability
+# production$ColTypeFreq = cost[as.character(production$Target),]$freq
+# production$TypeLength = cost[as.character(production$Item),]$length
+# production$TypeFreq = cost[as.character(production$Item),]$freq
+# production$ColorLength = cost[as.character(production$TargetColor),]$length
+# production$ColorFreq = cost[as.character(production$TargetColor),]$freq
+
+# Encode informativity and color competitor presence as binary
+production$Informative = as.factor(ifelse(production$context %in% c("informative","informative-cc"),"informative","overinformative"))
+production$CC = as.factor(ifelse(production$context %in% c("informative-cc","overinformative-cc"),"cc","no-cc"))
+
+# Exclude all "other" utterances
+an = production[,c("gameid","context","NormedTypicality","Informative","CC","Item","ColorAndType","Color")]
+# nrow(an)
+
+centered = cbind(an,myCenter(an[,c("NormedTypicality","Informative","CC")]))
+# ColorOrType is the same as ColorMentioned
+centered$ColorOrType = centered$ColorAndType | centered$Color
+
+# Informative is a negative value, Overinformative is a positive value
+# CC is negative, nonCC is positive
+
+m.1 = glmer(ColorOrType ~ cNormedTypicality + cInformative + cCC + (1|gameid) + (1|Item), data = centered, family="binomial")
+summary(m.1)
+# ranef(m.1)
+
+m.2 = glmer(ColorOrType ~ cNormedTypicality + cInformative + cCC + cNormedTypicality : cInformative + (1|gameid) + (1|Item), data = centered, family="binomial")
+summary(m.2)
+# ranef(m.2)
+
+m.3 = glmer(ColorOrType ~ cNormedTypicality + cInformative + cCC + cNormedTypicality : cInformative + cNormedTypicality:cCC + (1|gameid) + (1|Item), data = centered, family="binomial")
+summary(m.3)
+# ranef(m.3)
+
+anova(m.1,m.2)
+anova(m.1,m.3)
+
 ###################################################
 # Plot utterance choice proportions by typicality #
 ###################################################
@@ -92,77 +141,6 @@ ggplot(agr, aes(x=NormedTypicality,y=Probability,color=Utterance)) +
   theme(legend.text=element_text(size=11,colour="#757575")) +
   theme(strip.background=element_rect(colour="#939393",fill="white")) +
   theme(panel.background=element_rect(colour="#939393"))
-
-############################
-# Mixed effects regression #
-############################
-
-# Read cost file
-cost = read.csv(here("data","cost_exp2.csv"),header=TRUE)
-row.names(cost) = cost$target
-
-production = droplevels(production[production$UttforBDA != "other",])
-
-# 
-production$ColTypeLength = cost[as.character(production$Target),]$length
-# This is actually a LogProbability
-production$ColTypeFreq = cost[as.character(production$Target),]$freq
-production$TypeLength = cost[as.character(production$Item),]$length
-production$TypeFreq = cost[as.character(production$Item),]$freq
-production$ColorLength = cost[as.character(production$TargetColor),]$length
-production$ColorFreq = cost[as.character(production$TargetColor),]$freq
-
-production$TargetLength = as.numeric(ifelse(production$ColorAndType,production$ColTypeLength,
-                                 ifelse(production$Type,production$TypeLength,
-                                        ifelse(production$Color,production$ColorLength,"ERROR"))))
-production$TargetFreq = as.numeric(ifelse(production$ColorAndType,production$ColTypeFreq,
-                               ifelse(production$Type,production$TypeFreq,
-                                      ifelse(production$Color,production$ColorFreq,"ERROR"))))
-production$UttAlt1Length = as.numeric(ifelse(production$ColorAndType,production$TypeLength,
-                                  ifelse(production$Type,production$ColorLength,
-                                         ifelse(production$Color,production$ColTypeLength,"ERROR"))))
-production$UttAlt1Freq = as.numeric(ifelse(production$ColorAndType,production$TypeFreq,
-                                ifelse(production$Type,production$ColorFreq,
-                                       ifelse(production$Color,production$ColTypeFreq,"ERROR"))))
-production$UttAlt2Length = as.numeric(ifelse(production$ColorAndType,production$ColorLength,
-                                  ifelse(production$Type,production$ColTypeLength,
-                                         ifelse(production$Color,production$TypeLength,"ERROR"))))
-production$UttAlt2Freq = as.numeric(ifelse(production$ColorAndType,production$ColorFreq,
-                                ifelse(production$Type,production$ColTypeFreq,
-                                       ifelse(production$Color,production$TypeFreq,"ERROR"))))
-
-# Encode informativity and color competitor presence as binary
-production$Informative = as.factor(ifelse(production$context %in% c("informative","informative-cc"),"informative","overinformative"))
-production$CC = as.factor(ifelse(production$context %in% c("informative-cc","overinformative-cc"),"cc","no-cc"))
-
-# Exclude all "other" utterances
-an = production[,c("gameid","context","NormedTypicality","Informative","CC","Item","ColorAndType","Color","TargetLength","TargetFreq","UttAlt1Length","UttAlt1Freq","UttAlt2Length","UttAlt2Freq")]
-# nrow(an)
-
-centered = cbind(an,myCenter(an[,c("NormedTypicality","Informative","CC","TargetLength","TargetFreq")]))
-# ColorOrType is the same as ColorMentioned
-centered$ColorOrType = centered$ColorAndType | centered$Color
-
-# Informative is a negative value, Overinformative is a positive value
-# CC is negative, nonCC is positive
-# m = glmer(ColorOrType ~ cNormedTypicality + cInformative + cCC + cNormedTypicality : cInformative + cNormedTypicality:cCC + (1|gameid) + (1|Item), data = centered, family="binomial")
-# summary(m)
-# ranef(m)
-
-m.0 = glmer(ColorOrType ~ cNormedTypicality + cInformative + cCC + cTargetLength + cTargetFreq + (1|gameid) + (1|Item), data = centered, family="binomial")
-summary(m.0)
-# ranef(m.0)
-
-m.1 = glmer(ColorOrType ~ cNormedTypicality + cInformative + cCC + (1|gameid) + (1|Item), data = centered, family="binomial")
-summary(m.1)
-# ranef(m.1)
-
-# m.2 = glmer(ColorOrType ~ cNormedTypicality + cInformative + cCC + cNormedTypicality : cInformative + (1|gameid) + (1|Item), data = centered, family="binomial")
-# summary(m.2)
-# ranef(m.2)
-
-# anova(m.1,m.2)
-anova(m.0,m.1)
 
 ###############
 # Other plots #
