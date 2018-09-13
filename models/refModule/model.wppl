@@ -35,7 +35,7 @@ var initializeModel = function(params) {
   var meaning = function(utt, object) {
     var objStr = _.values(object).join("_");
     var lexicalEntry = params.lexicon[utt];
-    return _.has(lexicalEntry, objStr) ? lexicalEntry[objStr] : -100; 
+    return _.has(lexicalEntry, objStr) ? lexicalEntry[objStr] : 0; 
   };
   
   // Selects among objects in context using lexicon
