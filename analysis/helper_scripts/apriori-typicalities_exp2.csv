@@ -1,0 +1,23 @@
+Item,Color,Utterance,AprioriTypicality
+apple,blue,blue apple,atypical
+apple,green,green apple,midtypical
+apple,red,red apple,typical
+avocado,black,black avocado,midtypical
+avocado,green,green avocado,typical
+avocado,red,red avocado,atypical
+banana,blue,blue banana,atypical
+banana,brown,brown banana,midtypical
+banana,yellow,yellow banana,typical
+carrot,brown,brown carrot,midtypical
+carrot,orange,orange carrot,typical
+carrot,purple,purple carrot,atypical
+pear,green,green pear,typical
+pear,orange,orange pear,atypical
+pear,yellow,yellow pear,midtypical
+pepper,black,black pepper,atypical
+pepper,green,green pepper,typical
+pepper,orange,orange pepper,midtypical
+pepper,red,red pepper,typical
+tomato,green,green tomato,midtypical
+tomato,purple,purple tomato,atypical
+tomato,red,red tomato,typical
