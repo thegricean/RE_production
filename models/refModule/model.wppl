@@ -29,8 +29,10 @@ var initializeModel = function(params) {
           return (params.colorCost * colorMention +
               params.typeCost * typeMention);
     } else if (_.includes(['nominal', 'typicality'], params.modelVersion))  {
-      return (params.lengthCost * refModule.getRelativeLength(params, utt) +
-  		 params.freqCost * refModule.getRelativeLogFrequency(params, utt));
+      // console.log("lengthCost: "+params.lengthCostWeight)
+      // console.log("freqCost: "+params.freqCostWeight)
+      return (params.lengthCostWeight * refModule.getRelativeLength(params, utt) +
+  		 params.freqCostWeight * refModule.getRelativeLogFrequency(params, utt));
     } else {
       return console.error('unknown model specification: modelVersion: ' + params.modelVersion + '; costs: ' + params.costs + '; smeantics: ' + params.semantics);
     }
