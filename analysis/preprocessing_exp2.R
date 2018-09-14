@@ -27,6 +27,7 @@ production = d[,c("gameid","context","nameClickedObj","alt1Name","alt2Name","ref
 
 # Correct for change in labelling (we realized what we considered pink was mostly considered purple)
 production$clickedColor = ifelse(as.character(production$clickedColor) == 'pink', 'purple', as.character(production$clickedColor))
+production$nameClickedObj = gsub("pink", "purple", production$nameClickedObj)
 production$alt1Name = gsub("pink", "purple", production$alt1Name)
 production$alt2Name = gsub("pink", "purple", production$alt2Name)
 
@@ -155,5 +156,5 @@ production$Dist1 = paste(production$Dist1Color, production$Dist1Type, sep="_")
 production$Dist2 = paste(production$Dist2Color, production$Dist2Type, sep="_")
 production$Item = production$clickedType
 production$TargetColor = production$clickedColor
-preproc_file = production[,c("gameid","context","NormedTypicality","UtteranceType","Color","ColorAndType","Type","ColorMentioned","ItemMentioned","Other","Item","TargetColor","Target","Dist1","Dist2","UttforBDA")]
+preproc_file = production[,c("gameid","context","NormedTypicality","UtteranceType","Color","ColorAndType","Type","ColorMentioned","ItemMentioned","Other","Item","TargetColor","Target","Dist1","Dist2","refExp","UttforBDA")]
 write.table(preproc_file,file=here("data","data_exp2.csv"),sep="\t",row.names=F,quote=F)
