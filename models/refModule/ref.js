@@ -89,10 +89,10 @@ var getColorSizeUtterances = function(context) {
 };
 
 // Need to be able to look up what type a word is (includes collapsed versions)...
-var colors = ['color', 'othercolor', 'blue', 'red', 'green', 'gray', 'brown'];
+var colors = ['color', 'othercolor', 'blue', 'red', 'green', 'gray', 'brown','orange','black','yellow','purple'];
 var sizes = ["size", "othersize", 'big', 'small'];
 var types = ['item', 'thing', 'thumbtack', 'couch',
-	     'tv', 'desk', 'chair', 'fan'];       
+	     'tv', 'desk', 'chair', 'fan', 'banana','tomato','carrot','pepper','pear','avocado','apple'];       
 
 var getColorSizeUttMeaning = function(params, utt, obj) {
   var wordMeanings = _.map(utt.split('_'), function(word) {
@@ -152,6 +152,10 @@ function getConditions(modelVersion) {
 
 function getParamPosterior(modelVersion) {
   return readCSV('./bdaOutput/' + modelVersion + '_params.csv');
+}
+
+function getManualParams(modelVersion) {
+  return readCSV('./' + modelVersion + '_manualparams.csv');
 }
 
 function writeCSV(jsonCSV, filename){
@@ -370,7 +374,7 @@ module.exports = {
   getNominalUtterances, getColorSizeUtterances, getTypicalityUtterances,
   constructLexicon, powerset, getSubset, 
   bayesianErpWriter, writeERP, writeCSV, readCSV, getTestContexts,
-  getData, getConditions, getParamPosterior,
+  getData, getConditions, getParamPosterior, getManualParams,
   obj_product,
   getL0score,getSpeakerScore,
   getRelativeLength, getRelativeLogFrequency, getTypSubset,
