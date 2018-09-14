@@ -1,8 +1,9 @@
 // simulates model forward with given params/context 
-// webppl evaluate.wppl --require ./refModule/ -- --modelVersion <colorSize> --paramSource <inferred>
+// webppl evaluate.wppl --require ./refModule/ -- --modelVersion <colorSize> --paramSource <inferred> --costs <fixed>
 var config = {
   'modelVersion' : argv.modelVersion, // colorSize, typicality, or nominal
-  'paramSource' : argv.paramSource // inferred, manual
+  'paramSource' : argv.paramSource, // inferred, manual
+  'costs' : argv.costs // fixed, empirical
 };
 
 // Pull in requested data/conditions 
@@ -17,13 +18,13 @@ var getParams = function() {
   if (config.paramSource == "inferred") {
     var paramPosterior = refModule.getParamPosterior(config.modelVersion);
     var map_likelihood = _.min(_.map(paramPosterior, 'logLikelihood'));
-    console.log(map_likelihood);
+    // console.log(map_likelihood);
     return find(function(x) {
       return _.toFinite(x.logLikelihood) == _.toFinite(map_likelihood);
     }, paramPosterior);
   } else {
     var manualParams = refModule.getManualParams(config.modelVersion)[0];
-    console.log(manualParams);
+    // console.log(manualParams);
     return manualParams;
   };
 };
@@ -40,7 +41,7 @@ var modelAnalysis = function() {
     var conditionName = c.condition;
     var context = c.context;
     var target = context[0];
-    console.log(target, context);
+    // console.log(target, context);
     // Run model
     var modelOutput = speakerModel(target, context);
 
