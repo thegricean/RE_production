@@ -15,35 +15,32 @@ console.log("Loading unique conditions... found" + conditions.length);
 // If based on posterior over parameters, extract highest scoring MCMC sample
 var getParams = function() {
   if (config.paramSource == "inferred") {
-    console.log("in here");
     var paramPosterior = refModule.getParamPosterior(config.modelVersion);
-    return _.find(paramPosterior, function(x) {
-        return x === _.max(_.map(paramPosterior, 'logLikelihood'));
-    });
+    var map_likelihood = _.min(_.map(paramPosterior, 'logLikelihood'));
+    console.log(map_likelihood);
+    return find(function(x) {
+      return _.toFinite(x.logLikelihood) == _.toFinite(map_likelihood);
+    }, paramPosterior);
   } else {
-    console.log("in right place");
-    var manualParams = refModule.getManualParams(config.modelVersion);
-    return _.find(manualParams, function(x) {
-        return x === _.max(_.map(manualParams, 'alpha'));
-    });
+    var manualParams = refModule.getManualParams(config.modelVersion)[0];
+    console.log(manualParams);
+    return manualParams;
   };
 };
 
 var params = extend({}, getParams(), config);
-
 console.log(params);
-
 var modelAnalysis = function() {
 
   var lexicon = refModule.constructLexicon(params);
   var speakerModel = initializeModel(extend(params, {lexicon}));
-
+  
   foreach(conditions, function(c) {
     // Extract condition information
     var conditionName = c.condition;
     var context = c.context;
     var target = context[0];
-    
+    console.log(target, context);
     // Run model
     var modelOutput = speakerModel(target, context);
 
