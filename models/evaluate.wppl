@@ -1,7 +1,8 @@
 // simulates model forward with given params/context 
-// webppl simulate.wppl --require ../refModule/ -- --modelVersion <colorSize> 
+// webppl evaluate.wppl --require ./refModule/ -- --modelVersion <colorSize> --paramSource <inferred>
 var config = {
-  'modelVersion' : argv.modelVersion
+  'modelVersion' : argv.modelVersion, // colorSize, typicality, or nominal
+  'paramSource' : argv.paramSource // inferred, manual
 };
 
 // Pull in requested data/conditions 
@@ -11,13 +12,26 @@ console.log("Loading data... found" + data.length + " data points");
 var conditions = refModule.getConditions(config.modelVersion);
 console.log("Loading unique conditions... found" + conditions.length);
 
-// Pull in requested data/conditions and extract highest scoring MCMC sample
-var paramPosterior = refModule.getParamPosterior(config.modelVersion);
-var MAP = _.find(paramPosterior, function(x) {
-    return x === _.max(_.map(paramPosterior, 'logLikelihood'));
-});
+// If based on posterior over parameters, extract highest scoring MCMC sample
+var getParams = function() {
+  if (config.paramSource == "inferred") {
+    console.log("in here");
+    var paramPosterior = refModule.getParamPosterior(config.modelVersion);
+    return _.find(paramPosterior, function(x) {
+        return x === _.max(_.map(paramPosterior, 'logLikelihood'));
+    });
+  } else {
+    console.log("in right place");
+    var manualParams = refModule.getManualParams(config.modelVersion);
+    return _.find(manualParams, function(x) {
+        return x === _.max(_.map(manualParams, 'alpha'));
+    });
+  };
+};
 
-var params = extend({}, config, MAP);
+var params = extend({}, getParams(), config);
+
+console.log(params);
 
 var modelAnalysis = function() {
 
