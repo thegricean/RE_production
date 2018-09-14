@@ -175,3 +175,35 @@ ggplot(agr, aes(x=binTyp,y=PropColorMentioned,color=clickedType,linetype=binCont
   guides(color=guide_legend(title="Object")) +
   guides(linetype=guide_legend(title="Context"))
 
+###
+# Empirical length vs theoretical length
+###
+
+production$empiricalLength = str_length(production$refExp)
+production$theoreticalLength = str_length(production$UttforBDA)
+
+agr = production[production$UtteranceType!="OTHER",c("empiricalLength","theoreticalLength","UtteranceType","Item")]
+
+ggplot(agr,aes(x=empiricalLength,y=theoreticalLength)) +
+  geom_abline(intercept = 0, slope = 1, color="lightblue") +
+  geom_point(alpha=0.05) +
+  facet_wrap(~UtteranceType) +
+  xlim(0,30) +
+  ylim(0,30)
+# ggsave(here("exp2_lengths.jpg"))
+
+ggplot(agr,aes(x=empiricalLength,y=theoreticalLength)) +
+  geom_abline(intercept = 0, slope = 1, color="lightblue") +
+  geom_point(alpha=0.05) +
+  facet_wrap(~Item) +
+  xlim(0,30) +
+  ylim(0,30)
+
+agr = agr %>%
+  select(-Item) %>% 
+  group_by(UtteranceType) %>%
+  summarize(MeanEmpLength=mean(empiricalLength),MeanTheorLength=mean(theoreticalLength))
+agr$OverallDiff = agr$MeanEmpLength-agr$MeanTheorLength
+agr
+
+
