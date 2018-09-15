@@ -151,8 +151,8 @@ function getConditions(modelVersion) {
   return require('../bdaInput/' + modelVersion + '/unique_conditions.json');
 }
 
-function getParamPosterior(modelVersion) {
-  return readCSV('./bdaOutput/' + modelVersion + '_params.csv');
+function getParamPosterior(modelVersion,costs) {
+  return readCSV('./bdaOutput/' + modelVersion + '_' + costs + '_empirical_params.csv');
 }
 
 function getManualParams(modelVersion) {
@@ -229,6 +229,9 @@ var getHeader = function(version) {
   } else if (version == 'typicality_predictives') {
     return ['condition','t_color', "t_item", 'd1_color', "d1_item",
 	    "d2_color", "d2_item", "response", "logModelProb",  "zeros"];
+  } else if (version == 'typicality_fixed_empirical_predictives') {
+    return ['condition','t_color', "t_item", 'd1_color', "d1_item",
+      "d2_color", "d2_item", "response", "logModelProb",  "zeros"];      
   } else if (version == 'nominal_params') {
     return ['infWeight', 'lengthCostWeight', 'freqCostWeight', 'typWeight',
 	    'logLikelihood', 'outputProb'];

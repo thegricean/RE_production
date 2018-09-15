@@ -265,22 +265,22 @@ typParamPosteriors = ggplot(params.samples, aes(x=value))+
 
     geom_density(aes(y=..density..),
                  data=subset(params.samples, parameter == "infWeight"),
-                 adjust = 1, infWeight=.2, fill="#FF6666")+
+                 adjust = 1, alpha=.2, fill="#FF6666")+
     geom_density(aes(y=..density..),
     data=subset(params.samples, parameter == "lengthCostWeight"),
-    adjust = 1, infWeight=.2, fill="#FF6666")+
+    adjust = 1, alpha=.2, fill="#FF6666")+
     geom_density(aes(y=..density..),
     data=subset(params.samples, parameter == "freqCostWeight"),
-    adjust = 1, infWeight=.2, fill="#FF6666")+
+    adjust = 1, alpha=.2, fill="#FF6666")+
     geom_density(aes(y=..density..),
                  data=subset(params.samples, parameter == "typWeight"),
-                 adjust = 1, infWeight=.2, fill="#FF6666")+
+                 adjust = 1, alpha=.2, fill="#FF6666")+
       geom_density(aes(y=..density..),
                  data=subset(params.samples, parameter == "colorCost"),
-                 adjust = 1, infWeight=.2, fill="#FF6666")+
+                 adjust = 1, alpha=.2, fill="#FF6666")+
     geom_density(aes(y=..density..),
                  data=subset(params.samples, parameter == "typeCost"),
-                 adjust = 1, infWeight=.2, fill="#FF6666")+  
+                 adjust = 1, alpha=.2, fill="#FF6666")+  
     # ggtitle("Param Posteriors (10,000 samples; lag = 10; burnin=10000)") +
     facet_wrap( ~ parameter, scales = 'free',nrow=1) +
     theme_bw() +
@@ -343,7 +343,10 @@ empirical = tmp_prob %>%
 
 Load predictives and get into right format.
 ```{r}
-pred = read.csv("../models/bdaOutput/typicality_predictives.csv",quote="")
+costs = "fixed" # or "empirical"
+costs = "empirical" # or "fixed"
+semantics = "empirical" # or "fixed" or "fixedplusempirical"
+pred = read.csv(paste("../models/bdaOutput/typicality_",costs,"_",semantics,"_predictives.csv",sep=""),quote="")
 colnames(pred) = c("Condition","TargetColor","TargetType","Dist1Color","Dist1Type","Dist2Color","Dist2Type","Utterance","logProbability","Zero")
 predictives = pred %>%
   mutate(Probability = exp(logProbability),
@@ -372,7 +375,6 @@ typ = read.csv(file="../data/raw/norming_exp2/typicality_exp2_type.csv") %>%
   mutate(Combo = paste(Color,"_",Item,sep=""))
 row.names(typ) = typ$Combo
 predictives$TypeTypicality = typ[as.character(predictives$Target),]$Typicality
-# predictives$UtteranceType = ifelse(as.character(predictives$Utterance) %in% as.character(unique(pred$TargetColor)),"color",ifelse(as.character(predictives$Utterance) %in% as.character(unique(pred$TargetType)),"type",ifelse(as.character(predictives$Utterance) %in% as.character(unique(predictives$Target)),"color-type","other")))
 ```
 
 Plot model predictions
@@ -388,7 +390,7 @@ ggplot(predictives, aes(x=TypeTypicality,y=ModelProb,color=UtteranceType)) +
   facet_wrap(~Condition) +
   # facet_wrap(~relevel(as.factor(Condition),"sub necessary")) +
   guides(color=guide_legend(title="Utterance"))
-ggsave(file="../writing/pics/exp2_predictives.pdf",height=5,width=8)
+ggsave(file=paste("../writing/pics/exp2-",costs,"-",semantics,"-predictives.pdf",sep=""),height=5,width=8)
 ```
 
 Bind empirical and predictives and plot (like Fig 8 in paper).
