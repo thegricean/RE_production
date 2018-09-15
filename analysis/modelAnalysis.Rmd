@@ -36,7 +36,7 @@ Read parameter data from BDA and compute MAPs and HDIs.
 params <- read_csv("../models/bdaOutput/colorSize_params.csv") %>%
   mutate(costDiff = colorCost - sizeCost) %>%
   mutate(typDiff = colorTyp - sizeTyp) %>%
-  gather(parameter, value, alpha:typWeight, costDiff, typDiff)
+  gather(parameter, value, infWeight:typWeight, costDiff, typDiff)
 
 params %>% 
   group_by(parameter) %>%
@@ -60,10 +60,10 @@ typParamPosteriors = ggplot(params.samples %>% filter(parameter %in% c('colorTyp
 
     geom_density(aes(y=..density..),
                  data=subset(params.samples, parameter == "colorTyp"),
-                 adjust = 2, alpha=.2, fill="#FF6666")+
+                 adjust = 2, infWeight=.2, fill="#FF6666")+
     geom_density(aes(y=..density..),
                  data=subset(params.samples, parameter == "sizeTyp"),
-                 adjust = 2, alpha=.2, fill="#FF6666")+
+                 adjust = 2, infWeight=.2, fill="#FF6666")+
     # ggtitle("Param Posteriors (2000 samples; lag = 10; burnin=10000)") +
     facet_grid(parameter ~. , scales = 'free', labeller=labeller(parameter = labels)) +
     theme_bw() +
@@ -88,10 +88,10 @@ costParamPosteriors = ggplot(params.samples %>% filter(parameter %in% c('colorCo
 
     geom_density(aes(y=..density..),
                  data=subset(params.samples, parameter == "colorCost"),
-                 adjust = 1, alpha=.2, fill="#FF6666")+
+                 adjust = 1, infWeight=.2, fill="#FF6666")+
     geom_density(aes(y=..density..),
                  data=subset(params.samples, parameter == "sizeCost"),
-                 adjust = 1, alpha=.2, fill="#FF6666")+
+                 adjust = 1, infWeight=.2, fill="#FF6666")+
     ylab("Density") +
   xlab("Cost") +
 
@@ -226,9 +226,11 @@ ggsave("../writing/pics/exp1-empirical-predictives.pdf",height=3.5,width=6.7)
 
 Read parameter data from BDA and compute MAPs and HDIs.
 ```{r}
-params <- read_csv("../models/bdaOutput/typicality_params.csv") %>%
-  # gather(parameter, value, alpha:typWeight)
-  gather(parameter, value, infWeight:typeCost)
+costs = "fixed" # or "empirical"
+costs = "empirical" # or "fixed"
+semantics = "empirical" # or "fixed" or "fixedplusempirical"
+params <- read_csv(paste("../models/bdaOutput/typicality_",costs,"_",semantics,"_params.csv",sep="")) %>%
+  gather(parameter, value, infWeight:typWeight)
 
 params %>% 
   group_by(parameter) %>%
@@ -245,12 +247,12 @@ typParamPosteriors = ggplot(params.samples, aes(x=value))+
     geom_histogram(aes(y=..density..),
                    data=subset(params.samples, parameter == "infWeight"),
                    binwidth = .1, colour="black", fill="white") +
-    # geom_histogram(aes(y=..density..),
-                 # data =subset(params.samples, parameter == "lengthCost" ),
-                 # binwidth = .1, colour="black", fill="white") +
-      # geom_histogram(aes(y=..density..),
-                   # data=subset(params.samples, parameter == "freqCost"),
-                   # binwidth = .1, colour="black", fill="white") +
+    geom_histogram(aes(y=..density..),
+    data =subset(params.samples, parameter == "lengthCostWeight" ),
+    binwidth = .1, colour="black", fill="white") +
+    geom_histogram(aes(y=..density..),
+    data=subset(params.samples, parameter == "freqCostWeight"),
+    binwidth = .1, colour="black", fill="white") +
     geom_histogram(aes(y=..density..),
                  data =subset(params.samples, parameter == "typWeight" ),
                  binwidth = .1, colour="black", fill="white") +
@@ -263,28 +265,28 @@ typParamPosteriors = ggplot(params.samples, aes(x=value))+
 
     geom_density(aes(y=..density..),
                  data=subset(params.samples, parameter == "infWeight"),
-                 adjust = 1, alpha=.2, fill="#FF6666")+
-    # geom_density(aes(y=..density..),
-                 # data=subset(params.samples, parameter == "lengthCost"),
-                 # adjust = 1, alpha=.2, fill="#FF6666")+
-      # geom_density(aes(y=..density..),
-                 # data=subset(params.samples, parameter == "freqCost"),
-                 # adjust = 1, alpha=.2, fill="#FF6666")+
+                 adjust = 1, infWeight=.2, fill="#FF6666")+
+    geom_density(aes(y=..density..),
+    data=subset(params.samples, parameter == "lengthCostWeight"),
+    adjust = 1, infWeight=.2, fill="#FF6666")+
+    geom_density(aes(y=..density..),
+    data=subset(params.samples, parameter == "freqCostWeight"),
+    adjust = 1, infWeight=.2, fill="#FF6666")+
     geom_density(aes(y=..density..),
                  data=subset(params.samples, parameter == "typWeight"),
-                 adjust = 1, alpha=.2, fill="#FF6666")+
+                 adjust = 1, infWeight=.2, fill="#FF6666")+
       geom_density(aes(y=..density..),
                  data=subset(params.samples, parameter == "colorCost"),
-                 adjust = 1, alpha=.2, fill="#FF6666")+
+                 adjust = 1, infWeight=.2, fill="#FF6666")+
     geom_density(aes(y=..density..),
                  data=subset(params.samples, parameter == "typeCost"),
-                 adjust = 1, alpha=.2, fill="#FF6666")+  
-    # ggtitle("Param Posteriors (2000 samples; lag = 10; burnin=10000)") +
+                 adjust = 1, infWeight=.2, fill="#FF6666")+  
+    # ggtitle("Param Posteriors (10,000 samples; lag = 10; burnin=10000)") +
     facet_wrap( ~ parameter, scales = 'free',nrow=1) +
     theme_bw() +
   ylab("Density") 
 typParamPosteriors
-ggsave(file="../writing/pics/exp2-paramposteriors.pdf",width=10,height=3)
+ggsave(file=paste("../writing/pics/exp2-",costs,"-",semantics,"-paramposteriors.pdf",sep=""),width=10,height=3)
 ```
 
 ```{r}
@@ -415,7 +417,7 @@ ggsave("../writing/pics/exp3-empirical-predictives.pdf",height=4,width=11)
 Read parameter data from BDA and compute MAPs and HDIs.
 ```{r}
 params <- read_csv("../models/bdaOutput/nominal_params.csv") %>%
-  gather(parameter, value, alpha:typWeight)
+  gather(parameter, value, infWeight:typWeight)
 
 params %>% 
   group_by(parameter) %>%
@@ -431,7 +433,7 @@ params.samples$parameter2 = factor(params.samples$parameter,labels = c("informat
   
 nomParamPosteriors = ggplot(params.samples, aes(x=value))+
     geom_histogram(aes(y=..density..),
-                   data=subset(params.samples, parameter == "alpha"),
+                   data=subset(params.samples, parameter == "infWeight"),
                    binwidth = .1, colour="black", fill="white") +
     geom_histogram(aes(y=..density..),
                  data =subset(params.samples, parameter == "lengthCost" ),
@@ -444,17 +446,17 @@ nomParamPosteriors = ggplot(params.samples, aes(x=value))+
                  binwidth = .1, colour="black", fill="white") +
 
     geom_density(aes(y=..density..),
-                 data=subset(params.samples, parameter == "alpha"),
-                 adjust = 1, alpha=.2, fill="#FF6666")+
+                 data=subset(params.samples, parameter == "infWeight"),
+                 adjust = 1, infWeight=.2, fill="#FF6666")+
     geom_density(aes(y=..density..),
                  data=subset(params.samples, parameter == "lengthCost"),
-                 adjust = 1, alpha=.2, fill="#FF6666")+
+                 adjust = 1, infWeight=.2, fill="#FF6666")+
       geom_density(aes(y=..density..),
                  data=subset(params.samples, parameter == "freqCost"),
-                 adjust = 1, alpha=.2, fill="#FF6666")+
+                 adjust = 1, infWeight=.2, fill="#FF6666")+
     geom_density(aes(y=..density..),
                  data=subset(params.samples, parameter == "typWeight"),
-                 adjust = 1, alpha=.2, fill="#FF6666")+
+                 adjust = 1, infWeight=.2, fill="#FF6666")+
     # ggtitle("Param Posteriors (2000 samples; lag = 10; burnin=10000)") +
     facet_wrap( ~ parameter2, scales = 'free',nrow=1) +
     theme_bw() +
@@ -589,7 +591,7 @@ predictive<-read.csv("../models/typicality-predictives.csv") %>%
 ```{r}
 combined <- left_join(agr, predictive)
 answer_plots = (ggplot(combined, aes(x = modelProbability, y = Probability))
-  + geom_errorbar(aes(ymax = YMax, ymin = YMin), alpha = .2) 
+  + geom_errorbar(aes(ymax = YMax, ymin = YMin), infWeight = .2) 
   + geom_point(aes(colour = condition))
   + geom_abline(intercept = 0, slope = 1, linetype = "dotted")
   + scale_x_continuous(lim = c(0,1), breaks=c(0,.5,1))
@@ -647,7 +649,7 @@ answererParamPosteriors = ggplot(params.samples, aes(x=value))+
   #geom_histogram(aes(y=..density..)) +
   
     geom_histogram(aes(y=..density..),
-                   data =subset(params.samples, parameter == "alpha" ),
+                   data =subset(params.samples, parameter == "infWeight" ),
                    binwidth = .5, colour="black", fill="white") +
     geom_histogram(aes(y=..density..),
                    data=subset(params.samples, parameter == "typWeight"),
@@ -660,17 +662,17 @@ answererParamPosteriors = ggplot(params.samples, aes(x=value))+
                  binwidth = .25, colour="black", fill="white") +
 
     geom_density(aes(y=..density..),
-                 data =subset(params.samples, parameter == "alpha" ),
-                 adjust = 1, alpha=.2, fill="#FF6666")+
+                 data =subset(params.samples, parameter == "infWeight" ),
+                 adjust = 1, infWeight=.2, fill="#FF6666")+
     geom_density(aes(y=..density..),
                  data=subset(params.samples, parameter == "typWeight"),
-                 adjust = 5, alpha=.2, fill="#FF6666")+
+                 adjust = 5, infWeight=.2, fill="#FF6666")+
     geom_density(aes(y=..density..),
                  data=subset(params.samples, parameter == "cost_color"),
-                 adjust = 5, alpha=.2, fill="#FF6666")+
+                 adjust = 5, infWeight=.2, fill="#FF6666")+
     geom_density(aes(y=..density..),
                  data=subset(params.samples, parameter == "cost_type"),
-                 adjust = 5, alpha=.2, fill="#FF6666")+
+                 adjust = 5, infWeight=.2, fill="#FF6666")+
 
     ggtitle("Parameter Posteriors (500 iterations)") +
     facet_grid(~parameter, scales = 'free') +
@@ -726,7 +728,7 @@ predictive<-read.csv("../models/typicality-predictives.csv") %>%
 ```{r}
 combined <- left_join(agr, predictive)
 answer_plots = (ggplot(combined, aes(x = modelProbability, y = Probability))
-  + geom_errorbar(aes(ymax = YMax, ymin = YMin), alpha = .2) 
+  + geom_errorbar(aes(ymax = YMax, ymin = YMin), infWeight = .2) 
   + geom_point(aes(colour = condition))
   + geom_abline(intercept = 0, slope = 1, linetype = "dotted")
   + scale_x_continuous(lim = c(0,1), breaks=c(0,.5,1))
