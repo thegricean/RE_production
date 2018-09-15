@@ -11,7 +11,7 @@ var getCostData = function(modelVersion) {
   var maxLength = _.max(_.map(rawData, function(v) {return _.toFinite(v.length);}));
   var minLength = _.min(_.map(rawData, function(v) {return _.toFinite(v.length);}));
   var standardizedLengths = _.map(rawData, function(v) {
-    return {label: v.target, lengthCost: (v.length - minLength)/(maxLength - minLength)};
+    return {label: v.target, lengthCostWeight: (v.length - minLength)/(maxLength - minLength)};
   });
 
   // pre-normalize freq
@@ -26,7 +26,7 @@ var getCostData = function(modelVersion) {
   var minFreq = _.min(flippedFreqs);
   var standardizedFreqs = _.map(rawData, function(v, i) {
     return {label: v.target,
-	    freqCost : (flippedFreqs[i] - minFreq)/(maxFreq - minFreq)};
+	    freqCostWeight : (flippedFreqs[i] - minFreq)/(maxFreq - minFreq)};
   });
 
   return {'freq' : _.keyBy(standardizedFreqs, "label"),
@@ -108,6 +108,7 @@ var getColorSizeUttMeaning = function(params, utt, obj) {
   return _.reduce(wordMeanings, _.multiply);
 };
 
+// TODO: add the fixed semantics for typicality
 var constructLexicon = function(params) {
   if(params.modelVersion === 'colorSize') {
     var completeContext = [
@@ -205,22 +206,31 @@ var predictiveSupportWriter = function(s, p, handle) {
 
 var getHeader = function(version) {
   if(version == 'colorSize_simulation') {
-    return ['context','alpha', "costWeight", 'modelVersion', "colorTyp",
+    return ['context','infWeight', "costWeight", 'modelVersion', "colorTyp",
 	    "sizeTyp", "typeTyp", "colorVsSizeCost",
 	    "typWeight", "utterance", "logModelProb"];
   } else if (version == 'colorSize_params') {
-    return ['alpha', 'costWeight', 'colorTyp', 'sizeTyp', 'colorVsSizeCost', 'typWeight',
+    return ['infWeight', 'costWeight', 'colorTyp', 'sizeTyp', 'colorVsSizeCost', 'typWeight',
 	    'logLikelihood', 'outputProb'];
   } else if (version == 'colorSize_predictives') {
     return ['color', 'size', 'condition', 'othercolor', 'item', 'utt', 'prob',  "zeros"];
-  } else if (version == 'typicality_params') {
+  } else if (version == 'typicality_empirical_empirical_params') {
     return ['infWeight', 'lengthCostWeight', 'freqCostWeight', 'typWeight',
 	    'logLikelihood', 'outputProb'];
+  } else if (version == 'typicality_fixed_empirical_params') {
+    return ['infWeight', 'colorCost', 'sizeCost', 'typeCost', 'typWeight',
+      'logLikelihood', 'outputProb']; 
+  } else if (version == 'typicality_fixed_fixed_params') {
+    return ['infWeight', 'colorCost', 'sizeCost', 'typeCost', 'colorTyp', 'typeTyp', 'typWeight',
+      'logLikelihood', 'outputProb']; 
+  } else if (version == 'typicality_fixed_fixedplusempirical_params') {
+    return ['infWeight', 'colorCost', 'sizeCost', 'typeCost', 'colorTyp', 'typeTyp', 'typWeight',
+      'logLikelihood', 'outputProb'];                  
   } else if (version == 'typicality_predictives') {
     return ['condition','t_color', "t_item", 'd1_color', "d1_item",
 	    "d2_color", "d2_item", "response", "logModelProb",  "zeros"];
   } else if (version == 'nominal_params') {
-    return ['alpha', 'lengthCost', 'freqCost', 'typWeight',
+    return ['infWeight', 'lengthCostWeight', 'freqCostWeight', 'typWeight',
 	    'logLikelihood', 'outputProb'];
   } else if (version == 'nominal_predictives') {
     return ['condition',"target_item", 'd1_item', "d2_item",
@@ -270,14 +280,14 @@ var locParse = function(filename) {
 
 var getRelativeLogFrequency = function(params, label) {
   var frequencyData = costData[params.modelVersion]['freq'];
-  return frequencyData[label]['freqCost'];
+  return frequencyData[label]['freqCostWeight'];
 };
 
 var getRelativeLength = function(params, label) {
   var lengthData = costData[params.modelVersion]['length'];
   if(_.isUndefined(lengthData[label]))
     console.log(label);
-  return lengthData[label]['lengthCost'];
+  return lengthData[label]['lengthCostWeight'];
 };
 
 // NOTE: this is 0, not -Infinity or -100 or something
@@ -307,9 +317,14 @@ var uttCost = function(params, utt) {
     var sizeMention = _.intersection(sizes, utt.split('_')).length;
     return (params.colorCost * colorMention +
 	    params.sizeCost * sizeMention);
+  } else if (params.costs === 'fixed') {
+        var colorMention = _.intersection(refModule.colors, utt.split('_')).length;
+        var typeMention = _.intersection(refModule.types, utt.split('_')).length;
+        return (params.colorCost * colorMention +
+            params.typeCost * typeMention);
   } else if (_.includes(['nominal', 'typicality'], params.modelVersion))  {
-    return (params.lengthCost * getRelativeLength(params, utt) +
-	    params.freqCost * getRelativeLogFrequency(params, utt));
+    return (params.lengthCostWeight * getRelativeLength(params, utt) +
+	    params.freqCostWeight * getRelativeLogFrequency(params, utt));
   } else {
     return console.error('unknown modelVersion: ' + params.modelVersion);
   }
@@ -318,7 +333,7 @@ var uttCost = function(params, utt) {
 var getSpeakerUtility = function(target, utt, context, params) {
   // console.log(utt);
   // console.log(getL0score(target, utt, context, params));
-  var inf = params.alpha * getL0score(target, utt, context, params);
+  var inf = params.infWeight * getL0score(target, utt, context, params);
   var cost = uttCost(params, utt);
   
   // console.log(utt);
@@ -348,6 +363,7 @@ var getSpeakerScore = function(trueUtt, target, context, params) {
   for(var i=0; i<possibleUtts.length; i++){
     var utt = possibleUtts[i];
     var utility = getSpeakerUtility(target, utt, context, params);
+    // console.log(utility);
     scores.push(utility);//Math.log(Math.max(utility, Number.EPSILON)));
   }
     var trueUtility = getSpeakerUtility(target, trueUtt, context, params);
