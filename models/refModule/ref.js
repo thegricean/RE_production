@@ -125,6 +125,7 @@ var constructLexicon = function(params) {
       }));
     }));
   } else if (params.modelVersion === 'typicality') {
+    
     return require('./json/typicality-meanings.json');
   } else if (params.modelVersion === 'nominal') {
     return require('./json/nominal-meanings.json');
@@ -315,21 +316,18 @@ function _logsumexp(a) {
 }
 
 var uttCost = function(params, utt) {    
-  if(params.modelVersion === 'colorSize') {
-    var colorMention = _.intersection(colors, utt.split('_')).length;
+  if (params.costs === 'fixed') {
     var sizeMention = _.intersection(sizes, utt.split('_')).length;
+    var colorMention = _.intersection(colors, utt.split('_')).length;
+    var typeMention = _.intersection(types, utt.split('_')).length;
     return (params.colorCost * colorMention +
-	    params.sizeCost * sizeMention);
-  } else if (params.costs === 'fixed') {
-        var colorMention = _.intersection(refModule.colors, utt.split('_')).length;
-        var typeMention = _.intersection(refModule.types, utt.split('_')).length;
-        return (params.colorCost * colorMention +
+	    params.sizeCost * sizeMention +
             params.typeCost * typeMention);
-  } else if (_.includes(['nominal', 'typicality'], params.modelVersion))  {
+  } else if (params.costs === 'empirical') {
     return (params.lengthCostWeight * getRelativeLength(params, utt) +
 	    params.freqCostWeight * getRelativeLogFrequency(params, utt));
   } else {
-    return console.error('unknown modelVersion: ' + params.modelVersion);
+    return console.error('unknown costs: ' + params.costs);
   }
 };
 
