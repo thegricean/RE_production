@@ -393,7 +393,7 @@ module.exports = {
   bayesianErpWriter, writeERP, writeCSV, readCSV, getTestContexts,
   getData, getConditions, getParamPosterior, getManualParams,
   obj_product,
-  getL0score,getSpeakerScore,
+  getL0score,getSpeakerScore, uttCost,
   getRelativeLength, getRelativeLogFrequency, getTypSubset,
   colors, sizes
 };

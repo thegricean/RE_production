@@ -13,31 +13,6 @@ var initializeModel = function(params) {
     }
   };
   
-  // Cost of utterance
-  // TODO
-  // 1. double-check colors, types, sizes
-  // 2. make sure length/freq either looks at right json or uses combined json
-  var uttCost = function(utt) {    
-    if(params.modelVersion === 'colorSize') {
-      var colorMention = _.intersection(refModule.colors, utt.split('_')).length;
-      var sizeMention = _.intersection(refModule.sizes, utt.split('_')).length;
-      return (params.colorCost * colorMention +
-  	      params.sizeCost * sizeMention);
-    } else if (params.costs === 'fixed') {
-          var colorMention = _.intersection(refModule.colors, utt.split('_')).length;
-          var typeMention = _.intersection(refModule.types, utt.split('_')).length;
-          return (params.colorCost * colorMention +
-              params.typeCost * typeMention);
-    } else if (_.includes(['nominal', 'typicality'], params.modelVersion))  {
-      // console.log("lengthCost: "+params.lengthCostWeight)
-      // console.log("freqCost: "+params.freqCostWeight)
-      return (params.lengthCostWeight * refModule.getRelativeLength(params, utt) +
-  		 params.freqCostWeight * refModule.getRelativeLogFrequency(params, utt));
-    } else {
-      return console.error('unknown model specification: modelVersion: ' + params.modelVersion + '; costs: ' + params.costs + '; smeantics: ' + params.semantics);
-    }
-  };
-
   // Looks up meaning in given lexicon
   var meaning = function(utt, object) {
     var objStr = _.values(object).join("_");
@@ -63,7 +38,7 @@ var initializeModel = function(params) {
       var utt = uniformDraw(utts);
       // this is a fast shortcut for literalListener(utt, context).score(target)
       var utility = (params.infWeight * literalListener(utt, context).score(target)
-      		     - uttCost(utt));
+      		     - refModule.uttCost(utt));
       factor(utility);
       return utt;
     }});
