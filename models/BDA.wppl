@@ -25,18 +25,15 @@ var paramPrior = function() {
     infWeight : uniformDrift({a: 0, b: 20, w: 3})
   };
 
-  var costParams = (config.modelVersion === 'colorSize' ? {
+  var costParams = (config.costs === 'fixed'  ? {
 
     colorCost :       uniformDrift({a: 0, b: 10, w: 40/20}),
-    sizeCost :        uniformDrift({a: 0, b: 10, w: 40/20}),
-    typeCost :        0
-
-  } : config.costs === 'fixed' ? {
-
-    colorCost :       uniformDrift({a: 0, b: 10, w: 40/20}),
-    sizeCost :        0,
-    typeCost :        uniformDrift({a: 0, b: 10, w: 40/20})   
-  
+    sizeCost :        (config.modelVersion == 'colorSize' ?
+		       uniformDrift({a: 0, b: 10, w: 40/20}) :
+		       0),
+    typeCost :        (config.modelVersion == 'typicality' ?
+		       uniformDrift({a: 0, b: 10, w: 40/20}) :
+		       0)
   } : config.costs === 'empirical' ? {
 
     lengthCostWeight : uniformDrift({a: 0, b: 5, w: 1}),
@@ -75,7 +72,6 @@ var paramPrior = function() {
 var modelAnalysis = function() {
 
   var params = paramPrior();
-  // console.log(params);
   var lexicon = refModule.constructLexicon(params);
   var modelParams = extend(params, {lexicon});
   var likelihood = reduce(function(c, memo) {
