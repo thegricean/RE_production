@@ -11,7 +11,7 @@ var getCostData = function(modelVersion) {
   var maxLength = _.max(_.map(rawData, function(v) {return _.toFinite(v.length);}));
   var minLength = _.min(_.map(rawData, function(v) {return _.toFinite(v.length);}));
   var standardizedLengths = _.map(rawData, function(v) {
-    return {label: v.target, lengthCost: (v.length - minLength)/(maxLength - minLength)};
+    return {label: v.target, lengthCostWeight: (v.length - minLength)/(maxLength - minLength)};
   });
 
   // pre-normalize freq
@@ -26,7 +26,7 @@ var getCostData = function(modelVersion) {
   var minFreq = _.min(flippedFreqs);
   var standardizedFreqs = _.map(rawData, function(v, i) {
     return {label: v.target,
-	    freqCost : (flippedFreqs[i] - minFreq)/(maxFreq - minFreq)};
+	    freqCostWeight : (flippedFreqs[i] - minFreq)/(maxFreq - minFreq)};
   });
 
   return {'freq' : _.keyBy(standardizedFreqs, "label"),
@@ -89,10 +89,10 @@ var getColorSizeUtterances = function(context) {
 };
 
 // Need to be able to look up what type a word is (includes collapsed versions)...
-var colors = ['color', 'othercolor', 'blue', 'red', 'green', 'gray', 'brown'];
+var colors = ['color', 'othercolor', 'blue', 'red', 'green', 'gray', 'brown','orange','black','yellow','purple'];
 var sizes = ["size", "othersize", 'big', 'small'];
 var types = ['item', 'thing', 'thumbtack', 'couch',
-	     'tv', 'desk', 'chair', 'fan'];       
+	     'tv', 'desk', 'chair', 'fan', 'banana','tomato','carrot','pepper','pear','avocado','apple'];       
 
 var getColorSizeUttMeaning = function(params, utt, obj) {
   var wordMeanings = _.map(utt.split('_'), function(word) {
@@ -108,6 +108,7 @@ var getColorSizeUttMeaning = function(params, utt, obj) {
   return _.reduce(wordMeanings, _.multiply);
 };
 
+// TODO: add the fixed semantics for typicality
 var constructLexicon = function(params) {
   if(params.modelVersion === 'colorSize') {
     var completeContext = [
@@ -124,6 +125,7 @@ var constructLexicon = function(params) {
       }));
     }));
   } else if (params.modelVersion === 'typicality') {
+    
     return require('./json/typicality-meanings.json');
   } else if (params.modelVersion === 'nominal') {
     return require('./json/nominal-meanings.json');
@@ -150,8 +152,12 @@ function getConditions(modelVersion) {
   return require('../bdaInput/' + modelVersion + '/unique_conditions.json');
 }
 
-function getParamPosterior(modelVersion) {
-  return readCSV('./bdaOutput/' + modelVersion + '_params.csv');
+function getParamPosterior(modelVersion,costs) {
+  return readCSV('./bdaOutput/' + modelVersion + '_' + costs + '_empirical_params.csv');
+}
+
+function getManualParams(modelVersion) {
+  return readCSV('./' + modelVersion + '_manualparams.csv');
 }
 
 function writeCSV(jsonCSV, filename){
@@ -201,22 +207,34 @@ var predictiveSupportWriter = function(s, p, handle) {
 
 var getHeader = function(version) {
   if(version == 'colorSize_simulation') {
-    return ['context','alpha', "costWeight", 'modelVersion', "colorTyp",
+    return ['context','infWeight', "costWeight", 'modelVersion', "colorTyp",
 	    "sizeTyp", "typeTyp", "colorVsSizeCost",
 	    "typWeight", "utterance", "logModelProb"];
   } else if (version == 'colorSize_params') {
-    return ['alpha', 'costWeight', 'colorTyp', 'sizeTyp', 'colorVsSizeCost', 'typWeight',
+    return ['infWeight', 'costWeight', 'colorTyp', 'sizeTyp', 'colorVsSizeCost', 'typWeight',
 	    'logLikelihood', 'outputProb'];
   } else if (version == 'colorSize_predictives') {
     return ['color', 'size', 'condition', 'othercolor', 'item', 'utt', 'prob',  "zeros"];
-  } else if (version == 'typicality_params') {
+  } else if (version == 'typicality_empirical_empirical_params') {
     return ['infWeight', 'lengthCostWeight', 'freqCostWeight', 'typWeight',
 	    'logLikelihood', 'outputProb'];
+  } else if (version == 'typicality_fixed_empirical_params') {
+    return ['infWeight', 'colorCost', 'sizeCost', 'typeCost', 'typWeight',
+      'logLikelihood', 'outputProb']; 
+  } else if (version == 'typicality_fixed_fixed_params') {
+    return ['infWeight', 'colorCost', 'sizeCost', 'typeCost', 'colorTyp', 'typeTyp', 'typWeight',
+      'logLikelihood', 'outputProb']; 
+  } else if (version == 'typicality_fixed_fixedplusempirical_params') {
+    return ['infWeight', 'colorCost', 'sizeCost', 'typeCost', 'colorTyp', 'typeTyp', 'typWeight',
+      'logLikelihood', 'outputProb'];                  
   } else if (version == 'typicality_predictives') {
     return ['condition','t_color', "t_item", 'd1_color', "d1_item",
 	    "d2_color", "d2_item", "response", "logModelProb",  "zeros"];
+  } else if (version == 'typicality_fixed_empirical_predictives') {
+    return ['condition','t_color', "t_item", 'd1_color', "d1_item",
+      "d2_color", "d2_item", "response", "logModelProb",  "zeros"];      
   } else if (version == 'nominal_params') {
-    return ['alpha', 'lengthCost', 'freqCost', 'typWeight',
+    return ['infWeight', 'lengthCostWeight', 'freqCostWeight', 'typWeight',
 	    'logLikelihood', 'outputProb'];
   } else if (version == 'nominal_predictives') {
     return ['condition',"target_item", 'd1_item', "d2_item",
@@ -266,14 +284,14 @@ var locParse = function(filename) {
 
 var getRelativeLogFrequency = function(params, label) {
   var frequencyData = costData[params.modelVersion]['freq'];
-  return frequencyData[label]['freqCost'];
+  return frequencyData[label]['freqCostWeight'];
 };
 
 var getRelativeLength = function(params, label) {
   var lengthData = costData[params.modelVersion]['length'];
   if(_.isUndefined(lengthData[label]))
     console.log(label);
-  return lengthData[label]['lengthCost'];
+  return lengthData[label]['lengthCostWeight'];
 };
 
 // NOTE: this is 0, not -Infinity or -100 or something
@@ -298,23 +316,25 @@ function _logsumexp(a) {
 }
 
 var uttCost = function(params, utt) {    
-  if(params.modelVersion === 'colorSize') {
-    var colorMention = _.intersection(colors, utt.split('_')).length;
+  if (params.costs === 'fixed') {
     var sizeMention = _.intersection(sizes, utt.split('_')).length;
+    var colorMention = _.intersection(colors, utt.split('_')).length;
+    var typeMention = _.intersection(types, utt.split('_')).length;
     return (params.colorCost * colorMention +
-	    params.sizeCost * sizeMention);
-  } else if (_.includes(['nominal', 'typicality'], params.modelVersion))  {
-    return (params.lengthCost * getRelativeLength(params, utt) +
-	    params.freqCost * getRelativeLogFrequency(params, utt));
+	    params.sizeCost * sizeMention +
+            params.typeCost * typeMention);
+  } else if (params.costs === 'empirical') {
+    return (params.lengthCostWeight * getRelativeLength(params, utt) +
+	    params.freqCostWeight * getRelativeLogFrequency(params, utt));
   } else {
-    return console.error('unknown modelVersion: ' + params.modelVersion);
+    return console.error('unknown costs: ' + params.costs);
   }
 };
 
 var getSpeakerUtility = function(target, utt, context, params) {
   // console.log(utt);
   // console.log(getL0score(target, utt, context, params));
-  var inf = params.alpha * getL0score(target, utt, context, params);
+  var inf = params.infWeight * getL0score(target, utt, context, params);
   var cost = uttCost(params, utt);
   
   // console.log(utt);
@@ -344,6 +364,7 @@ var getSpeakerScore = function(trueUtt, target, context, params) {
   for(var i=0; i<possibleUtts.length; i++){
     var utt = possibleUtts[i];
     var utility = getSpeakerUtility(target, utt, context, params);
+    // console.log(utility);
     scores.push(utility);//Math.log(Math.max(utility, Number.EPSILON)));
   }
     var trueUtility = getSpeakerUtility(target, trueUtt, context, params);
@@ -370,9 +391,9 @@ module.exports = {
   getNominalUtterances, getColorSizeUtterances, getTypicalityUtterances,
   constructLexicon, powerset, getSubset, 
   bayesianErpWriter, writeERP, writeCSV, readCSV, getTestContexts,
-  getData, getConditions, getParamPosterior,
+  getData, getConditions, getParamPosterior, getManualParams,
   obj_product,
-  getL0score,getSpeakerScore,
+  getL0score,getSpeakerScore, uttCost,
   getRelativeLength, getRelativeLogFrequency, getTypSubset,
   colors, sizes
 };

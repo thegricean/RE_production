@@ -1,11 +1,15 @@
 // run using:
-// webppl BDA.wppl --require ./refModule/ -- --modelVersion colorSize
+// webppl BDA.wppl --require ./refModule/ -- --modelVersion <colorSize> --costs <fixed> --semantics <empirical> 
 
-// model version can be <colorSize> <typicality> <nominal>
+// modelVersion can be <colorSize> <typicality> <nominal>
+// costs can be <fixed> <empirical>
+// semantics can be <fixed> <empirical> <fixedplusempirical>
 
 // Fix some configuration options
 var config = {
-  'modelVersion' : argv.modelVersion
+  'modelVersion' : argv.modelVersion,
+  'costs' : argv.costs,
+  'semantics' : argv.semantics
 };
 
 // Pull in requested data/conditions 
@@ -18,26 +22,51 @@ console.log("Loading unique conditions... found" + conditions.length);
 var paramPrior = function() {
   // Params shared by all versions of the model
   var baseParams = {
-    alpha : uniformDrift({a: 0, b: 20, w: 3})
+    infWeight : uniformDrift({a: 0, b: 20, w: 3})
   };
+
+  var costParams = (config.costs === 'fixed'  ? {
+
+    colorCost :       uniformDrift({a: 0, b: 10, w: 40/20}),
+    sizeCost :        (config.modelVersion == 'colorSize' ?
+		       uniformDrift({a: 0, b: 10, w: 40/20}) :
+		       0),
+    typeCost :        (config.modelVersion == 'typicality' ?
+		       uniformDrift({a: 0, b: 10, w: 40/20}) :
+		       0)
+  } : config.costs === 'empirical' ? {
+
+    lengthCostWeight : uniformDrift({a: 0, b: 5, w: 1}),
+    freqCostWeight :   uniformDrift({a: 0, b: 5, w: 1})
+
+  } : console.error('unknown modelspecification: ' + config.modelVersion + ' ' + config.costs + ' ' + config.semantics));
   
-  var specificParams = (config.modelVersion === 'colorSize' ? {
+  var semanticParams = (config.modelVersion === 'colorSize' ? {
 
-    colorTyp :        uniformDrift({a: .5, b: 1, w: .5/20}),
-    sizeTyp :         uniformDrift({a: .5, b: 1, w: .5/20}),
-    colorCost :       uniformDrift({a: 0, b: 40, w: 40/20}),
-    sizeCost :        uniformDrift({a: 0, b: 40, w: 40/20}),    
-    typWeight :       1
-    
-  } : _.includes(['typicality', 'nominal'], config.modelVersion) ? {
-    
-    lengthCost : uniformDrift({a: 0, b: 5, w: 1}),
-    freqCost :   0,//uniformDrift({a: 0, b: 5, w: 1}),
-    typWeight :  uniformDrift({a: 0, b: 5, w: 1})
-        
-  } : console.error('unknown modelVersion: ' + config.modelVersion));
+    colorTyp :   uniformDrift({a: .5, b: 1, w: .5/20}),
+    sizeTyp :    uniformDrift({a: .5, b: 1, w: .5/20}),
+    typWeight :  1
 
-  return extend(config, baseParams, specificParams);
+  } : config.semantics === 'fixed' ? {
+
+    colorTyp :   uniformDrift({a: .5, b: 1, w: .5/20}),
+    typeTyp :    uniformDrift({a: .5, b: 1, w: .5/20}),
+    typWeight :  1    
+
+  } : config.semantics === 'empirical' ? {
+
+    typWeight :  uniformDrift({a: 0, b: 5, w: 1})    
+
+  } : config.semantics === 'fixedplusempirical' ? {
+
+    colorTyp :   uniformDrift({a: .5, b: 1, w: .5/20}),
+    typeTyp :    uniformDrift({a: .5, b: 1, w: .5/20}),
+    typWeight :  uniformDrift({a: 0, b: 5, w: 1})   
+
+  } : console.error('unknown modelspecification: model version: ' 
+    + config.modelVersion + '; costs: ' + config.costs + '; semantics: ' + config.semantics));     
+
+  return extend(config, baseParams, costParams, semanticParams);
 };
 
 var modelAnalysis = function() {
@@ -60,10 +89,11 @@ var modelAnalysis = function() {
   factor(likelihood);
   console.log(likelihood);
   
-  var paramsKey = _.values(_.omit(params, ['modelVersion'])).join(',');
+  var paramsKey = _.values(_.omit(params, ['modelVersion','costs','semantics'])).join(',');
   return {
     output : _.zipObject([paramsKey], [likelihood]),
-    version: params.modelVersion + '_params:obj'
+    // version: params.modelVersion + '_params:obj'
+    version: params.modelVersion + '_' + params.costs + '_' + params.semantics + '_params:obj'
   };
 };
 
@@ -75,7 +105,15 @@ var inferenceSettings = {
   burn: config.modelVersion == 'colorSize' ? 10000 : 7500
 };
 
+// var inferenceSettings = {
+//   model: modelAnalysis, method:'MCMC', verbose: true,
+//   samples: config.modelVersion == 'colorSize' ? 2000 : 10000,
+//   lag: config.modelVersion == 'colorSize' ? 10 : 10,
+//   burn: config.modelVersion == 'colorSize' ? 10000 : 10000
+// };
+
 //modelAnalysis();
 var outputERP = Infer(inferenceSettings);
+// console.log(outputERP);
 
 refModule.bayesianErpWriter(outputERP);

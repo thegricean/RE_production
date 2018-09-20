@@ -1,7 +1,9 @@
 // simulates model forward with given params/context 
-// webppl simulate.wppl --require ../refModule/ -- --modelVersion <colorSize> 
+// webppl evaluate.wppl --require ./refModule/ -- --modelVersion <colorSize> --paramSource <inferred> --costs <fixed>
 var config = {
-  'modelVersion' : argv.modelVersion
+  'modelVersion' : argv.modelVersion, // colorSize, typicality, or nominal
+  'paramSource' : argv.paramSource, // inferred, manual
+  'costs' : argv.costs // fixed, empirical
 };
 
 // Pull in requested data/conditions 
@@ -11,25 +13,35 @@ console.log("Loading data... found" + data.length + " data points");
 var conditions = refModule.getConditions(config.modelVersion);
 console.log("Loading unique conditions... found" + conditions.length);
 
-// Pull in requested data/conditions and extract highest scoring MCMC sample
-var paramPosterior = refModule.getParamPosterior(config.modelVersion);
-var MAP = _.find(paramPosterior, function(x) {
-    return x === _.max(_.map(paramPosterior, 'logLikelihood'));
-});
+// If based on posterior over parameters, extract highest scoring MCMC sample
+var getParams = function() {
+  if (config.paramSource == "inferred") {
+    var paramPosterior = refModule.getParamPosterior(config.modelVersion,config.costs);
+    var map_likelihood = _.min(_.map(paramPosterior, 'logLikelihood'));
+    // console.log(map_likelihood);
+    return find(function(x) {
+      return _.toFinite(x.logLikelihood) == _.toFinite(map_likelihood);
+    }, paramPosterior);
+  } else {
+    var manualParams = refModule.getManualParams(config.modelVersion)[0];
+    // console.log(manualParams);
+    return manualParams;
+  };
+};
 
-var params = extend({}, config, MAP);
-
+var params = extend({}, getParams(), config);
+console.log(params);
 var modelAnalysis = function() {
 
   var lexicon = refModule.constructLexicon(params);
   var speakerModel = initializeModel(extend(params, {lexicon}));
-
+  
   foreach(conditions, function(c) {
     // Extract condition information
     var conditionName = c.condition;
     var context = c.context;
     var target = context[0];
-    
+    // console.log(target, context);
     // Run model
     var modelOutput = speakerModel(target, context);
 
@@ -40,9 +52,9 @@ var modelAnalysis = function() {
       globalStore.predictives = extend(globalStore.predictives, newPair);
     });
   });
-
+  // console.log(params.modelVersion + '_' + params.costs + '_empirical_predictives:obj');
   return {output: globalStore.predictives,
-	  version : params.modelVersion + '_predictives:obj'}; //predictive: globalStore.predictives, 
+	  version : params.modelVersion + '_' + params.costs + '_empirical_predictives:obj'}; //predictive: globalStore.predictives, 
 };
 
 var outputERP = Infer({method:'enumerate', model: modelAnalysis});

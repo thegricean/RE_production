@@ -23,9 +23,9 @@ var sampleSpecificParams = function() {
     var colorTyp = uniform({a: .5, b: 1});
     var sizeTyp = (config.constraint == 'yokeTyps' ? colorTyp :
 		   uniform({a: .5, b: 1}));
-    var colorCost = uniform({a: 0, b: 40});
-    var sizeCost = (config.constraint == 'yokeCosts' ? colorTyp :
-		   uniform({a: .5, b: 1}));
+    var colorCost = uniform({a: 0, b: 10});
+    var sizeCost = (config.constraint == 'yokeCosts' ? colorCost :
+		   uniform({a: 0, b: 10}));
     return {
       colorTyp, sizeTyp, colorCost, sizeCost,
       typWeight : 1
@@ -46,7 +46,7 @@ var sampleSpecificParams = function() {
 var paramPrior = function() {
   // Params shared by all versions of the model
   var baseParams = {
-    alpha : uniform({a: 0, b: 40})
+    alpha : uniform({a: 0, b: 20})
   };
 
   var specificParams = sampleSpecificParams();
@@ -54,6 +54,7 @@ var paramPrior = function() {
   return extend(config, baseParams, specificParams);
 };
 
+globalStore.iteration = 0;
 var modelAnalysis = function() {
 
   var params = paramPrior();
@@ -71,6 +72,10 @@ var modelAnalysis = function() {
     factor(score);
   }, data);
 
+  globalStore.iteration += 1;
+  if(globalStore.iteration % 10 == 0) {
+    console.log(globalStore.iteration)
+  }
 //  factor(likelihood);
 //
   //  var paramsKey = _.values(_.omit(params, ['modelVersion'])).join(',');
