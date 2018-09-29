@@ -89,10 +89,11 @@ var getColorSizeUtterances = function(context) {
 };
 
 // Need to be able to look up what type a word is (includes collapsed versions)...
-var colors = ['color', 'othercolor', 'blue', 'red', 'green', 'gray', 'brown','orange','black','yellow','purple'];
+var colors = ['color', 'othercolor', 'blue', 'red', 'green', 'gray',
+	      'brown','orange','black','yellow','purple'];
 var sizes = ["size", "othersize", 'big', 'small'];
-var types = ['item', 'thing', 'thumbtack', 'couch',
-	     'tv', 'desk', 'chair', 'fan', 'banana','tomato','carrot','pepper','pear','avocado','apple'];       
+var types = ['item', 'thing', 'thumbtack', 'couch', 'tv', 'desk', 'chair',
+	     'fan', 'banana','tomato','carrot','pepper','pear','avocado','apple'];
 
 var getColorSizeUttMeaning = function(params, utt, obj) {
   var wordMeanings = _.map(utt.split('_'), function(word) {
@@ -108,31 +109,62 @@ var getColorSizeUttMeaning = function(params, utt, obj) {
   return _.reduce(wordMeanings, _.multiply);
 };
 
-// TODO: add the fixed semantics for typicality
-var constructLexicon = function(params) {
-  if(params.modelVersion === 'colorSize') {
-    var completeContext = [
+var constructDeterministicLexicon = function(utts, objs, params) {
+  var objNames = _.map(objs, obj => _.values(obj).join("_"));
+  return _.zipObject(utts, _.map(utts, function(utt) {
+    return _.zipObject(objNames, _.map(objs, function(obj) {
+      return getColorSizeUttMeaning(params, utt, obj);
+    }));
+  }));
+};
+
+var fruits = ['banana','tomato','carrot','pepper','pear','avocado','apple'];
+var fruitColors = ['blue', 'red', 'green', 'gray', 'brown','orange','black','yellow','purple'];
+var completeContexts = {
+  'colorSize' : [
       {size : 'size', color : 'color', item : 'item'},
       {size : 'othersize', color : 'color', item : 'item'},
       {size : 'size', color : 'othercolor', item : 'item'},
       {size : 'othersize', color : 'othercolor', item : 'item'}
-    ];
+  ],
+  'typicality' : _.flatten(_.map(fruits, function(item) {
+    return _.map(fruitColors, function(color) {
+      return {color: color, item: item};
+    });
+  }))
+};
+
+// TODO: add the fixed semantics for typicality
+var constructLexicon = function(params) {
+  var completeContext = completeContexts[params.modelVersion];
+  if(params.modelVersion === 'colorSize') {
+    console.assert(params.semantics == 'fixed', 'empirical semantics not allowed for colorSize');
     var utts = getColorSizeUtterances(completeContext);
-    var objs = _.map(completeContext, obj => _.values(obj).join("_"));
-    return _.zipObject(utts, _.map(utts, function(utt) {
-      return _.zipObject(objs, _.map(completeContext, function(obj) {
-	return getColorSizeUttMeaning(params, utt, obj);
-      }));
-    }));
+    return constructDeterministicLexicon(utts, completeContext, params);
   } else if (params.modelVersion === 'typicality') {
-    
-    return require('./json/typicality-meanings.json');
+    var empirical = require('./json/typicality-meanings.json');
+    var deterministic = require('./json/typicality-meanings-deterministic.json');
+    if(params.semantics == 'empirical') {
+      return empirical;
+    } else {
+      var utts = _.keys(deterministic);
+      var lex = constructDeterministicLexicon(utts, completeContext, params);
+      return params.semantics == 'fixed' ? lex : interpolateLexicons(lex, empirical, params);
+    }
   } else if (params.modelVersion === 'nominal') {
     return require('./json/nominal-meanings.json');
   } else {
     return console.error('unknown modelVersion: ' + params.modelVersion);
   }
 }
+
+var interpolateLexicons = function(det, emp, params) {
+  return _.mapValues(emp, function(subtree, utt) {
+    return _.mapValues(subtree, function(val, obj) {
+      return (1 - params.fixedVsEmpirical) * val + (params.fixedVsEmpirical) * emp[utt][obj];
+    });
+  });
+};
 
 function readCSV(filename){
   return babyparse.parse(fs.readFileSync(filename, 'utf8'),
@@ -205,34 +237,43 @@ var predictiveSupportWriter = function(s, p, handle) {
   }
 };
 
+// TODO: split into checks for cost & semantics values
 var getHeader = function(version) {
   if(version == 'colorSize_simulation') {
     return ['context','infWeight', "costWeight", 'modelVersion', "colorTyp",
 	    "sizeTyp", "typeTyp", "colorVsSizeCost",
 	    "typWeight", "utterance", "logModelProb"];
-  } else if (version == 'colorSize_params') {
+  } else if (version == 'colorSize_cost-fixed_sem-fixed_params') {
     return ['infWeight', 'costWeight', 'colorTyp', 'sizeTyp', 'colorVsSizeCost', 'typWeight',
 	    'logLikelihood', 'outputProb'];
-  } else if (version == 'colorSize_predictives') {
+  } else if (version == 'colorSize_cost-fixed_sem-fixed_predictives') {
     return ['color', 'size', 'condition', 'othercolor', 'item', 'utt', 'prob',  "zeros"];
-  } else if (version == 'typicality_empirical_empirical_params') {
+
+  } else if (version == 'typicality_cost-empirical_sem-empirical_params') {
     return ['infWeight', 'lengthCostWeight', 'freqCostWeight', 'typWeight',
 	    'logLikelihood', 'outputProb'];
-  } else if (version == 'typicality_fixed_empirical_params') {
+  } else if (version == 'typicality_cost-fixed_sem-empirical_params') {
     return ['infWeight', 'colorCost', 'sizeCost', 'typeCost', 'typWeight',
-      'logLikelihood', 'outputProb']; 
-  } else if (version == 'typicality_fixed_fixed_params') {
+	    'logLikelihood', 'outputProb'];
+  } else if (version == 'typicality_cost-empirical_sem-fixed_params') {
+    return ['infWeight', 'colorCost', 'sizeCost', 'typeCost', 'typWeight',
+	    'logLikelihood', 'outputProb']; 
+  } else if (version == 'typicality_cost-fixed_sem-fixed_params') {
     return ['infWeight', 'colorCost', 'sizeCost', 'typeCost', 'colorTyp', 'typeTyp', 'typWeight',
       'logLikelihood', 'outputProb']; 
-  } else if (version == 'typicality_fixed_fixedplusempirical_params') {
+  } else if (version == 'typicality_cost-fixed_sem-fixedplusempirical_params') {
     return ['infWeight', 'colorCost', 'sizeCost', 'typeCost', 'colorTyp', 'typeTyp', 'typWeight',
-      'logLikelihood', 'outputProb'];                  
+	    'logLikelihood', 'outputProb'];
+  } else if (version == 'typicality_cost-empirical_sem-fixedplusempirical_params') {
+    return ['infWeight', 'colorCost', 'sizeCost', 'typeCost', 'colorTyp', 'typeTyp', 'typWeight',
+	    'logLikelihood', 'outputProb'];                  
   } else if (version == 'typicality_predictives') {
     return ['condition','t_color', "t_item", 'd1_color', "d1_item",
 	    "d2_color", "d2_item", "response", "logModelProb",  "zeros"];
   } else if (version == 'typicality_fixed_empirical_predictives') {
     return ['condition','t_color', "t_item", 'd1_color', "d1_item",
       "d2_color", "d2_item", "response", "logModelProb",  "zeros"];      
+
   } else if (version == 'nominal_params') {
     return ['infWeight', 'lengthCostWeight', 'freqCostWeight', 'typWeight',
 	    'logLikelihood', 'outputProb'];
@@ -324,6 +365,7 @@ var uttCost = function(params, utt) {
 	    params.sizeCost * sizeMention +
             params.typeCost * typeMention);
   } else if (params.costs === 'empirical') {
+    console.assert(params.modelVersion != 'colorSize', 'empirical costs not allowed for colorSize');
     return (params.lengthCostWeight * getRelativeLength(params, utt) +
 	    params.freqCostWeight * getRelativeLogFrequency(params, utt));
   } else {
