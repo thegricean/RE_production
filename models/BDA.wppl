@@ -19,6 +19,24 @@ console.log("Loading data... found" + data.length + " data points");
 var conditions = refModule.getConditions(config.modelVersion);
 console.log("Loading unique conditions... found" + conditions.length);
 
+var getSemanticParams = function(semantics) {
+  if(semantics === 'fixed') {
+    return {
+      colorTyp : uniformDrift({a: .5, b: 1, w: .5/20}),
+      sizeTyp : config.modelVersion == 'colorSize' ? uniformDrift({a: .5, b: 1, w: .5/20}) : 0,
+      typeTyp : config.modelVersion == 'typicality' ? uniformDrift({a: .5, b: 1, w: .5/20}) : 0,
+      typWeight : 1
+    };
+  } else if (semantics === 'empirical') {
+    return {
+      typWeight :  uniformDrift({a: 0, b: 5, w: 1})
+    };
+  } else {
+    console.error('unknown modelspecification: model version: ' + config.modelVersion +
+		  '; costs: ' + config.costs + '; semantics: ' + config.semantics);
+  }
+};
+
 var paramPrior = function() {
   // Params shared by all versions of the model
   var baseParams = {
@@ -26,51 +44,23 @@ var paramPrior = function() {
   };
 
   var costParams = (config.costs === 'fixed'  ? {
-
-    colorCost :       uniformDrift({a: 0, b: 10, w: 40/20}),
-    sizeCost :        (config.modelVersion == 'colorSize' ?
-		       uniformDrift({a: 0, b: 10, w: 40/20}) :
-		       0),
-    typeCost :        (config.modelVersion == 'typicality' ?
-		       uniformDrift({a: 0, b: 10, w: 40/20}) :
-		       0)
+    colorCost : uniformDrift({a: 0, b: 10, w: 40/20}),
+    sizeCost :  config.modelVersion == 'colorSize' ? uniformDrift({a: 0, b: 10, w: 40/20}) : 0,
+    typeCost :  config.modelVersion == 'typicality' ? uniformDrift({a: 0, b: 10, w: 40/20}) : 0
   } : config.costs === 'empirical' ? {
-
     lengthCostWeight : uniformDrift({a: 0, b: 5, w: 1}),
     freqCostWeight :   uniformDrift({a: 0, b: 5, w: 1})
-
-  } : console.error('unknown modelspecification: ' + config.modelVersion + ' ' + config.costs + ' ' + config.semantics));
+  } : console.error('unknown modelspecification: ' + config.modelVersion + ' ' +
+		    config.costs + ' ' + config.semantics));
   
-  var semanticParams = (config.modelVersion === 'colorSize' ? {
-
-    colorTyp :   uniformDrift({a: .5, b: 1, w: .5/20}),
-    sizeTyp :    uniformDrift({a: .5, b: 1, w: .5/20}),
-    typWeight :  1
-
-  } : config.semantics === 'fixed' ? {
-
-    colorTyp :   uniformDrift({a: .5, b: 1, w: .5/20}),
-    typeTyp :    uniformDrift({a: .5, b: 1, w: .5/20}),
-    typWeight :  1    
-
-  } : config.semantics === 'empirical' ? {
-
-    typWeight :  uniformDrift({a: 0, b: 5, w: 1})    
-
-  } : config.semantics === 'fixedplusempirical' ? {
-
-    colorTyp :   uniformDrift({a: .5, b: 1, w: .5/20}),
-    typeTyp :    uniformDrift({a: .5, b: 1, w: .5/20}),
-    typWeight :  uniformDrift({a: 0, b: 5, w: 1})   
-
-  } : console.error('unknown modelspecification: model version: ' 
-    + config.modelVersion + '; costs: ' + config.costs + '; semantics: ' + config.semantics));     
-
+  var semanticParams = (config.semantics == 'fixedplusempirical' ?
+			extend(getSemanticParams('fixed'), getSemanticParams('empirical'),
+			       {fixedVsEmpirical: uniformDrift({a: 0, b: 1, w: 1/20})}) :
+			getSemanticParams(config.semantics));
   return extend(config, baseParams, costParams, semanticParams);
 };
 
 var modelAnalysis = function() {
-
   var params = paramPrior();
   var lexicon = refModule.constructLexicon(params);
   var modelParams = extend(params, {lexicon});
@@ -93,7 +83,7 @@ var modelAnalysis = function() {
   return {
     output : _.zipObject([paramsKey], [likelihood]),
     // version: params.modelVersion + '_params:obj'
-    version: params.modelVersion + '_' + params.costs + '_' + params.semantics + '_params:obj'
+    version: params.modelVersion + '_cost-' + params.costs + '_sem-' + params.semantics + '_params:obj'
   };
 };
 
