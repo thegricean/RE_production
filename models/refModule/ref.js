@@ -160,8 +160,9 @@ var constructLexicon = function(params) {
 
 var interpolateLexicons = function(det, emp, params) {
   return _.mapValues(emp, function(subtree, utt) {
-    return _.mapValues(subtree, function(val, obj) {
-      return (1 - params.fixedVsEmpirical) * val + (params.fixedVsEmpirical) * emp[utt][obj];
+    return _.mapValues(subtree, function(empVal, obj) {
+      var detVal = det[utt][obj];
+      return (1 - params.fixedVsEmpirical) * empVal + (params.fixedVsEmpirical) * detVal;
     });
   });
 };
