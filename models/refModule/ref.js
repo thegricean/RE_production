@@ -98,6 +98,22 @@ var types = ['item', 'thing', 'thumbtack', 'couch', 'tv', 'desk', 'chair',
 var getColorSizeUttMeaning = function(params, utt, obj) {
   var wordMeanings = _.map(utt.split('_'), function(word) {
     if(_.includes(colors, word))
+      return word == obj.color ? params.colorTyp : ad.scalar.sub(1, params.colorTyp);
+    else if (_.includes(sizes, word))
+      return word == obj.size ? params.sizeTyp : ad.scalar.sub(1, params.sizeTyp);
+    else if (_.includes(types, word))
+      return word == obj.item ? params.typeTyp : ad.scalar.sub(1, params.typeTyp);
+    else
+      console.error('word ' + word + ' not recognized');
+  });
+  return _.reduce(wordMeanings, ad.scalar.mul);
+};
+
+/////////// OLD stuff
+
+var getColorSizeUttMeaning_old = function(params, utt, obj) {
+  var wordMeanings = _.map(utt.split('_'), function(word) {
+    if(_.includes(colors, word))
       return word == obj.color ? params.colorTyp : 1 - params.colorTyp;
     else if (_.includes(sizes, word))
       return word == obj.size ? params.sizeTyp : 1 - params.sizeTyp;
@@ -162,7 +178,9 @@ var interpolateLexicons = function(det, emp, params) {
   return _.mapValues(emp, function(subtree, utt) {
     return _.mapValues(subtree, function(empVal, obj) {
       var detVal = det[utt][obj];
-      return (1 - params.fixedVsEmpirical) * empVal + (params.fixedVsEmpirical) * detVal;
+      var term1 = ad.scalar.mul(ad.scalar.sub(1, params.fixedVsEmpirical), empVal) ;
+      var term2 = ad.scalar.mul(params.fixedVsEmpirical, detVal);
+      return ad.scalar.add(term1, term2);
     });
   });
 };
@@ -349,12 +367,13 @@ var meaning = function(utt, object, params) {
 };
 
 function _logsumexp(a) {
-  var m = Math.max.apply(null, a);
+  var m = _.reduce(a, ad.scalar.max);//Math.max.apply(null, a);
   var sum = 0;
   for (var i = 0; i < a.length; ++i) {
-    sum += (a[i] === -Infinity ? 0 : Math.exp(a[i] - m));
+    var newVal = (a[i] === -Infinity ? 0 : ad.scalar.exp(ad.scalar.sub(a[i], m)));
+    sum = ad.scalar.add(sum, newVal);
   }
-  return m + Math.log(sum);
+  return ad.scalar.add(m, ad.scalar.log(sum));
 }
 
 var uttCost = function(params, utt) {    
@@ -362,28 +381,24 @@ var uttCost = function(params, utt) {
     var sizeMention = _.intersection(sizes, utt.split('_')).length;
     var colorMention = _.intersection(colors, utt.split('_')).length;
     var typeMention = _.intersection(types, utt.split('_')).length;
-    return (params.colorCost * colorMention +
-	    params.sizeCost * sizeMention +
-            params.typeCost * typeMention);
+    return ad.scalar.sum([ad.scalar.mul(params.colorCost, colorMention),
+			  ad.scalar.mul(params.sizeCost, sizeMention),
+			  ad.scalar.mul(params.typeCost, typeMention)]);
   } else if (params.costs === 'empirical') {
     console.assert(params.modelVersion != 'colorSize', 'empirical costs not allowed for colorSize');
-    return (params.lengthCostWeight * getRelativeLength(params, utt) +
-	    params.freqCostWeight * getRelativeLogFrequency(params, utt));
+    return ad.scalar.sum([ad.scalar.mul(params.lengthCostWeight,
+					getRelativeLength(params, utt)),
+			  ad.scalar.mul(params.freqCostWeight,
+					getRelativeLogFrequency(params, utt))]);
   } else {
     return console.error('unknown costs: ' + params.costs);
   }
 };
 
 var getSpeakerUtility = function(target, utt, context, params) {
-  // console.log(utt);
-  // console.log(getL0score(target, utt, context, params));
-  var inf = params.infWeight * getL0score(target, utt, context, params);
+  var inf = ad.scalar.mul(params.infWeight, getL0score(target, utt, context, params));
   var cost = uttCost(params, utt);
-  
-  // console.log(utt);
-  // console.log('inf' + inf);
-  // console.log('cost' + cost);
-  return inf - cost; 
+  return ad.scalar.sub(inf, cost); 
 }
 
 var getPossibleUtts = function(params, target, context) {
@@ -400,18 +415,16 @@ var getPossibleUtts = function(params, target, context) {
 
 var getSpeakerScore = function(trueUtt, target, context, params) {
   var possibleUtts = getPossibleUtts(params, target, context);
-
   var scores = [];
   // note: could memoize this for moderate optimization...
   // (only needs to be computed once per context per param, not for every utt)
   for(var i=0; i<possibleUtts.length; i++){
     var utt = possibleUtts[i];
     var utility = getSpeakerUtility(target, utt, context, params);
-    // console.log(utility);
     scores.push(utility);//Math.log(Math.max(utility, Number.EPSILON)));
   }
-    var trueUtility = getSpeakerUtility(target, trueUtt, context, params);
-  return trueUtility - _logsumexp(scores); // softmax subtraction bc log space,
+  var trueUtility = getSpeakerUtility(target, trueUtt, context, params);
+  return ad.scalar.sub(trueUtility, _logsumexp(scores)); // softmax subtraction bc log space,
 };
 
 // P(target | sketch) = e^{scale * sim(t, s)} / (\sum_{i} e^{scale * sim(t, s)})
@@ -420,14 +433,12 @@ var getL0score = function(target, utt, context, params) {
   var lexicon = params.lexicon;
   var scores = [];
   for(var i=0; i<context.length; i++){
-    // console.log('object')
-    // console.log(context[i]);
-    // console.log('fitness' + meaning(utt, context[i], params));    
     var m = meaning(utt, context[i], params);
-    scores.push(params.typWeight * m);
+    scores.push(ad.scalar.mul(params.typWeight, m));
   }
   var targetM = meaning(utt, target, params);
-  return params.typWeight * targetM - _logsumexp(scores);
+  return ad.scalar.sub(ad.scalar.mul(params.typWeight, targetM),
+		       _logsumexp(scores));
 };
 
 module.exports = {

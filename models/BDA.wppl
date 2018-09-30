@@ -40,13 +40,13 @@ var getSemanticParams = function(semantics) {
 var paramPrior = function() {
   // Params shared by all versions of the model
   var baseParams = {
-    infWeight : uniformDrift({a: 0, b: 20, w: 3})
+    infWeight : uniformDrift({a: 0, b: 50, w: 40/20})
   };
 
   var costParams = (config.costs === 'fixed'  ? {
-    colorCost : uniformDrift({a: 0, b: 10, w: 40/20}),
-    sizeCost :  config.modelVersion == 'colorSize' ? uniformDrift({a: 0, b: 10, w: 40/20}) : 0,
-    typeCost :  config.modelVersion == 'typicality' ? uniformDrift({a: 0, b: 10, w: 40/20}) : 0
+    colorCost : uniformDrift({a: 0, b: 10, w: 10/20}),
+    sizeCost :  config.modelVersion == 'colorSize' ? uniformDrift({a: 0, b: 10, w: 10/20}) : 0,
+    typeCost :  config.modelVersion == 'typicality' ? uniformDrift({a: 0, b: 10, w: 10/20}) : 0
   } : config.costs === 'empirical' ? {
     lengthCostWeight : uniformDrift({a: 0, b: 5, w: 1}),
     freqCostWeight :   uniformDrift({a: 0, b: 5, w: 1})
@@ -64,24 +64,16 @@ var modelAnalysis = function() {
   var params = paramPrior();
   var lexicon = refModule.constructLexicon(params);
   var modelParams = extend(params, {lexicon});
-  var likelihood = reduce(function(c, memo) {
-    // Extract condition information
-    var context = c.context;
-    var target = context[0];
-    
-    // Condition on data
-    var itemData = refModule.getSubset(data, _.omit(c, 'context'));
-    return memo + reduce(function(datum, memo) {
-      return memo + refModule.getSpeakerScore(datum.response, target, context, modelParams);
-    }, 0, itemData);
-  }, 0, conditions);
-
-  factor(likelihood);
-  console.log(likelihood);
-  
+  globalStore.score = 0;
+  mapData({data: data, batchSize: 20}, function(datum) {
+    var score = refModule.getSpeakerScore(datum.response, datum.context[0], datum.context, modelParams);
+    globalStore.score += score;
+    factor(score);
+  });
+  display(globalStore.score);
   var paramsKey = _.values(_.omit(params, ['modelVersion','costs','semantics'])).join(',');
   return {
-    output : _.zipObject([paramsKey], [likelihood]),
+    output : _.zipObject([paramsKey], [globalStore.score]),
     // version: params.modelVersion + '_params:obj'
     version: params.modelVersion + '_cost-' + params.costs + '_sem-' + params.semantics + '_params:obj'
   };
@@ -89,21 +81,17 @@ var modelAnalysis = function() {
 
 // Some versions take longer to run than others, so we tune settings to match
 var inferenceSettings = {
-  model: modelAnalysis, method:'MCMC', verbose: true,
-  samples: config.modelVersion == 'colorSize' ? 2000 : 1000,
-  lag: config.modelVersion == 'colorSize' ? 10 : 5,
-  burn: config.modelVersion == 'colorSize' ? 10000 : 7500
+  model: modelAnalysis,
+  method:'MCMC',
+  verbose: true,
+  kernel: 'MH', // (config.modelVersion == 'colorSize' ?
+	  //  'MH' : //{HMC: {steps: 2, stepSize: .001}} ://'MH' :
+	  //  {HMC: {steps: 10, stepSize: .0005}}), 
+  samples: config.modelVersion == 'colorSize' ? 2000 : 100,
+  lag: config.modelVersion == 'colorSize' ? 10 : 0,
+  burn: config.modelVersion == 'colorSize' ? 10000 : 100
 };
 
-// var inferenceSettings = {
-//   model: modelAnalysis, method:'MCMC', verbose: true,
-//   samples: config.modelVersion == 'colorSize' ? 2000 : 10000,
-//   lag: config.modelVersion == 'colorSize' ? 10 : 10,
-//   burn: config.modelVersion == 'colorSize' ? 10000 : 10000
-// };
-
-//modelAnalysis();
 var outputERP = Infer(inferenceSettings);
-// console.log(outputERP);
 
 refModule.bayesianErpWriter(outputERP);
