@@ -64,25 +64,19 @@ var modelAnalysis = function() {
   var params = paramPrior();
   var lexicon = refModule.constructLexicon(params);
   var modelParams = extend(params, {lexicon});
-  var likelihood = reduce(function(c, memo) {
-    // Extract condition information
-    var context = c.context;
-    var target = context[0];
-    
-    // Condition on data
-    var itemData = refModule.getSubset(data, _.omit(c, 'context'));
-    return memo + reduce(function(datum, memo) {
-      return memo + refModule.getSpeakerScore(datum.response, target, context, modelParams);
-    }, 0, itemData);
-  }, 0, conditions);
 
-  factor(likelihood);
-  console.log(likelihood);
+  globalStore.likelihood = 0;
+  mapData({data: data}, function(datum) {
+    var score = refModule.getSpeakerScore(datum.response, datum.context[0], datum.context, modelParams);
+    globalStore.likelihood += score;
+    factor(score);
+  });
+
+  console.log(globalStore.likelihood);
   
   var paramsKey = _.values(_.omit(params, ['modelVersion','costs','semantics'])).join(',');
   return {
-    output : _.zipObject([paramsKey], [likelihood]),
-    // version: params.modelVersion + '_params:obj'
+    output : _.zipObject([paramsKey], [globalStatus.likelihood]),
     version: params.modelVersion + '_cost-' + params.costs + '_sem-' + params.semantics + '_params:obj'
   };
 };
@@ -95,15 +89,6 @@ var inferenceSettings = {
   burn: config.modelVersion == 'colorSize' ? 10000 : 7500
 };
 
-// var inferenceSettings = {
-//   model: modelAnalysis, method:'MCMC', verbose: true,
-//   samples: config.modelVersion == 'colorSize' ? 2000 : 10000,
-//   lag: config.modelVersion == 'colorSize' ? 10 : 10,
-//   burn: config.modelVersion == 'colorSize' ? 10000 : 10000
-// };
-
-//modelAnalysis();
 var outputERP = Infer(inferenceSettings);
-// console.log(outputERP);
 
 refModule.bayesianErpWriter(outputERP);
