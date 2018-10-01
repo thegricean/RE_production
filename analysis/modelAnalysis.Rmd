@@ -224,13 +224,12 @@ ggsave("../writing/pics/exp1-empirical-predictives.pdf",height=3.5,width=6.7)
 
 ## Parameters
 
-Read parameter data from BDA and compute MAPs and HDIs.
+Read parameter data from BDA with **empirical costs** and **empirical semantics** and compute MAPs and HDIs.
 ```{r}
 costs = "empirical" # or "empirical"
 semantics = "fixedplusempirical" # or "fixed" or "fixedplusempirical"
 params <- read_csv(paste("../models/bdaOutput/typicality_cost-",costs,"_sem-",semantics,"_params.csv",sep="")) %>%
   gather(parameter, value, -logLikelihood, -outputProb)
-
 params %>% 
   group_by(parameter) %>%
   summarize(mode = estimate_mode(value),
@@ -311,7 +310,89 @@ typParamPosteriors = ggplot(params.samples, aes(x=value))+
     theme_bw() +
   ylab("Density") 
 typParamPosteriors
-ggsave(file=paste("../writing/pics/exp2-",costs,"-",semantics,"-paramposteriors.pdf",sep=""),width=10,height=3)
+ggsave(file=paste("../writing/pics/exp2-cost-",costs,"-sem-",semantics,"-paramposteriors.pdf",sep=""),width=10,height=3)
+```
+
+Read parameter data from BDA with **empirical costs** and **fixed plus empirical semantics** and compute MAPs and HDIs.
+```{r}
+costs = "empirical" 
+semantics = "fixedplusempirical"
+params <- read_csv(paste("../models/bdaOutput/typicality_cost-",costs,"_sem-",semantics,"_params.csv",sep="")) %>%
+  gather(parameter, value, infWeight:fixedVsEmpirical)
+
+params %>% 
+  group_by(parameter) %>%
+  summarize(mode = estimate_mode(value),
+            md_lo = round(HPDlo(value), 3),
+            md_hi = round(HPDhi(value), 3))
+```
+
+```{r}
+numSamples = nrow(params)/length(unique(params$parameter))
+params.samples <- params[rep(row.names(params), exp(params$outputProb)*numSamples), 3:4]
+
+typParamPosteriors = ggplot(params.samples, aes(x=value))+
+    geom_histogram(aes(y=..density..),
+                   data=subset(params.samples, parameter == "infWeight"),
+                   binwidth = .1, colour="black", fill="white") +
+    geom_histogram(aes(y=..density..),
+    data =subset(params.samples, parameter == "lengthCostWeight" ),
+    binwidth = .1, colour="black", fill="white") +
+    geom_histogram(aes(y=..density..),
+    data=subset(params.samples, parameter == "freqCostWeight"),
+    binwidth = .1, colour="black", fill="white") +
+    geom_histogram(aes(y=..density..),
+                 data =subset(params.samples, parameter == "typWeight" ),
+                 binwidth = .1, colour="black", fill="white") +
+      geom_histogram(aes(y=..density..),
+                   data=subset(params.samples, parameter == "colorCost"),
+                   binwidth = .1, colour="black", fill="white") +
+    geom_histogram(aes(y=..density..),
+                 data =subset(params.samples, parameter == "typeCost" ),
+                 binwidth = .1, colour="black", fill="white") +
+     geom_histogram(aes(y=..density..),
+                   data=subset(params.samples, parameter == "colorTyp"),
+                   binwidth = .1, colour="black", fill="white") +
+    geom_histogram(aes(y=..density..),
+                 data =subset(params.samples, parameter == "typeTyp" ),
+                 binwidth = .1, colour="black", fill="white") +
+    geom_histogram(aes(y=..density..),
+                 data =subset(params.samples, parameter == "fixedVsEmpirical" ),
+                 binwidth = .1, colour="black", fill="white") +  
+
+    geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "infWeight"),
+                 adjust = 1, alpha=.2, fill="#FF6666")+
+    geom_density(aes(y=..density..),
+    data=subset(params.samples, parameter == "lengthCostWeight"),
+    adjust = 1, alpha=.2, fill="#FF6666")+
+    geom_density(aes(y=..density..),
+    data=subset(params.samples, parameter == "freqCostWeight"),
+    adjust = 1, alpha=.2, fill="#FF6666")+
+    geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "typWeight"),
+                 adjust = 1, alpha=.2, fill="#FF6666")+
+      geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "colorCost"),
+                 adjust = 1, alpha=.2, fill="#FF6666")+
+    geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "typeCost"),
+                 adjust = 1, alpha=.2, fill="#FF6666")+
+      geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "colorTyp"),
+                 adjust = 1, alpha=.2, fill="#FF6666")+
+    geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "typeTyp"),                 
+                 adjust = 1, alpha=.2, fill="#FF6666")+
+      geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "fixedVsEmpirical"),                 
+                 adjust = 1, alpha=.2, fill="#FF6666")+
+    # ggtitle("Param Posteriors (10,000 samples; lag = 10; burnin=10000)") +
+    facet_wrap( ~ parameter, scales = 'free',nrow=3) +
+    theme_bw() +
+  ylab("Density") 
+typParamPosteriors
+ggsave(file=paste("../writing/pics/exp2-cost-",costs,"-sem-",semantics,"-paramposteriors.pdf",sep=""),width=10,height=3)
 ```
 
 ```{r}
