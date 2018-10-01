@@ -185,8 +185,8 @@ function getConditions(modelVersion) {
   return require('../bdaInput/' + modelVersion + '/unique_conditions.json');
 }
 
-function getParamPosterior(modelVersion,costs) {
-  return readCSV('./bdaOutput/' + modelVersion + '_' + costs + '_empirical_params.csv');
+function getParamPosterior(modelVersion,costs,semantics) {
+  return readCSV('./bdaOutput/' + modelVersion + '_cost-' + costs + '_sem-' + semantics + '_params.csv');
 }
 
 function getManualParams(modelVersion) {
@@ -239,48 +239,51 @@ var predictiveSupportWriter = function(s, p, handle) {
 };
 
 // TODO: split into checks for cost & semantics values
-var getHeader = function(version) {
-  if(version == 'colorSize_simulation') {
-    return ['context','infWeight', "costWeight", 'modelVersion', "colorTyp",
-	    "sizeTyp", "typeTyp", "colorVsSizeCost",
-	    "typWeight", "utterance", "logModelProb"];
-  } else if (version == 'colorSize_cost-fixed_sem-fixed_params') {
-    return ['infWeight', 'costWeight', 'colorTyp', 'sizeTyp', 'colorVsSizeCost', 'typWeight',
-	    'logLikelihood', 'outputProb'];
-  } else if (version == 'colorSize_cost-fixed_sem-fixed_predictives') {
-    return ['color', 'size', 'condition', 'othercolor', 'item', 'utt', 'prob',  "zeros"];
+var getHeader = function(versionStr) {
+  var version = versionStr.split('_');
+  if(version[0] == 'colorSize') {
+    if(version[1] == 'simulation') {
+      return ['context','infWeight', "costWeight", 'modelVersion', "colorTyp",
+	      "sizeTyp", "typeTyp", "colorVsSizeCost",
+	      "typWeight", "utterance", "logModelProb"];
+    } else if (version[3] == 'params') {
+      return ['infWeight', 'costWeight', 'colorTyp', 'sizeTyp', 'colorVsSizeCost', 'typWeight',
+	      'logLikelihood', 'outputProb'];
+    } else if (version[3] == 'predictives') {
+      return ['color', 'size', 'condition', 'othercolor', 'item', 'utt', 'prob',  "zeros"];
+    }
+  } else if(version[0] == 'typicality') {
+    if (version == 'typicality_cost-empirical_sem-empirical_params') {
+      return ['infWeight', 'lengthCostWeight', 'freqCostWeight', 'typWeight',
+	      'logLikelihood', 'outputProb'];
+    } else if (version == 'typicality_cost-fixed_sem-empirical_params') {
+      return ['infWeight', 'colorCost', 'sizeCost', 'typeCost', 'typWeight',
+	      'logLikelihood', 'outputProb'];
+    } else if (version == 'typicality_cost-empirical_sem-fixed_params') {
+      return ['infWeight', 'colorCost', 'sizeCost', 'typeCost', 'typWeight',
+	      'logLikelihood', 'outputProb']; 
+    } else if (version == 'typicality_cost-fixed_sem-fixed_params') {
+      return ['infWeight', 'colorCost', 'sizeCost', 'typeCost', 'colorTyp', 'typeTyp', 'typWeight',
+	      'logLikelihood', 'outputProb']; 
+    } else if (version == 'typicality_cost-fixed_sem-fixedplusempirical_params') {
+      return ['infWeight','colorCost','sizeCost','typeCost','colorTyp','sizeTyp',
+	      'typeTyp','typWeight','fixedVsEmpirical','logLikelihood','outputProb'];
+    } else if (version == 'typicality_cost-empirical_sem-fixedplusempirical_params') {
+      return ['infWeight','lengthCostWeight','freqCostWeight','colorTyp','sizeTyp',
+	      'typeTyp','typWeight','fixedVsEmpirical','logLikelihood','outputProb'];
 
-  } else if (version == 'typicality_cost-empirical_sem-empirical_params') {
-    return ['infWeight', 'lengthCostWeight', 'freqCostWeight', 'typWeight',
-	    'logLikelihood', 'outputProb'];
-  } else if (version == 'typicality_cost-fixed_sem-empirical_params') {
-    return ['infWeight', 'colorCost', 'sizeCost', 'typeCost', 'typWeight',
-	    'logLikelihood', 'outputProb'];
-  } else if (version == 'typicality_cost-empirical_sem-fixed_params') {
-    return ['infWeight', 'colorCost', 'sizeCost', 'typeCost', 'typWeight',
-	    'logLikelihood', 'outputProb']; 
-  } else if (version == 'typicality_cost-fixed_sem-fixed_params') {
-    return ['infWeight', 'colorCost', 'sizeCost', 'typeCost', 'colorTyp', 'typeTyp', 'typWeight',
-      'logLikelihood', 'outputProb']; 
-  } else if (version == 'typicality_cost-fixed_sem-fixedplusempirical_params') {
-    return ['infWeight', 'colorCost', 'sizeCost', 'typeCost', 'colorTyp', 'typeTyp', 'typWeight',
-	    'logLikelihood', 'outputProb'];
-  } else if (version == 'typicality_cost-empirical_sem-fixedplusempirical_params') {
-    return ['infWeight', 'colorCost', 'sizeCost', 'typeCost', 'colorTyp', 'typeTyp', 'typWeight',
-	    'logLikelihood', 'outputProb'];                  
-  } else if (version == 'typicality_predictives') {
-    return ['condition','t_color', "t_item", 'd1_color', "d1_item",
-	    "d2_color", "d2_item", "response", "logModelProb",  "zeros"];
-  } else if (version == 'typicality_fixed_empirical_predictives') {
-    return ['condition','t_color', "t_item", 'd1_color', "d1_item",
-      "d2_color", "d2_item", "response", "logModelProb",  "zeros"];      
-
-  } else if (version == 'nominal_params') {
-    return ['infWeight', 'lengthCostWeight', 'freqCostWeight', 'typWeight',
-	    'logLikelihood', 'outputProb'];
-  } else if (version == 'nominal_predictives') {
-    return ['condition',"target_item", 'd1_item', "d2_item",
-	    "response", "logModelProb", "zeros"];
+    } else if (version[3] == 'predictives') {
+      return ['condition','t_color', "t_item", 'd1_color', "d1_item",
+	      "d2_color", "d2_item", "response", "logModelProb",  "zeros"];
+    }
+  } else if (version[0] == 'nominal') {
+    if (version[3] == 'params') {
+      return ['infWeight', 'lengthCostWeight', 'freqCostWeight', 'typWeight',
+	      'logLikelihood', 'outputProb'];
+    } else if (version[3] == 'predictives') {
+      return ['condition',"target_item", 'd1_item', "d2_item",
+	      "response", "logModelProb", "zeros"];
+    }
   } else {
     console.error('unknown version: ' + version);
   }
