@@ -46,8 +46,7 @@ params %>%
 ```
 
 ```{r}
-numSamples = nrow(params)/length(unique(params$parameter))
-params.samples <- params[rep(row.names(params), exp(params$outputProb)*numSamples), 3:4]
+params.samples <- getSamples(params)
 
 labels <- c(colorTyp = "color", sizeTyp = "size")
 typParamPosteriors = ggplot(params.samples %>% filter(parameter %in% c('colorTyp', 'sizeTyp')), aes(x=value))+
@@ -238,8 +237,6 @@ params %>%
 ```
 
 ```{r}
-numSamples = 1000#nrow(params)/length(unique(params$parameter))
-params.samples <- params[rep(row.names(params), exp(params$outputProb)*numSamples), 3:4]
 
 typParamPosteriors = ggplot(params.samples, aes(x=value))+
     geom_histogram(aes(y=..density..),
@@ -328,8 +325,7 @@ params %>%
 ```
 
 ```{r}
-numSamples = nrow(params)/length(unique(params$parameter))
-params.samples <- params[rep(row.names(params), exp(params$outputProb)*numSamples), 3:4]
+params.samples <- getSamples(params)
 
 typParamPosteriors = ggplot(params.samples, aes(x=value))+
     geom_histogram(aes(y=..density..),
@@ -522,8 +518,7 @@ params %>%
 ```
 
 ```{r}
-numSamples = nrow(params)/length(unique(params$parameter))
-params.samples <- params[rep(row.names(params), exp(params$outputProb)*numSamples), 3:4]
+params.samples <- getSamples(params)
 params.samples$parameter2 = factor(params.samples$parameter,labels = c("informativity","frequency","length","typicality"))
   
 nomParamPosteriors = ggplot(params.samples, aes(x=value))+
