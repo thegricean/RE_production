@@ -226,11 +226,10 @@ ggsave("../writing/pics/exp1-empirical-predictives.pdf",height=3.5,width=6.7)
 
 Read parameter data from BDA and compute MAPs and HDIs.
 ```{r}
-costs = "fixed" # or "empirical"
-costs = "empirical" # or "fixed"
-semantics = "empirical" # or "fixed" or "fixedplusempirical"
-params <- read_csv(paste("../models/bdaOutput/typicality_",costs,"_",semantics,"_params.csv",sep="")) %>%
-  gather(parameter, value, infWeight:typWeight)
+costs = "empirical" # or "empirical"
+semantics = "fixedplusempirical" # or "fixed" or "fixedplusempirical"
+params <- read_csv(paste("../models/bdaOutput/typicality_cost-",costs,"_sem-",semantics,"_params.csv",sep="")) %>%
+  gather(parameter, value, -logLikelihood, -outputProb)
 
 params %>% 
   group_by(parameter) %>%
@@ -240,49 +239,75 @@ params %>%
 ```
 
 ```{r}
-numSamples = nrow(params)/length(unique(params$parameter))
+numSamples = 1000#nrow(params)/length(unique(params$parameter))
 params.samples <- params[rep(row.names(params), exp(params$outputProb)*numSamples), 3:4]
 
 typParamPosteriors = ggplot(params.samples, aes(x=value))+
     geom_histogram(aes(y=..density..),
                    data=subset(params.samples, parameter == "infWeight"),
                    binwidth = .1, colour="black", fill="white") +
+    geom_density(aes(y=..density..),
+                   data=subset(params.samples, parameter == "infWeight"),
+                   adjust = 1, alpha=.2, fill="#FF6666")+
+
     geom_histogram(aes(y=..density..),
-    data =subset(params.samples, parameter == "lengthCostWeight" ),
-    binwidth = .1, colour="black", fill="white") +
+                data =subset(params.samples, parameter == "lengthCostWeight" ),
+                binwidth = .01, colour="black", fill="white") +
+    geom_density(aes(y=..density..),
+                  data=subset(params.samples, parameter == "lengthCostWeight"),
+                  adjust = 1, alpha=.2, fill="#FF6666")+
+  
     geom_histogram(aes(y=..density..),
-    data=subset(params.samples, parameter == "freqCostWeight"),
-    binwidth = .1, colour="black", fill="white") +
+                data=subset(params.samples, parameter == "freqCostWeight"),
+                binwidth = .01, colour="black", fill="white") +
+    geom_density(aes(y=..density..),
+                data=subset(params.samples, parameter == "freqCostWeight"),
+                adjust = 1, alpha=.2, fill="#FF6666")+
+
     geom_histogram(aes(y=..density..),
                  data =subset(params.samples, parameter == "typWeight" ),
-                 binwidth = .1, colour="black", fill="white") +
-      geom_histogram(aes(y=..density..),
+                 binwidth = .01, colour="black", fill="white") +
+    geom_density(aes(y=..density..),
+               data=subset(params.samples, parameter == "typWeight"),
+               adjust = 1, alpha=.2, fill="#FF6666")+
+
+    geom_histogram(aes(y=..density..),
                    data=subset(params.samples, parameter == "colorCost"),
-                   binwidth = .1, colour="black", fill="white") +
+                   binwidth = .01, colour="black", fill="white") +
+    geom_density(aes(y=..density..),
+             data=subset(params.samples, parameter == "colorCost"),
+             adjust = 1, alpha=.2, fill="#FF6666")+
+
     geom_histogram(aes(y=..density..),
                  data =subset(params.samples, parameter == "typeCost" ),
-                 binwidth = .1, colour="black", fill="white") +
-
-    geom_density(aes(y=..density..),
-                 data=subset(params.samples, parameter == "infWeight"),
-                 adjust = 1, alpha=.2, fill="#FF6666")+
-    geom_density(aes(y=..density..),
-    data=subset(params.samples, parameter == "lengthCostWeight"),
-    adjust = 1, alpha=.2, fill="#FF6666")+
-    geom_density(aes(y=..density..),
-    data=subset(params.samples, parameter == "freqCostWeight"),
-    adjust = 1, alpha=.2, fill="#FF6666")+
-    geom_density(aes(y=..density..),
-                 data=subset(params.samples, parameter == "typWeight"),
-                 adjust = 1, alpha=.2, fill="#FF6666")+
-      geom_density(aes(y=..density..),
-                 data=subset(params.samples, parameter == "colorCost"),
-                 adjust = 1, alpha=.2, fill="#FF6666")+
+                 binwidth = .01, colour="black", fill="white") +
     geom_density(aes(y=..density..),
                  data=subset(params.samples, parameter == "typeCost"),
                  adjust = 1, alpha=.2, fill="#FF6666")+  
+  
+    geom_histogram(aes(y=..density..),
+                 data =subset(params.samples, parameter == "colorTyp" ),
+                 binwidth = .005, colour="black", fill="white") +
+    geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "colorTyp"),
+                 adjust = 1, alpha=.2, fill="#FF6666")+  
+  
+    geom_histogram(aes(y=..density..),
+                 data =subset(params.samples, parameter == "typeTyp" ),
+                 binwidth = .001, colour="black", fill="white") +
+    geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "typeTyp"),
+                 adjust = 1, alpha=.2, fill="#FF6666")+  
+
+    geom_histogram(aes(y=..density..),
+               data =subset(params.samples, parameter == "fixedVsEmpirical" ),
+               binwidth = .01, colour="black", fill="white") +
+    geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "fixedVsEmpirical"),
+                 adjust = 1, alpha=.2, fill="#FF6666")+  
+
     # ggtitle("Param Posteriors (10,000 samples; lag = 10; burnin=10000)") +
-    facet_wrap( ~ parameter, scales = 'free',nrow=1) +
+    facet_wrap( ~ parameter, scales = 'free') +
     theme_bw() +
   ylab("Density") 
 typParamPosteriors
@@ -292,7 +317,8 @@ ggsave(file=paste("../writing/pics/exp2-",costs,"-",semantics,"-paramposteriors.
 ```{r}
 joint = params.samples %>%
   filter(parameter %in% c("colorCost","typeCost")) %>%
-  mutate(Iteration=rep(seq(1,numSamples),2)) %>%
+  group_by(parameter) %>%
+  mutate(Iteration = row_number()) %>%
   spread(parameter,value)
 ggplot(joint,aes(x=colorCost,y=typeCost,color=Iteration)) +
   geom_point()
@@ -303,66 +329,50 @@ ggplot(joint,aes(x=colorCost,y=typeCost,color=Iteration)) +
 FIXME Load empirical data and get into right format.
 
 ```{r}
-emp = read.csv("../models/bdaInput/typicality/bda_data.csv")
-colnames(emp) = c("Condition","TargetColor","TargetType","Dist1Color","Dist1Type","Dist2Color","Dist2Type","Utterance")
+empirical = read.csv("../models/bdaInput/typicality/bda_data.csv") %>%
+  mutate(target_item = paste(t_color, t_item, sep = "_")) %>%
+  mutate(color = ifelse(as.character(response) == as.character(t_color),1,0)) %>%
+  mutate(item = ifelse(as.character(response) == as.character(t_item),1,0)) %>%
+  mutate(color_item = ifelse(as.character(response) == as.character(target_item),1,0))
 
-empirical = emp %>%
-  mutate(Condition = 
-           case_when(Cond == "basic12" ~ "sub necessary",
-                     Cond == "basic33" ~ "super sufficient",
-                     TRUE ~ "basic sufficient"),
-         sub = Utterance == "sub",
-         basic = Utterance == "basic",
-         super = Utterance == "super") %>%
-  group_by(Condition, Target) %>%
-  summarize(ProbSub = mean(sub),ProbBasic = mean(basic),ProbSuper = mean(super),CILowSub=ci.low(sub),CIHighSub=ci.high(sub),CILowBasic=ci.low(basic),CIHighBasic=ci.high(basic),CILowSuper=ci.low(super),CIHighSuper=ci.high(super)) %>%
+agr = empirical %>%
+  select(color,item,color_item,condition,target_item) %>%
+  gather(utterance,mentioned,-condition,-target_item) %>%
+  group_by(condition,utterance,target_item) %>%
+  summarise(Probability=mean(mentioned),
+            cilow=ci.low(mentioned),
+            cihigh=ci.high(mentioned)) %>%
   ungroup() %>%
-  mutate(YMinSub=ProbSub-CILowSub,YMaxSub=ProbSub+CIHighSub,YMinBasic=ProbBasic-CILowBasic,YMaxBasic=ProbBasic+CIHighBasic,YMinSuper=ProbSuper-CILowSuper,YMaxSuper=ProbSuper+CIHighSuper) 
+  mutate(YMax = Probability + cihigh) %>%
+  mutate(YMin = Probability - cilow) %>%
+  select(condition, target_item, utterance, Probability, YMax, YMin)
+agr = as.data.frame(agr)
 
-tmp_prob = empirical %>%
-  select(Condition,Target,ProbSub,ProbBasic,ProbSuper) %>%
-  gather(Utterance, Probability, -Condition, -Target) %>%
-  mutate(Utterance=gsub("Prob","",as.character(Utterance)))
-
-tmp_ymin = empirical %>%
-  select(Condition,Target,YMinSub,YMinBasic,YMinSuper) %>%
-  gather(Utterance, YMin,-Condition,-Target) %>%
-  mutate(Utterance=gsub("YMin","",as.character(Utterance)))
-
-tmp_ymax = empirical %>%
-  select(Condition,Target,YMaxSub,YMaxBasic,YMaxSuper) %>%
-  gather(Utterance, YMax,-Condition,-Target) %>%
-  mutate(Utterance=gsub("YMax","",as.character(Utterance)))
-
-empirical = tmp_prob %>%
-  left_join(tmp_ymin,by=c("Condition","Target","Utterance")) %>%
-  left_join(tmp_ymax,by=c("Condition","Target","Utterance")) %>%
-  mutate(Utterance = tolower(Utterance))
 ```
 
 
 Load predictives and get into right format.
 ```{r}
-costs = "fixed" # or "empirical"
 costs = "empirical" # or "fixed"
-semantics = "empirical" # or "fixed" or "fixedplusempirical"
-pred = read.csv(paste("../models/bdaOutput/typicality_",costs,"_",semantics,"_predictives.csv",sep=""),quote="")
-colnames(pred) = c("Condition","TargetColor","TargetType","Dist1Color","Dist1Type","Dist2Color","Dist2Type","Utterance","logProbability","Zero")
+semantics = "fixedplusempirical" # or "fixed" or "fixedplusempirical"
+pred = read.csv(paste("../models/bdaOutput/typicality_cost-",costs,"_sem-",semantics,"_predictives.csv",sep=""),quote="")
+colnames(pred) = c("condition","target_color","target_type","Dist1Color","Dist1Type","Dist2Color","Dist2Type","utterance","logProbability","Zero")
 predictives = pred %>%
-  mutate(Probability = exp(logProbability),
-         Target=paste(TargetColor,"_",TargetType,sep="")) %>%
+  mutate(probability = exp(logProbability),
+         target_item=paste(target_color,"_",target_type,sep="")) %>%
   # filter(as.character(Utterance) %in% c(as.character(TargetColor),as.character(TargetType),Target)) %>%
-  mutate_at(vars(Utterance,TargetColor,TargetType),funs(as.character(.))) %>%
-  mutate(UtteranceType = case_when(
-    Utterance == TargetColor ~ "color",
-    Utterance == TargetType ~ "type",
-    Utterance == Target ~ "color-type",
+  mutate_at(vars(utterance,target_color,target_type),funs(as.character(.))) %>%
+  mutate(utterance = case_when(
+    utterance == target_color ~ "color",
+    utterance == target_type ~ "item",
+    utterance == target_item ~ "color_item",
     TRUE ~ "other"
     )) %>%
+  filter(utterance != 'other') %>%
   # filter(Utterance == TargetColor | Utterance == TargetType | Utterance == Target) %>%
-  select(Condition,Target,Utterance,UtteranceType,Probability) %>%
-  group_by(Condition,Target,UtteranceType) %>%
-  summarize(ModelProb=mean(Probability),CILow=ci.low(Probability),CIHigh=ci.high(Probability)) %>%
+  select(condition,target_item,utterance,probability) %>%
+  group_by(condition,target_item,utterance) %>%
+  summarize(ModelProb=mean(probability),CILow=ci.low(probability),CIHigh=ci.high(probability)) %>%
   ungroup() %>%
   mutate(ModelYMin=ModelProb-CILow,ModelYMax=ModelProb+CIHigh) %>%
   select(-CILow,-CIHigh)
@@ -374,12 +384,12 @@ typ = read.csv(file="../data/raw/norming_exp2/typicality_exp2_type.csv") %>%
   filter(Utterance == Item) %>%
   mutate(Combo = paste(Color,"_",Item,sep=""))
 row.names(typ) = typ$Combo
-predictives$TypeTypicality = typ[as.character(predictives$Target),]$Typicality
+predictives$type_typicality = typ[as.character(predictives$target_item),]$Typicality
 ```
 
 Plot model predictions
 ```{r}
-ggplot(predictives, aes(x=TypeTypicality,y=ModelProb,color=UtteranceType)) +
+ggplot(predictives, aes(x=type_typicality,y=ModelProb,color=utterance)) +
   # geom_errorbar(aes(ymin=YMin,ymax=YMax)) +
   # geom_errorbarh(aes(xmin=ModelYMin,xmax=ModelYMax)) +
   geom_point() +
@@ -387,25 +397,27 @@ ggplot(predictives, aes(x=TypeTypicality,y=ModelProb,color=UtteranceType)) +
   geom_smooth(method="lm") +
   xlab("Type typicality") +
   ylab("MAP model predicted probability") +
-  facet_wrap(~Condition) +
+  facet_wrap(~condition) +
   # facet_wrap(~relevel(as.factor(Condition),"sub necessary")) +
-  guides(color=guide_legend(title="Utterance"))
+  guides(color=guide_legend(title="utterance"))
 ggsave(file=paste("../writing/pics/exp2-",costs,"-",semantics,"-predictives.pdf",sep=""),height=5,width=8)
 ```
 
 Bind empirical and predictives and plot (like Fig 8 in paper).
 ```{r}
-d = left_join(empirical,predictives,by=c("Condition","Target","Utterance"))
+d = full_join(agr,predictives,by=c("condition","target_item","utterance"))
 
-ggplot(d, aes(x=ModelProb,y=Probability,color=relevel(as.factor(Utterance),"sub"))) +
+ggplot(d, aes(x=ModelProb,y=Probability,color=utterance)) +
   geom_errorbar(aes(ymin=YMin,ymax=YMax)) +
   geom_errorbarh(aes(xmin=ModelYMin,xmax=ModelYMax)) +
   geom_point() +
   xlab("Model predicted probability") +
   ylab("Empirical utterance proportion") +
-  facet_wrap(~Condition) +
-  # facet_wrap(~relevel(as.factor(Condition),"sub necessary")) +
-  guides(color=guide_legend(title="Utterance"))
+  facet_wrap(~utterance) +
+  theme_bw() +
+  geom_abline(intercept = 0, slope = 1, linetype = "dotted") +
+  guides(color=guide_legend(title="utterance")) +
+  theme(aspect.ratio = 1)
 ggsave("../writing/pics/exp3-empirical-predictives.pdf",height=4,width=11)
 ```
 
@@ -572,30 +584,14 @@ ggplot(d, aes(x=typ_sub,y=ModelProb,color=relevel(as.factor(Utterance),"sub"))) 
 
 
 
-## Import predictives data XXX NOT UP TO DATE COLOR TYPICALITY BUSINESS
-
-```{r}
-colors <- c("yellow","orange","red","pink", "green","blue","brown","black")
-types <- c('apple', 'avocado', 'banana', 'carrot', 'pear', 'tomato', 'pepper')
-predictive<-read.csv("../models/typicality-predictives.csv") %>%
-  rowwise() %>%
-  mutate(target_item = paste0(c(as.character(t_color), as.character(t_item)), collapse = '_')) %>%
-  filter(response %in% c(as.character(t_color), as.character(t_item), target_item)) %>%
-  mutate(utterance = ifelse(as.character(response) %in% colors, 'color', 
-                            ifelse(as.character(response) %in% types, 'item',
-                                   'color_item'))) %>%
-  group_by(condition, utterance, target_item) %>%
-  summarize(modelProbability=mean(logModelProb)) 
-```
-
 ## Plot predictives w/ empirical data
 
 ```{r}
 combined <- left_join(agr, predictive)
-answer_plots = (ggplot(combined, aes(x = modelProbability, y = Probability))
-  + geom_errorbar(aes(ymax = YMax, ymin = YMin), infWeight = .2) 
-  + geom_point(aes(colour = condition))
-  + geom_abline(intercept = 0, slope = 1, linetype = "dotted")
+answer_plots = ggplot(combined, aes(x = exp(modelProbability), y = Probability)) +
+  geom_errorbar(aes(ymax = YMax, ymin = YMin), infWeight = .2) 
+  geom_point(aes(colour = condition))
+  geom_abline(intercept = 0, slope = 1, linetype = "dotted")
   + scale_x_continuous(lim = c(0,1), breaks=c(0,.5,1))
   + ggtitle("Answerer Posterior Predictive")
   #+ geom_smooth(method = "lm")
@@ -606,7 +602,7 @@ answer_plots = (ggplot(combined, aes(x = modelProbability, y = Probability))
   + ylab("Empirical Probability")
   + theme_bw()   
   + theme(text = element_text(size = 10),  axis.text.x = element_text(angle=90, vjust=1), aspect.ratio = 1)
-)
+
 answer_plots
 #dev.off()
 ```
@@ -617,104 +613,13 @@ Look at R^2
 summary(lm(Probability ~ modelProbability, data = combined))
 ```
 
-
-
-
-
-
-
-# Analyze typicality results
-
-### Load in model results
-
-```{r}
-params <- read_csv("../models/typicality-params.csv")
-```
-
-look at MAP, credible intervals...
-
-```{r}
-params %>% 
-  group_by(parameter) %>%
-  summarize(mode = estimate_mode(value),
-            md_lo = round(HPDlo(value), 3),
-            md_hi = round(HPDhi(value), 3))
-```
-
-```{r}
-numSamples = nrow(params)/length(levels(params$parameter))
-params.samples <- params[rep(row.names(params), exp(params$MCMCprob)*numSamples), 1:2]
-
-#pdf(file="../writing/2016/journal-manuscript/figures/AnswererParamPosteriors.pdf",
-        #width = 6, height = 3)
-answererParamPosteriors = ggplot(params.samples, aes(x=value))+
-  #geom_histogram(aes(y=..density..)) +
-  
-    geom_histogram(aes(y=..density..),
-                   data =subset(params.samples, parameter == "infWeight" ),
-                   binwidth = .5, colour="black", fill="white") +
-    geom_histogram(aes(y=..density..),
-                   data=subset(params.samples, parameter == "typWeight"),
-                   binwidth = .25, colour="black", fill="white") +
-    geom_histogram(aes(y=..density..),
-                 data =subset(params.samples, parameter == "cost_color" ),
-                 binwidth = .5, colour="black", fill="white") +
-    geom_histogram(aes(y=..density..),
-                 data=subset(params.samples, parameter == "cost_type"),
-                 binwidth = .25, colour="black", fill="white") +
-
-    geom_density(aes(y=..density..),
-                 data =subset(params.samples, parameter == "infWeight" ),
-                 adjust = 1, infWeight=.2, fill="#FF6666")+
-    geom_density(aes(y=..density..),
-                 data=subset(params.samples, parameter == "typWeight"),
-                 adjust = 5, infWeight=.2, fill="#FF6666")+
-    geom_density(aes(y=..density..),
-                 data=subset(params.samples, parameter == "cost_color"),
-                 adjust = 5, infWeight=.2, fill="#FF6666")+
-    geom_density(aes(y=..density..),
-                 data=subset(params.samples, parameter == "cost_type"),
-                 adjust = 5, infWeight=.2, fill="#FF6666")+
-
-    ggtitle("Parameter Posteriors (500 iterations)") +
-    facet_grid(~parameter, scales = 'free') +
-    theme_bw()
-answererParamPosteriors
-```
-
-Looks like there's a super narrow range where the pragmatic model makes much much better predictions... 
-
-### Predictives
-
-# Import empirical data
-
-```{r}
-empirical = read.csv("../models/bdaInput/typicality/bda_data-raw.csv") %>%
-  mutate(target_item = paste(t_color, t_item, sep = "_")) %>%
-  mutate(color = ifelse(as.character(response) == as.character(t_color),1,0)) %>%
-  mutate(item = ifelse(as.character(response) == as.character(t_item),1,0)) %>%
-  mutate(color_item = ifelse(as.character(response) == as.character(target_item),1,0))
-
-agr = empirical %>%
-  select(color,item,color_item,condition,target_item) %>%
-  gather(utterance,mentioned,-condition,-target_item) %>%
-  group_by(condition,utterance,target_item) %>%
-  summarise(Probability=mean(mentioned),
-            cilow=ci.low(mentioned),
-            cihigh=ci.high(mentioned)) %>%
-  ungroup() %>%
-  mutate(YMax = Probability + cihigh) %>%
-  mutate(YMin = Probability - cilow) %>%
-  select(condition, target_item, utterance, Probability, YMax, YMin)
-agr = as.data.frame(agr)
-```
 
 ## Import predictives data
 
 ```{r}
 colors <- c("yellow","orange","red","pink", "green","blue","brown","black")
 types <- c('apple', 'avocado', 'banana', 'carrot', 'pear', 'tomato', 'pepper')
-predictive<-read.csv("../models/typicality-predictives.csv") %>%
+predictive<-read.csv("../models/bdaOutput/typicality_cost-empirical_sem-fixedplusempirical_predictives.csv") %>%
   rowwise() %>%
   mutate(target_item = paste0(c(as.character(t_color), as.character(t_item)), collapse = '_')) %>%
   filter(response %in% c(as.character(t_color), as.character(t_item), target_item)) %>%
@@ -752,41 +657,4 @@ Look at R^2
 
 ```{r}
 summary(lm(Probability ~ modelProbability, data = combined))
-```
-
-Plot qualitative pattern
-
-```{r}
-typ = read.csv(file="~/cogsci/projects/stanford/projects/overinformativeness/experiments/elisa_paper_relevant/norming_comp_object/results/data/meantypicalities.csv")
-typ = typ[as.character(typ$Item) == as.character(typ$utterance),]
-row.names(typ) = paste(typ$Color,typ$Item,sep="_")
-combined$NounTypicality = typ[as.character(combined$target_item),]$MeanTypicality
-
-ggplot(combined, aes(x=NounTypicality,y=modelProbability,color=Utterance)) +
-  geom_point() +
-  geom_smooth(method="lm") +
-  facet_wrap(~conditionName)
-```
-
-
-Compare predictives with & without emperical lengths/weights
-
-```{r}
-predictiveComparison <-read_csv("./MAPneglCostPredictives.csv") %>%
-  rename(empCostProb = prob) %>%
-  left_join(read_csv("./MAPfixedcostPredictives.csv")) %>%
-  rename(fixedCostProb = prob) %>%
-  rowwise() %>%
-  mutate(target_item = paste0(c(TargetColor, TargetType), collapse = '_')) %>%
-  filter(value %in% c(TargetColor, TargetType, target_item)) %>%
-  mutate(Utterance = ifelse(value %in% colors, 'color', 
-                            ifelse(value %in% types, 'type',
-                                   'color_type'))) %>%
-  rename(conditionName = condition) %>%
-  group_by(conditionName, Utterance, target_item) %>%
-  summarize(empProb=mean(empCostProb), nonEmpProb = mean(fixedCostProb)) 
-
-ggplot(predictiveComparison, aes(x = empProb, y = nonEmpProb)) +
-  geom_point() +
-  geom_text(aes(label=Utterance), size = 2)
 ```
