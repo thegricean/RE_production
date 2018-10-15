@@ -294,7 +294,11 @@ var bayesianErpWriter = function(erp) {
   var version = supp[0]['version'].split(':');
   var header = getHeader(version[0]);
   console.log(header);
-  var fileHandle = fs.openSync('./bdaOutput/' + version[0] + ".csv", 'w');
+  var fileHandleStr = './bdaOutput/' + version[0]
+  if(_.has(supp[0], 'chainNumber') {
+    fileHandleStr += supp[0]['chainNumber']
+  }
+  var fileHandle = fs.openSync(fileHandleStr + ".csv", 'w');
   fs.writeSync(fileHandle, header.join(',') + '\n');
   supp.forEach(function(s) {
     if(version[1] == 'list')
