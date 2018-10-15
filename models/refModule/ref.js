@@ -138,7 +138,7 @@ var completeContexts = {
 var constructLexicon = function(params) {
   var completeContext = completeContexts[params.modelVersion];
   if(params.modelVersion === 'colorSize') {
-    console.assert(params.semantics == 'fixed', 'empirical semantics not allowed for colorSize');
+    console.assert(params.semantics == 'fixed', 'empirical semantics not defined for colorSize');
     var utts = getColorSizeUtterances(completeContext);
     return constructDeterministicLexicon(utts, completeContext, params);
   } else if (params.modelVersion === 'typicality') {
@@ -152,6 +152,8 @@ var constructLexicon = function(params) {
       return params.semantics == 'fixed' ? lex : interpolateLexicons(lex, empirical, params);
     }
   } else if (params.modelVersion === 'nominal') {
+    console.assert(params.semantics == 'empirical', 'fixed semantics not defined for nominal');
+    console.log('TODO: allow interpolation w/ truth-conditional instead');
     return require('./json/nominal-meanings.json');
   } else {
     return console.error('unknown modelVersion: ' + params.modelVersion);
@@ -298,7 +300,7 @@ var bayesianErpWriter = function(erp) {
   var header = getHeader(version[0]);
   console.log(header);
   var fileHandleStr = './bdaOutput/' + version[0]
-  if(_.has(supp[0], 'chainNumber') {
+  if(_.has(supp[0], 'chainNumber')) {
     fileHandleStr += supp[0]['chainNumber']
   }
   var fileHandle = fs.openSync(fileHandleStr + ".csv", 'w');
@@ -365,7 +367,7 @@ function _logsumexp(a) {
 }
 
 var uttCost = function(params, utt) {    
-  if (params.costs === 'fixed') {
+  if (_.has(params, 'colorCost') && _.has(params, 'sizeCost') && _.has(params,'typeCost')) {
     var sizeMention = _.intersection(sizes, utt.split('_')).length;
     var colorMention = _.intersection(colors, utt.split('_')).length;
     var typeMention = _.intersection(types, utt.split('_')).length;
@@ -373,7 +375,7 @@ var uttCost = function(params, utt) {
 	    params.sizeCost * sizeMention +
             params.typeCost * typeMention);
   } else if (params.costs === 'empirical') {
-    console.assert(params.modelVersion != 'colorSize', 'empirical costs not allowed for colorSize');
+    console.assert(params.modelVersion != 'colorSize', 'empirical costs not defined for colorSize');
     return (params.lengthCostWeight * getRelativeLength(params, utt) +
 	    params.freqCostWeight * getRelativeLogFrequency(params, utt));
   } else {

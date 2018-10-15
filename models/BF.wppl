@@ -8,7 +8,8 @@
 // Fix some configuration options
 var config = {
   'modelVersion' : argv.modelVersion,
-  'constraint' : argv.constraint
+  'costs' : argv.costs,
+  'semantics' : argv.semantics
 };
 
 // Pull in requested data/conditions 
@@ -18,47 +19,52 @@ var data = refModule.getData(config.modelVersion);
 var conditions = refModule.getConditions(config.modelVersion);
 // console.log("Loading unique conditions... found" + conditions.length);
 
-var sampleSpecificParams = function() {
-  if(config.modelVersion == 'colorSize') {
-    var colorTyp = uniform({a: .5, b: 1});
-    var sizeTyp = (config.constraint == 'yokeTyps' ? colorTyp :
-		   uniform({a: .5, b: 1}));
-    var colorCost = uniform({a: 0, b: 10});
-    var sizeCost = (config.constraint == 'yokeCosts' ? colorCost :
-		   uniform({a: 0, b: 10}));
+var getSemanticParams = function(semantics) {
+  if(semantics === 'fixed') {
     return {
-      colorTyp, sizeTyp, colorCost, sizeCost,
+      colorTyp : uniformDrift({a: .5, b: 1, w: .5/20}),
+      sizeTyp : config.modelVersion == 'colorSize' ? uniformDrift({a: .5, b: 1, w: .5/20}) : 0,
+      typeTyp : config.modelVersion == 'typicality' ? uniformDrift({a: .5, b: 1, w: .5/20}) : 0,
       typWeight : 1
     };
-  } else if ( _.includes(['typicality', 'nominal'], config.modelVersion)) {
-    var lengthCost = uniformDrift({a: 0, b: 40, w: 40/20});
-    var freqCost =  uniformDrift({a: 0, b: 40, w: 40/20});
-    var typWeight =  uniformDrift({a: 0, b: 10, w: 10/20});
-    var lexicon = 'empirical'; // can also use typical
+  } else if (semantics === 'empirical') {
     return {
-      lengthCost, freqCost, typWeight, lexicon
+      typWeight :  uniformDrift({a: 0, b: 5, w: 1})
     };
   } else {
-    console.error('unknown modelVersion: ' + config.modelVersion);
+    console.error('unknown modelspecification: model version: ' + config.modelVersion +
+		  '; costs: ' + config.costs + '; semantics: ' + config.semantics);
   }
 };
 
 var paramPrior = function() {
   // Params shared by all versions of the model
   var baseParams = {
-    alpha : uniform({a: 0, b: 20})
+    infWeight : uniformDrift({a: 0, b: 20, w: 3})
   };
 
-  var specificParams = sampleSpecificParams();
-
-  return extend(config, baseParams, specificParams);
+  var costParams = (config.costs === 'fixed'  ? {
+    colorCost : uniformDrift({a: 0, b: 5, w: 40/20}),
+    sizeCost :  config.modelVersion == 'colorSize' ? uniformDrift({a: 0, b: 5, w: 40/20}) : 0,
+    typeCost :  config.modelVersion == 'typicality' ? uniformDrift({a: 0, b: 5, w: 40/20}) : 0
+  } : config.costs === 'none'  ? {
+    colorCost : 0, sizeCost :  0, typeCost :  0
+  } : config.costs === 'empirical' ? {
+    lengthCostWeight : uniformDrift({a: 0, b: 5, w: 1}),
+    freqCostWeight :   uniformDrift({a: 0, b: 5, w: 1})
+  } : console.error('unknown modelspecification: ' + config.modelVersion + ' ' +
+		    config.costs + ' ' + config.semantics));
+  
+  var semanticParams = (config.semantics == 'fixedplusempirical' ?
+			extend(getSemanticParams('fixed'), getSemanticParams('empirical'),
+			       {fixedVsEmpirical: uniformDrift({a: 0, b: 1, w: 1/20})}) :
+			getSemanticParams(config.semantics));
+  return extend(config, baseParams, costParams, semanticParams);
 };
 
-globalStore.iteration = 0;
 var modelAnalysis = function() {
 
   var params = paramPrior();
-  //console.log(params);
   var lexicon = refModule.constructLexicon(params);
   var modelParams = extend(params, {lexicon});
   map(function(datum) {
@@ -67,22 +73,12 @@ var modelAnalysis = function() {
     var target = context[0];
     
     // Condition on data
-    var score = refModule.getSpeakerScore(datum.response, target, context, modelParams)
-    //console.log(score);
-    factor(score);
+    factor(refModule.getSpeakerScore(datum.response, target, context, modelParams));
   }, data);
 
-  globalStore.iteration += 1;
-  if(globalStore.iteration % 10 == 0) {
-    console.log(globalStore.iteration)
-  }
-//  factor(likelihood);
-//
-  //  var paramsKey = _.values(_.omit(params, ['modelVersion'])).join(',');
   return {
-    //output : _.zipObject([paramsKey], [likelihood]),
     version: params.modelVersion + '_params:obj'
   };
 };
 
-AIS(modelAnalysis, {samples: 1, steps: 2000})
+[config.modelVersion, config.costs, config.semantics, AIS(modelAnalysis, {samples: 1, steps: 3000})].join(',')
