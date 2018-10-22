@@ -650,11 +650,11 @@ Inputting these contexts and semantic values into the RSA model used thus far, w
 
 So far we have shown that continuous semantics RSA can capture typicality effects in principle if we assume that semantic values do not operate at the adjective type level but instead captures the typicality of an object for the (minimal and redundant) referring expressions. If an object is more typical for the redundant expression than for the minimal expression, then the bigger the difference in typicality, the greater the relative informativeness of the redundant expression, and the greater the probability of it being produced. 
 
-This example is somewhat oversimplified. In practice, speakers sometimes just mention an object's color without mentioning the noun. In the contexts presented in \figref{fig:bananaexamples} this does not make much sense because there is always a competitor of the same color present. In contrast, in the contexts in \figref{fig:condInf} and \figref{fig:condOverinf}, color alone disambiguates the target. This suggests that we should consider among the set of utterance alternatives not just the simple type mentions (e.g., \emph{banana}) and color-and-type mentions (e.g., \emph{yellow banana}), but also simple color mentions (e.g., \emph{yellow}). The dynamics of the model proceed as before.
+This example is somewhat oversimplified. In practice, speakers sometimes mention an object's color without mentioning the noun. In the contexts presented in \figref{fig:bananaexamples} this does not make much sense because there is always a competitor of the same color present. In contrast, in the contexts in \figref{fig:condInf} and \figref{fig:condOverinf}, color alone disambiguates the target. This suggests that we should consider among the set of utterance alternatives not just the simple type mentions (e.g., \emph{banana}) and color-and-type mentions (e.g., \emph{yellow banana}), but also simple color mentions (e.g., \emph{yellow}). The dynamics of the model proceed as before.
 
-We can now ask whether taking into account this more fine-grained notion of a continuous semantics affects the probability of redundantly mentioning color. Because the stimuli for Exp.~1 were specifically designed to be realistic objects with low color-diagnosticity, they do not include objects with low typicality values or large degrees of variation in typicality. This makes the dataset from Exp.~1 not well-suited for investigating typicality effects.\footnote{We did elicit typicality norms for the items in Exp.~1 and replicated the previously documented typicality effects on the four items that did exhibit variation in typicality. See \appref{sec:exp1typicality} for details.} We therefore conducted a separate production experiment in the same paradigm but with two broad changes: first, objects' color varied in typicality; and second, we did not manipulate object size, focusing only on color mention. This allows us to ask two question: first, do we replicate the typicality effects reported in the literature -- that is, are less color-typical objects more likely to lead to redundant color use than more color-typical objects? Second, does RSA with empirically elicited typicality values as proxy for a continuous semantics capture speakers' behavior?
+We can now ask whether taking into account this more fine-grained notion of a continuous semantics affects the probability of redundantly mentioning color. Because the stimuli for Exp.~1 were specifically designed to be realistic objects with low color-diagnosticity, they do not include objects with low typicality values or large degrees of variation in typicality. This makes the dataset from Exp.~1 not well-suited for investigating typicality effects.\footnote{We did elicit typicality norms for the items in Exp.~1 and replicated the previously documented typicality effects on the four items that did exhibit variation in typicality. See \appref{sec:exp1typicality} for details.} We therefore conducted a separate production experiment in the same paradigm but with two broad changes: first, objects' color varied in typicality; and second, we did not manipulate object size, focusing only on color mention. This allows us to ask three questions: first, do we replicate the typicality effects reported in the literature -- that is, are less color-typical objects more likely to lead to redundant color use than more color-typical objects? Second, does RSA with empirically elicited typicality values as proxy for a continuous semantics capture speakers' behavior? Third, does the semantic value depend only on typicality, or is there still a role for modifier type level noise  of the kind we investigated in the previous section? In addition, we can investigate the extent to which utterance cost, which we found not to play a role in the previous section, affects the choice of referring expression.
 
-Additionally, the proposed RSA model allows us to ask questions that have not been addressed previously. In particular, it allows us to test for complex interactions of contextual informativeness of color and type, by manipulating both whether there is a distractor of the same type present and whether there is a distractor of the same color present. 
+%Additionally, the proposed RSA model allows us to ask questions that have not been addressed previously. In particular, it allows us to test for complex interactions of contextual informativeness of color and type, by manipulating both whether there is a distractor of the same type present and whether there is a distractor of the same color present. 
 
 
 \subsection{Experiment 2: color typicality effects}
@@ -832,27 +832,58 @@ There was also a main effect of informativeness, such that color mention was les
 \label{sec:colorypicalitymodel}
 
 
-We evaluated the continuous semantics RSA model on the obtained production data from Exp.~2. While the architecture of the model remained the same as that of the model presented in \sectionref{sec:modifiedmodel}, we briefly review the minor necessary changes, some of which we already mentioned at the beginning of this section. These changes concerned the lexicon and the cost function.\footnote{See \tableref{tab:modeldiffs} for an overview of the models reported in the paper.} We elaborate on each in turn before turning to the model evaluation. 
+We evaluated the continuous semantics RSA model on the obtained production data from Exp.~2. In particular, we were interested in using model comparison to address the following issues. 
+
+First, we already discussed that at least for the banana item, the empirically elicited typicalities, when interpreted as semantic values, capture qualitative  patterns in the data that the simple modifier type noise asymmetry assumed in the previous section cannot capture. Is this more fine-grained treatment of semantic values as capturing an object's typicality as an instance of an utterance enough to account for speakers' choice of expression, or is it necessary to integrate both the empirically elicited values and the utterance type level (color, type) noise values?
+
+Second, we can ask whether or not utterance cost, quantified in two different ways, explains any of the observed production behavior. 
+
+While the architecture of the model remained the same as that of the model presented in \sectionref{sec:modifiedmodel}, we briefly review the minor necessary changes, some of which we already mentioned at the beginning of this section. These changes concerned the lexicon and the cost function.\footnote{See \tableref{tab:modeldiffs} for an overview of the models reported in the paper.} We elaborate on each in turn before turning to the model evaluation. 
 
 \subsubsection{Lexicon}
 
 Whereas for the purpose of evaluating the model in \sectionref{sec:rsaevaluationbasicscene}  we only considered the utterance alternatives \emph{color}, \emph{size}, and \emph{color-size}, we included in this lexicon each color adjective, type noun, and combination of the two. This substantially increased the size of the lexicon to 37 unique utterances. For each combination of utterance $u$ and object $o$ that occurred in the experiment, we included a separate semantic value $x_{u,o}$, elicited in the norming experiments described in \sectionref{sec:typicalitynormingcolor} (rather than inferred as done for Exp.~1, to avoid overfitting).\footnote{Ideally, one would like to derive the semantic values for the modified utterances from the semantic values of the individual lexical items.  Unfortunately, the compositionality of continuous values is a recognized problem \cite{kamp1995} and not one we aim to solve here. For our purposes it was therefore sufficient that we had access to the semantic values of the modified utterances elicited experimentally.} For any given context, we assumed the utterance alternatives that correspond to the individually present features and their combinations. For example, for the context in \figref{fig:condOverinfcc}, the set of utterance alternatives was \emph{yellow, green, pear, banana, avocado, yellow pear, yellow banana}, and \emph{green avocado}. 
 
+\subsection{Semantics}
+
+We compared two versions of the model. In one, the empirically elicited values were directly interpreted as semantic values (\emph{empirical semantics}). We compared this model to one that combined the empirical semantics and the utterance type level semantics employed in \sectionref{sec:rsaevaluationbasicscene}, by comparing the \emph{empirical semantics} model to a \emph{fixed plus empirical semantics} model that combined empirical typicality values and fixed expression type level noise terms in the following way:
+
+\jd{ROBERT PLEASE DESCRIBE BRIEFLY}
+
 \subsubsection{Cost function}
 
-For the purpose of evaluating the model in \sectionref{sec:rsaevaluationbasicscene} we inferred two constant costs (one for color and one for size). In contrast, we included here a more complex cost function. In particular, we defined utterance cost $c(u)$ as follows:
+For the purpose of evaluating the model in \sectionref{sec:rsaevaluationbasicscene} we inferred two constant costs (one for color and one for size), and found in the Bayesian Data Analysis that the role of cost in explaining the data was minimal at best. Here, we compared two different versions of utterance cost. In the \emph{fixed cost} model we treated cost the same way as in the previous section and included only a color and type level cost, inferred from the data. We then compared this model to an \emph{empirical cost model}, in which we included a more complex cost function. In particular, we defined utterance cost $c(u)$ as follows:
 \begin{equation}
 c(u) = \beta_F\cdot p(u) + (1-\beta_F)\cdot l(u)
 \end{equation}
 
 Here, $p(u)$ is utterance frequency as estimated from the Google Books corpus (years 1950 to 2008); $l(u)$ is the mean empirical length of the utterance in characters in the production data (e.g., sometimes \emph{yellow} was abbreviated as \emph{yel}, leading to an $l(u)$ smaller than 6); and $\beta_F$ is a weight that interpolates between length and frequency (when 1, cost is only a function of frequency; when 0, cost is only a function of length). Both $p(u)$ and $l(u)$ were normalized to fall into the interval $[0,1]$. The cost function thus prefers short and frequent utterances (e.g., \emph{blue}) over long and infrequent ones (\emph{turquoise-ish bananaesque thing}).
 
+We compared both of these models to one in which utterances were assumed to have no cost.
+
 \subsubsection{Evaluation}
 
+\jd{ROBERT INCLUDE DESCRIPTION OF PROCEDURE}
 
-To evaluate the model we employed the same Bayesian data analysis procedure as reported in \sectionref{sec:modifiedmodel}. We integrated over the following free parameters: \jd{XXX adjust to follow structure in 3.2}
+The models differed in the number of free parameters that were integrated over. The marginal log likelihoods for each model are shown in \tableref{tab:exp2-modelcomparison}. The most likely model was the \emph{fixed plus empirical semantics} model that does not include a cost term. Despite the greater number of parameters associated with adding the fixed semantics to the empirical semantics, the fixed plus empirical semantics models were more likely across the board compared to their empirical-only counterparts. In comparison, additional cost-related parameters were not justified.
 
-Posteriors over parameters are shown in \figref{fig:typparamposteriors}. \jd{XXX discuss}
+\begin{table}
+\caption{Marginal log likelihood for each model. Best model is in bold. Parentheses indicate number of free parameters.}
+\centering
+\begin{tabular}{l l c c }
+\toprule
+& & \multicolumn{2}{c}{Semantics}\\
+& & \emph{empirical} & \emph{fixed plus empirical}\\
+\midrule
+\multirow{3}{*}{Cost} & \emph{empirical} & -1474.6 () & -1354.4 () \\
+ & \emph{fixed} & -1434.8 () & -1321.9 () \\
+ & \emph{none} & -1372.9 () & \textbf{-1209.8 ()} \\ 
+\bottomrule
+\end{tabular}
+\label{tab:exp2-modelcomparison}
+\end{table}
+
+Posteriors over parameters for the best model are shown in \figref{fig:typparamposteriors}. \jd{XXX discuss once file available for plotting}
 
 \begin{figure}
 \centering
@@ -864,7 +895,7 @@ Posteriors over parameters are shown in \figref{fig:typparamposteriors}. \jd{XXX
 \label{fig:typparamposteriors}
 \end{figure}
 
-A scatterplot of empirical utterance proportions agains model predictions are shown in \figref{fig:typpredictives}. \jd{XXX discuss}
+A scatterplot of empirical utterance proportions agains model predictions are shown in \figref{fig:typpredictives}. \jd{XXX discuss once file available for plotting}
 
 
 \begin{figure}
@@ -877,19 +908,7 @@ A scatterplot of empirical utterance proportions agains model predictions are sh
 \label{fig:typpredictives}
 \end{figure}
 
-\jd{report:}
-\begin{itemize}
-	\item general procedure (same as for Exp. 1, exclude "other" utterances. same inference algorithm?)
-	\item free parameters
-	\item include plots: scatterplot of posterior predictive vs empirical proportions, and posterior over parameters
-	\item report correlations with empirical data at different levels: at individual item (u,o) level collapsing across distractors
-	\item discuss posteriors over params
-	\item comparison with different models:
-	\begin{itemize}
-		\item cost-only
-		\item typicality-only
-	\end{itemize}
-\end{itemize}
+
 
 
 
