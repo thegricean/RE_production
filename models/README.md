@@ -23,9 +23,9 @@ The fast way is what I did for the paper because in that section we're not inter
 
 **Paper:** Section 4.3?
 
-**Conditions file:** bdaInput/unique_conditions_typicality.json	
+**Conditions file:** bdaInput/typicality/unique_conditions.json	
 
-**Data file:**	bdaInput/bda_data_typicality.json
+**Data file:**	bdaInput/typicality/bda_data.json
 
 
 ## Nominal choice
