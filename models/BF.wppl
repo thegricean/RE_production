@@ -81,4 +81,4 @@ var modelAnalysis = function() {
   };
 };
 
-[config.modelVersion, config.costs, config.semantics, AIS(modelAnalysis, {samples: 1, steps: 3000})].join(',')
+[config.modelVersion, config.costs, config.semantics, AIS(modelAnalysis, {samples: 1, steps: 30000})].join(',')
