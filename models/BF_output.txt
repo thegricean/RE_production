@@ -1,3 +1,4 @@
+modelVersion,costs,semantics,margLikelihood
 typicality,empirical,empirical,-1374.8689202259086
 typicality,empirical,empirical,-1399.763566701998
 typicality,empirical,empirical,-1384.7489135774276

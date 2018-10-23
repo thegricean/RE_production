@@ -9,7 +9,7 @@ output: html_notebook
 library(tidyverse)
 library(coda)
 library(lme4)
-library(gridExtra)
+#library(gridExtra)
 estimate_mode <- function(s) {
   d <- density(s)
   return(d$x[which.max(d$y)])
@@ -498,8 +498,15 @@ ggplot(d, aes(x=ModelProb,y=Probability,color=utterance)) +
 ggsave("../writing/pics/exp3-empirical-predictives.pdf",height=4,width=11)
 ```
 
+## Model comparison
 
+Load BF results
 
+```{r}
+AIS.samples <- read_csv('../models/BF_output.txt') %>%
+  group_by(modelVersion, costs, semantics) %>%
+  summarize(m = mean(margLikelihood))
+```
 
 # Analyze nominal choice results
 
