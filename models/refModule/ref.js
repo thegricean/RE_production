@@ -255,25 +255,19 @@ var getHeader = function(versionStr) {
       return ['color', 'size', 'condition', 'othercolor', 'item', 'utt', 'prob',  "zeros"];
     }
   } else if(version[0] == 'typicality') {
-    if (version == 'typicality_cost-empirical_sem-empirical_params') {
-      return ['infWeight', 'lengthCostWeight', 'freqCostWeight', 'typWeight',
-	      'logLikelihood', 'outputProb'];
-    } else if (version == 'typicality_cost-fixed_sem-empirical_params') {
-      return ['infWeight', 'colorCost', 'sizeCost', 'typeCost', 'typWeight',
-	      'logLikelihood', 'outputProb'];
-    } else if (version == 'typicality_cost-empirical_sem-fixed_params') {
-      return ['infWeight', 'colorCost', 'sizeCost', 'typeCost', 'typWeight',
-	      'logLikelihood', 'outputProb']; 
-    } else if (version == 'typicality_cost-fixed_sem-fixed_params') {
-      return ['infWeight', 'colorCost', 'sizeCost', 'typeCost', 'colorTyp', 'typeTyp', 'typWeight',
-	      'logLikelihood', 'outputProb']; 
-    } else if (version == 'typicality_cost-fixed_sem-fixedplusempirical_params') {
-      return ['infWeight','colorCost','sizeCost','typeCost','colorTyp','sizeTyp',
-	      'typeTyp','typWeight','fixedVsEmpirical','logLikelihood','outputProb'];
-    } else if (version == 'typicality_cost-empirical_sem-fixedplusempirical_params') {
-      return ['infWeight','lengthCostWeight','freqCostWeight','colorTyp','sizeTyp',
-	      'typeTyp','typWeight','fixedVsEmpirical','logLikelihood','outputProb'];
+    if(version[3] == 'params') {
+      var header = ['infWeight'];
+      header = header.concat(
+	(version[1] == 'cost-empirical' ? ['lengthCostWeight', 'freqCostWeight'] :
+	 ['colorCost', 'sizeCost', 'typeCost']));
 
+      header = header.concat(
+	(version[2] == 'sem-empirical' ? ['typWeight'] :
+	 version[2] == 'sem-fixed' ? ['colorTyp','sizeTyp', 'typeTyp'] :
+	 ['colorTyp','sizeTyp', 'typeTyp', 'typWeight', 'fixedVsEmpirical']));
+
+      header = header.concat(['logLikelihood', 'outputProb']);
+      return header;
     } else if (version[3] == 'predictives') {
       return ['condition','t_color', "t_item", 'd1_color', "d1_item",
 	      "d2_color", "d2_item", "response", "logModelProb",  "zeros"];
