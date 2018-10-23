@@ -1,9 +1,11 @@
 // simulates model forward with given params/context 
-// webppl evaluate.wppl --require ./refModule/ -- --modelVersion <colorSize> --paramSource <inferred> --costs <fixed>
+// webppl evaluate.wppl --require ./refModule/ -- --modelVersion <colorSize> --paramSource <inferred> --costs <fixed> --semantics <empirical> --chainNumber <1>
 var config = {
   'modelVersion' : argv.modelVersion, // colorSize, typicality, or nominal
   'paramSource' : argv.paramSource, // inferred, manual
-  'costs' : argv.costs // fixed, empirical
+  'costs' : argv.costs, // fixed, empirical
+  'semantics' : argv.semantics, // fixed, empirical
+  'chainNumber' : _.has(argv, 'chainNumber') ? argv.chainNumber : ''
 };
 
 // Pull in requested data/conditions 
@@ -16,7 +18,7 @@ console.log("Loading unique conditions... found" + conditions.length);
 // If based on posterior over parameters, extract highest scoring MCMC sample
 var getParams = function() {
   if (config.paramSource == "inferred") {
-    var paramPosterior = refModule.getParamPosterior(config.modelVersion,config.costs);
+    var paramPosterior = refModule.getParamPosterior(config);
     var map_likelihood = _.min(_.map(paramPosterior, 'logLikelihood'));
     // console.log(map_likelihood);
     return find(function(x) {
@@ -54,7 +56,9 @@ var modelAnalysis = function() {
   });
   // console.log(params.modelVersion + '_' + params.costs + '_empirical_predictives:obj');
   return {output: globalStore.predictives,
-	  version : params.modelVersion + '_' + params.costs + '_empirical_predictives:obj'}; //predictive: globalStore.predictives, 
+	  version : params.modelVersion + '_' + params.costs + '_empirical_predictives:obj',
+	  chainNumber: config.chainNumber
+	  }; //predictive: globalStore.predictives, 
 };
 
 var outputERP = Infer({method:'enumerate', model: modelAnalysis});

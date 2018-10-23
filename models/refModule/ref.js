@@ -187,8 +187,12 @@ function getConditions(modelVersion) {
   return require('../bdaInput/' + modelVersion + '/unique_conditions.json');
 }
 
-function getParamPosterior(modelVersion,costs,semantics) {
-  return readCSV('./bdaOutput/' + modelVersion + '_cost-' + costs + '_sem-' + semantics + '_params.csv');
+function getParamPosterior(config) {
+    return readCSV('./bdaOutput/' + config.modelVersion +
+		   '_cost-' + config.costs +
+		   '_sem-' + config.semantics +
+		   '_params' + config.chainNumber +
+		   '.csv');
 }
 
 function getManualParams(modelVersion) {

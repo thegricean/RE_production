@@ -10,7 +10,8 @@
 var config = {
   'modelVersion' : argv.modelVersion,
   'costs' : argv.costs,
-  'semantics' : argv.semantics
+  'semantics' : argv.semantics,
+  'chainNumber' : _.has(argv, 'chainNumber') ? argv.chainNumber : ''
 };
 
 // Pull in requested data/conditions 
@@ -81,7 +82,7 @@ var modelAnalysis = function() {
   return {
     output : _.zipObject([paramsKey], [globalStore.likelihood]),
     version: params.modelVersion + '_cost-' + params.costs + '_sem-' + params.semantics + '_params:obj',
-    chainNumber: _.has(argv, 'chainNumber') ? argv.chainNumber : ''
+    chainNumber: config.chainNumber
   };
 };
 
