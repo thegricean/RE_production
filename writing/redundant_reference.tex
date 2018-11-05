@@ -810,14 +810,30 @@ Mean typicality values obtained in the norming studies are used in the analyses 
 
 \subsubsection{Results and discussion}
 
-Proportions of type-only (\emph{banana}), color-and-type (\emph{yellow banana}), color-only (\emph{yellow}), and other (\emph{funky carrot}) utterances are shown in \figref{fig:proportions} as a function of the described item's mean type-only (\emph{banana}) typicality. Visually inspecting just the explicitly marked \emph{yellow banana}, \emph{brown banana}, and \emph{blue banana} cases suggests a large typicality effect in the overinformative conditions as well as a smaller typicality effect in the informative conditions, such that color is less likely to be produced with increasing typicality of the object. 
+Proportions of type-only (\emph{banana}), color-and-type (\emph{yellow banana}), color-only (\emph{yellow}), and other (\emph{funky carrot}) utterances are shown in \figref{fig:exp2empirical} as a function of the described item's mean type-only (\emph{banana}) typicality. Visually inspecting just the explicitly marked \emph{yellow banana}, \emph{brown banana}, and \emph{blue banana} cases suggests a large typicality effect in the overinformative conditions as well as a smaller typicality effect in the informative conditions, such that color is less likely to be produced with increasing typicality of the object. 
 
-\begin{figure}[h!]
+\begin{figure}
 \centering
-\includegraphics[width=.8\textwidth]{pics/empiricalProportions_typ.png}
-\caption{For each target, proportion of color-only (\emph{yellow}), type-only (\emph{banana}), color-and-type (\emph{yellow banana}), and other (\emph{funky carrot}) utterances as a function of mean object typicality for the type-only utterance (e.g., \emph{banana}), across conditions. Modified utterance data points for the banana items are circled in the banana's respective color.}
-\label{fig:proportions}
+	\begin{subfigure}{.85\textwidth}
+		\centering
+		\includegraphics[width=.8\textwidth]{pics/empiricalProportions_typ.png}
+		\caption{Empirical utterance proportions}
+		\label{fig:exp2empirical}
+	\end{subfigure}
+	
+	\begin{subfigure}{.85\textwidth}
+		\centering
+		\includegraphics[width=.8\textwidth]{pics/exp2-none-fixedplusempirical-predictives}
+		\caption{MAP model predicted utterance probabilities}
+		\label{fig:exp2model}
+	\end{subfigure}
+%\caption{MAP model predicted utterance probabilities for each target as a function of mean object typicality for the type-only utterance (e.g., \emph{banana}). Color indicates utterance type: color-only (\emph{yellow}), type-only (\emph{banana}), color-and-type (\emph{yellow banana}). Facets indicate conditions.}
+\caption{(a) Empirical utterance proportions in Exp.~2 and (b) MAP model predicted utterance probabilities for each target as a function of mean object typicality for the type-only utterance (e.g., \emph{banana}). Color indicates utterance type: type-only (\emph{banana}), color-only (\emph{yellow}), color-and-type (\emph{yellow banana}), and other (\emph{funky carrot}). Facets indicate conditions. Modified utterance data points for the banana items are circled in the banana's respective color in (a).}
+\label{fig:exp2results}
 \end{figure}
+
+
+
 
 The following questions are of interest. First, do we replicate the previously documented typicality effect on redundant color mention beyond the one-item visual inspection? Second, does typicality affect color mention even when color is informative (i.e., technically necessary for establishing unique reference)? Third, are speakers sensitive to the presence of color competitors in their use of color or are typicality effects immune to the nature of the distractor items?
 
@@ -865,10 +881,10 @@ We compared both of these models to one in which utterances were assumed to have
 
 \jd{ROBERT INCLUDE DESCRIPTION OF PROCEDURE}
 
-The models differed in the number of free parameters that were integrated over. The marginal log likelihoods for each model are shown in \tableref{tab:exp2-modelcomparison}. The most likely model was the \emph{fixed plus empirical semantics} model that does not include a cost term. Despite the greater number of parameters associated with adding the fixed semantics to the empirical semantics, the fixed plus empirical semantics models were more likely across the board compared to their empirical-only counterparts. In comparison, additional cost-related parameters were not justified.
+The models differed in the number of free parameters that were integrated over. The marginal log likelihoods for each model are shown in \tableref{tab:exp2-modelcomparison}. The most likely model was the \emph{fixed plus empirical semantics} model that does not include a cost term. Despite the greater number of parameters associated with adding the fixed semantics to the empirical semantics, the fixed plus empirical semantics models were more likely across the board compared to their empirical-only counterparts. In comparison, additional cost-related parameters were not justified. The correlation between empirical utterance proportions and the best model's MAP predictions at the by-item level was $r=.94$. 
 
 \begin{table}
-\caption{Marginal log likelihood for each model. Best model is in bold. Parentheses indicate number of free parameters.}
+\caption{Marginal log likelihood for each model. Best model is in bold. Parentheses indicate number of free parameters. \jd{ROBERT CAN YOU INSERT NUMBER OF FREE PARAMS IN PARENS FOR EACH}}
 \centering
 \begin{tabular}{l l c c }
 \toprule
@@ -877,47 +893,35 @@ The models differed in the number of free parameters that were integrated over. 
 \midrule
 \multirow{3}{*}{Cost} & \emph{empirical} & -1474.6 () & -1354.4 () \\
  & \emph{fixed} & -1434.8 () & -1321.9 () \\
- & \emph{none} & -1372.9 () & \textbf{-1209.8 ()} \\ 
+ & \emph{none} & -1372.9 () & \textbf{-1209.8 (5)} \\ 
 \bottomrule
 \end{tabular}
 \label{tab:exp2-modelcomparison}
 \end{table}
 
-Posteriors over parameters for the best model are shown in \figref{fig:typparamposteriors}. \jd{XXX discuss once file available for plotting}
+Model predictions are visualized alongside empirical proportions in \figref{fig:exp2model}. The model reproduces the empirically observed typicality effects in all four experimental conditions. Where it diverges qualitatively from the empirical data is in the conditions without color competitors. Here, \emph{color-and-type} utterances are systematically underpredicted in the informative condition, and systematically overpredicted in the overinformative condition. The reverse is true for \emph{color-only} utterances. It is worth looking at the posterior over parameters, shown in \figref{fig:typparamposteriors}, to understand the pattern. In particular, the utterance type level semantic value of type is inferred to be systematically higher than that of color, capturing that type utterances are less noisy than color utterances.\footnote{Interestingly, the inferred semantic value for color is very similar in absolute terms to that in Exp.~1.} An increase in \emph{color-only} mentions in the overinformative condition could be achieved by reducing the semantic value for type. However, that would lead to a further increase in \emph{color-only} mentions in the informative condition as well. That is, the two conditions are in a tug-of-war with each other.
 
 \begin{figure}
 \centering
 %\includegraphics[width=\textwidth]{../../../models/1a_bda_basic/results_bda/graphs/parameterposteriors-fixed-reducedconditions}
 % old location \includegraphics[width=\textwidth]{../../../models/old/1a_bda_basic/results_bda/graphs/parameterposteriors-fixed-reducedconditions-unlogged}
 %\includegraphics[width=\textwidth]{pics/parameterposteriors-fixed-reducedconditions-unlogged}
-%\includegraphics[width=\textwidth]{pics/exp1-paramposteriors}
-\caption{\jd{XXX UPDATE Posterior model parameter distributions for semantic value (left column) and cost (right column), separately for color (top row) and size (bottom row). Maximum a posteriori (MAP)  $x_{\textrm{size}}$ = 0.79, 95\% highest density interval (HDI) = [0.76,0.80]; MAP $x_{\textrm{color}}$ = 0.88, HDI = [0.85,0.92]; MAP $c(u_{\textrm{size}})$ = .02, HDI = [0, 0.26]; MAP $c(u_{\textrm{color}})$ = 0.03, HDI = [0,0.45].}}
+\includegraphics[width=\textwidth]{pics/exp2-cost-none-sem-fixedplusempirical-paramposteriors}
+\caption{For best model, posterior model parameter distributions for utterance type level semantic values (color, type), interpolation weight on fixed vs.~empirical semantics, typicality stretching parameter, and weight on informativity. Maximum a posteriori (MAP)  $x_{\textrm{color}}$ = 0.86, 95\% highest density interval (HDI) = [0.82,0.89]; MAP $x_{\textrm{type}}$ = 0.998, HDI = [0.97,1.00]; $\beta_{\textrm{fixed}}$ = .69, HDI = [0.64, 0.77]; MAP $\beta_{\textrm{typ}}$ = 1.34, HDI = [1.19,1.75]; MAP $\beta_i$ = 13.74, HDI = [11.58,14.37].}
 \label{fig:typparamposteriors}
 \end{figure}
 
-A scatterplot of empirical utterance proportions agains model predictions are shown in \figref{fig:typpredictives}. \jd{XXX discuss once file available for plotting}
-
-
-\begin{figure}
-\centering
-%\includegraphics[width=\textwidth]{../../../models/1a_bda_basic/results_bda/graphs/parameterposteriors-fixed-reducedconditions}
-% old location \includegraphics[width=\textwidth]{../../../models/old/1a_bda_basic/results_bda/graphs/parameterposteriors-fixed-reducedconditions-unlogged}
-%\includegraphics[width=\textwidth]{pics/parameterposteriors-fixed-reducedconditions-unlogged}
-%\includegraphics[width=\textwidth]{pics/exp1-paramposteriors}
-\caption{\jd{XXX UPDATE scatterplot}}
-\label{fig:typpredictives}
-\end{figure}
-
-
-
+Two further things of note: the interpolation weight between the fixed and empirical semantic values somewhat overweights the fixed compared to the empirical semantics. This provides evidence that a noisy truth-conditional semantics as employed in Exp.~1 is justified, but that taking into account graded category membership or typicality in an utterance's final semantic value is also necessary. That the weight on the empirically elicited typicalities is slightly higher than 1 suggests that the empirically elicited typicalities were somewhat less extreme than represented underlyingly.
 
 
 
 \subsection{Discussion}
 
-In this section we demonstrated that the continuous semantics RSA model predicts color typicality effects in the production of referring expressions. The model employed here did not differ in its architecture from that employed in \sectionref{sec:rsaevaluationbasicscene}, but only in that a) semantic values were assumed to operate at the individual utterance/object level (instead of at the utterance type/object level); b) semantic values were empirically elicited via typicality norming studies (instead of inferred from the data); and c) an utterance's cost was assumed to be a function of its mean empirical length and its corpus frequency as estimated from a large corpus (instead of having a constant utterance type level value).\footnote{See \tableref{tab:modeldiffs} for a more extensive overview of the ways in which the models reported across sections differed.} 
+In this section we demonstrated that the continuous semantics RSA model predicts color typicality effects in the production of referring expressions. The model employed here did not differ in its architecture from that employed in \sectionref{sec:rsaevaluationbasicscene}, but only in that a) semantic values were assumed to operate at the individual utterance/object level (in addition to at the utterance type/object level); b) semantic values were empirically elicited via typicality norming studies (in addition to inferred from the data); and c) an utterance's cost was assumed to be a function of its mean empirical length and its corpus frequency as estimated from a large corpus (instead of having a constant utterance type level value, though utterance cost ultimately was found not to play a role in predicting utterance choice).\footnote{See \tableref{tab:modeldiffs} for a more extensive overview of the ways in which the models reported across sections differed.} 
 
-This suggests that the dynamics at work in the choice of color vs.~size and in the choice of color as a function of the object's color typicality are very similar: speakers choose utterances by considering the fine-grained differences in information about the intended referent communicated by the ultimately chosen utterance compared to its competitor utterances. For noisier utterances (e.g., \emph{banana} as applied to a blue banana), including the `overinformative' color modifier is useful because it provides information. For less noisy utterances (e.g., \emph{banana} as applied to a yellow banana), including the color modifier is useless because the unmodified utterance is already highly informative. These dynamics even lead to the color modifier being left out altogether even when there is another object of the same type present that is very atypical, simply because the literal listener asymmetry in probability of choosing the intended referent over the competitor object is big enough.
+This suggests that the dynamics at work in the choice of color vs.~size and in the choice of color as a function of the object's color typicality are very similar: speakers choose utterances by considering the fine-grained differences in information about the intended referent communicated by the ultimately chosen utterance compared to its competitor utterances. For noisier utterances (e.g., \emph{banana} as applied to a blue banana), including the `overinformative' color modifier is useful because it provides information. For less noisy utterances (e.g., \emph{banana} as applied to a yellow banana), including the color modifier is useless because the unmodified utterance is already highly informative with respect to the speaker's intention. These dynamics can sometimes even result in the color modifier being left out altogether, even when there is another object of the same type present that is very atypical, simply because the literal listener asymmetry in probability of choosing the intended referent over the competitor object is big enough.
+
+Crucially, model comparison demonstrated the need for assuming a semantics that interpolates between a noisy truth-conditional semantics as employed in Exp.~1 and empirically elicited semantic values. This suggests that speakers, in choosing utterances, take into account both an utterance's literal semantics and its noisiness, as well as the graded category membership of the objects under consideration. Perhaps surprisingly, we replicated the result from Exp.~1 that utterance cost does not add any predictive power, even when quantified via a more sophisticated cost function that takes into account an utterance's length and frequency.
 
 In the next section, we move beyond the choice of modifier and ask whether continuous semantics RSA provides a good account of content selection in referring expressions more generally. To answer this question we turn to simple nominal referring expressions.
 
