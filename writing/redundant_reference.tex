@@ -878,14 +878,20 @@ c(u) = \beta_F\cdot p(u) + (1-\beta_F)\cdot l(u)
 \end{equation}
 
 Here, $p(u)$ is utterance frequency as estimated from the Google Books corpus (years 1950 to 2008); $l(u)$ is the mean empirical length of the utterance in characters in the production data (e.g., sometimes \emph{yellow} was abbreviated as \emph{yel}, leading to an $l(u)$ smaller than 6); and $\beta_F$ is a weight that interpolates between length and frequency (when 1, cost is only a function of frequency; when 0, cost is only a function of length). Both $p(u)$ and $l(u)$ were normalized to fall into the interval $[0,1]$. The empirical cost function thus prefers short and frequent utterances (e.g., \emph{blue}) over long and infrequent ones (\emph{turquoise-ish bananaesque thing}).
-
 We compared both of these models to a simpler baseline in which utterances were assumed to have no cost.
 
-\subsubsection{Evaluation}
+\subsubsection{Model comparison}
 
 \jd{ROBERT INCLUDE DESCRIPTION OF PROCEDURE}
-
-The models differed in the number of free parameters that were integrated over. The marginal log likelihoods for each model are shown in \tableref{tab:exp2-modelcomparison}. The most likely model was the \emph{fixed plus empirical semantics} model that does not include a cost term. Despite the greater number of parameters associated with adding the fixed semantics to the empirical semantics, the fixed plus empirical semantics models were more likely across the board compared to their empirical-only counterparts. In comparison, additional cost-related parameters were not justified. The correlation between empirical utterance proportions and the best model's MAP predictions at the by-item level was $r=.94$. 
+To evaluate the effect of these choices of semantics and cost, we conducted a full Bayesian model comparison.
+Specifically, we compute the Bayes Factor for each comparison, a measure quantifying the support for one model over another in terms of the relative likelihood they each assign to the data.
+As opposed to classical likelihood ratios, which only use the maximum likelihood estimate, the likelihoods in the Bayes Factor integrate over all parameters, thus automatically applying an Occam's Razor correcting for over-fitting. 
+Because it was intractable to analytically compute these integrals for our recursive model, we used Annealed Importance Sampling (AIS), a Monte Carlo algorithm commonly used to approximate these quantities.
+To ensure high-quality estimates, we took the mean over 100 independent samples for each model, with each chain running for 30,000 steps.
+The marginal log likelihoods for each model are shown in \tableref{tab:exp2-modelcomparison}. 
+The best performing model used \emph{fixed plus empirical} semantics and did not include a cost term. 
+Despite the greater number of parameters associated with adding the fixed semantics to the empirical semantics, the \emph{fixed plus empirical} semantics models were preferred across the board compared to their empirical-only counterparts ($BF = 3.7 \times 10^{48}$ for fixed costs, $BF = 2.1 \times 10^{60}$ for empirical costs, and $BF = 1.4 \times 10^{71}$ for no cost). 
+In comparison, additional cost-related parameters were not justified, with $BF = 5.7 \times 10^{21}$ for no cost compared to fixed cost and $BF = 2.1 \times 10^{27}$ for compared to empirical cost.
 
 \begin{table}
 \caption{Marginal log likelihood for each model. Best model is in bold. Parentheses indicate number of free parameters. \jd{ROBERT CAN YOU INSERT NUMBER OF FREE PARAMS IN PARENS FOR EACH}}
@@ -895,15 +901,15 @@ The models differed in the number of free parameters that were integrated over. 
 & & \multicolumn{2}{c}{Semantics}\\
 & & \emph{empirical} & \emph{fixed plus empirical}\\
 \midrule
-\multirow{3}{*}{Cost} & \emph{empirical} & -1474.6 () & -1354.4 () \\
- & \emph{fixed} & -1434.8 () & -1321.9 () \\
- & \emph{none} & -1372.9 () & \textbf{-1209.8 (5)} \\ 
+\multirow{3}{*}{Cost} & \emph{empirical} & -1474.6 (4) & -1354.4 (7) \\
+ & \emph{fixed} & -1434.8 (4) & -1321.9 (7) \\
+ & \emph{none} & -1372.9 (2) & \textbf{-1209.8 (5)} \\ 
 \bottomrule
 \end{tabular}
 \label{tab:exp2-modelcomparison}
 \end{table}
 
-Model predictions are visualized alongside empirical proportions in \figref{fig:exp2model}. The model reproduces the empirically observed typicality effects in all four experimental conditions. Where it diverges qualitatively from the empirical data is in the conditions without color competitors. Here, \emph{color-and-type} utterances are systematically underpredicted in the informative condition, and systematically overpredicted in the overinformative condition. The reverse is true for \emph{color-only} utterances. It is worth looking at the posterior over parameters, shown in \figref{fig:typparamposteriors}, to understand the pattern. In particular, the utterance type level semantic value of type is inferred to be systematically higher than that of color, capturing that type utterances are less noisy than color utterances.\footnote{Interestingly, the inferred semantic value for color is very similar in absolute terms to that in Exp.~1.} An increase in \emph{color-only} mentions in the overinformative condition could be achieved by reducing the semantic value for type. However, that would lead to a further increase in \emph{color-only} mentions in the informative condition as well. That is, the two conditions are in a tug-of-war with each other.
+The correlation between empirical utterance proportions and the best model's MAP predictions at the by-item level was $r=.94$. Predictions for the best-performing model are visualized alongside empirical proportions in \figref{fig:exp2model}. The model successfully reproduces the empirically observed typicality effects in all four experimental conditions. However, we note that it diverges somewhat from the empirical data in conditions without color competitors. Here, \emph{color-and-type} utterances are systematically underpredicted in the informative condition, and systematically overpredicted in the overinformative condition \rdh{is this true? the green line in the overinformative condition looks almost exactly the same}. The reverse is true for \emph{color-only} utterances. It is worth looking at the posterior over parameters, shown in \figref{fig:typparamposteriors}, to understand the pattern. In particular, the utterance type level semantic value of type is inferred to be systematically higher than that of color, capturing that type utterances are less noisy than color utterances.\footnote{Interestingly, the inferred semantic value for color is very similar in absolute terms to that in Exp.~1.} An increase in \emph{color-only} mentions in the overinformative condition could be achieved by reducing the semantic value for type. However, that would lead to a further increase in \emph{color-only} mentions in the informative condition as well. That is, the two conditions are in a tug-of-war with each other.
 
 \begin{figure}
 \centering
@@ -915,7 +921,7 @@ Model predictions are visualized alongside empirical proportions in \figref{fig:
 \label{fig:typparamposteriors}
 \end{figure}
 
-Two further things of note: the interpolation weight between the fixed and empirical semantic values somewhat overweights the fixed compared to the empirical semantics. This provides evidence that a noisy truth-conditional semantics as employed in Exp.~1 is justified, but that taking into account graded category membership or typicality in an utterance's final semantic value is also necessary. That the weight on the empirically elicited typicalities is slightly higher than 1 suggests that the empirically elicited typicalities were somewhat less extreme than represented underlyingly.
+Two further things of note: the interpolation weight between the fixed and empirical semantic values is in the intermediate range: this provides evidence that a noisy truth-conditional semantics as employed in Exp.~1 is justified, but that taking into account graded category membership or typicality in an utterance's final semantic value is also necessary. That the weight on the empirically elicited typicalities is slightly higher than 1 suggests that the empirically elicited typicalities were somewhat less extreme than represented underlyingly.
 
 
 
