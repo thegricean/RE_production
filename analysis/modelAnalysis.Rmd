@@ -472,6 +472,17 @@ Load BF results
 AIS.samples <- read_csv('../models/BF_output.txt') %>%
   group_by(modelVersion, costs, semantics) %>%
   summarize(m = mean(margLikelihood))
+
+# fixedplusempirical vs. empirical
+AIS.samples %>% spread(semantics, m) %>%
+  mutate(BF = exp(fixedplusempirical - empirical))
+
+# no cost vs. cost
+AIS.samples %>% filter(semantics == 'fixedplusempirical') %>% 
+  spread(costs, m) %>%
+  mutate(noneVsFixedBF = exp(none - fixed)) %>%
+  mutate(noneVsEmpBF = exp(none - empirical)) %>%
+  select(noneVsFixedBF, noneVsEmpBF)
 ```
 
 # Analyze nominal choice results
