@@ -92,7 +92,7 @@ In the following, we review some of the key phenomena and puzzles in each of the
 
 We spend the remainder of the paper demonstrating how this account applies to various phenomena. In \sectionref{sec:intro} we spell out the problem and introduce the key overinformativeness phenomena. In \sectionref{sec:models} we introduce the basic (deterministic semantics) and modified (relaxed semantics) Rational Speech Act framework. In Sections 3 - 5 we evaluate the relaxed semantics RSA model on data from interactive online reference game experiments that exhibit the phenomena introduced in \sectionref{sec:intro}: size and color modifier choice under varying conditions of scene complexity; typicality effects in the choice of color modifier; and choice of nominal level of reference. We wrap up in \sectionref{sec:gd} by summarizing our findings and discussing the far-reaching implications of and further challenges for this line of work.
 
-\ndg{note: i removed "continuous semantics" to "relaxed semantics" here, since we would otherwise need to explain the connection between non-determinism and continuity, which seems better left for later.}
+%\ndg{note: i removed "continuous semantics" to "relaxed semantics" here, since we would otherwise need to explain the connection between non-determinism and continuity, which seems better left for later.}
 
 \subsection{Production of referring expressions: a case against rational language use?}
 
@@ -154,20 +154,19 @@ However, while the PRO model -- the most state-of-the-art computational model of
 \subsubsection{Scene variation}
 \label{sec:scenevariation}
 
-So far we have portrayed speakers' propensity to overmodify with color as a fixed quantity (though varying by experiment). However, this propensity is highly dependent on features of the distractor objects in the context. In particular, as the variation present in the scene increases, so does the probability of overmodifying with color \cite{Davies2013, Koolen2013}. How exactly scene variation is quantified differs across experiments. One very clear demonstration of the scene variation effect was given by \citeA{Koolen2013}, who quantified scene variation as the number of feature dimensions along which objects in a scene vary. Over the course of three experiments, they compared a low-variation condition in which objects never differed in color with a high-variation condition in which objects differed in type, color, orientation, and size. They consistently found higher rates of overmodification with color in the high-variation (28-27\%) than in the low-variation (4-10\%) conditions.
+So far we have portrayed speakers' propensity to overmodify with color as a fixed quantity (though varying by experiment). However, this propensity is highly dependent on features of the distractor objects in the context. In particular, as the variation present in the scene increases, so does the probability of overmodifying  \cite{Davies2013, Koolen2013}. How exactly scene variation is quantified differs across experiments. One very clear demonstration of the scene variation effect was given by \citeA{Koolen2013}, who quantified scene variation as the number of feature dimensions along which objects in a scene vary. Over the course of three experiments, they compared a low-variation condition in which objects never differed in color with a high-variation condition in which objects differed in type, color, orientation, and size. They consistently found higher rates of overmodification with color in the high-variation (28-27\%) than in the low-variation (4-10\%) conditions. Similarly, \citeA{Davies2013} found that listeners judge overmodified referring expressions in low-variation scenes of four objects as less natural than in high-variation scenes of 4 potentially compositional `objects-on-objects' (e.g., a button on a sock). And finally, \citeA{gatt2017}, while not reporting differences in overmodification behavior, did find that when size and color are jointly disambiguating, speech onset times for non-redundant \emph{color-and-size} utterances increased as the number of distractors in the display increased.
 
 The effect of scene variation on propensity to overmodify has typically been explained as the result of the demands imposed on visual search: in low-variation scenes, it is easier to discern the discriminating dimensions than in high-variation scenes, where it may be easier to simply start naming features of the target that are salient \cite{Koolen2013}. 
 
-The PRO model does not have a straightforward way of capturing the effect of scene variation on probability of overmodification. One way of doing so is to make the salience and overmodification parameters directly dependent on the amount of variation in the scene. However, this requires additional free parameters -- PRO can accommodate but not explain the effect.
 
-\ndg{say something about other kinds of scene variation? and the need to capture them all.}
+Above, we have considered three different ways of quantifying scene variation: the number of dimensions along which objects differ, whether objects are `simple' or `compositional', and the number of distractors present in a scene. A model of referring expression generation should ideally capture all of these types of variation in a unified way. 
 
-%We show in \sectionref{sec:models} how scene variation effects fall straightforwardly out of our proposed model by capturing the intuition that color becomes an increasingly good property for speakers to mention as it becomes contextually more informative.
+
 
 \subsubsection{Feature typicality}
 \label{sec:colortypicalityintro}
 
-Modifier type and amount of scene variation are not the only factors determining overmodification. Overmodification with color has been shown to be systematically related to the typicality of the color for the object. Building on work by \citeA{sedivy2003a}, \citeA{Westerbeek2015} (and more recently, \citeA{rubiofernandez2016}) have shown that the more typical a color is for an object, the less likely it is to be mentioned when not necessary for unique reference. For example, speakers never refer to a yellow banana in the absence of other bananas as \emph{the yellow banana} (see \figref{fig:typical}), but they sometimes refer to a brown banana as \emph{the brown banana}, and they almost always refer to a blue banana as \emph{the blue banana} (see \figref{fig:atypical}). Similar typicality effects have been shown for other (non-color) properties. For example, \citeA{Mitchell2013} showed that speakers are more likely to include an atypical than a typical property (either shape or material) when referring to everyday objects like boxes when mentioning at least one property was necessary for unique reference. %, when the shape and material was atypical (e.g., heart-shaped, made of clay) than when it was typical (e.g., square, made of cardboard). 
+Modifier type and amount of scene variation are not the only factors determining overmodification. Overmodification with color has been shown to be systematically related to the typicality of the color for the object. Building on work by \citeA{sedivy2003a}, \citeA{Westerbeek2015} (and more recently, \citeA{rubiofernandez2016}) have shown that the more typical a color is for an object, the less likely it is to be mentioned when not necessary for unique reference. For example, speakers never refer to a yellow banana in the absence of other bananas as \emph{the yellow banana} (see \figref{fig:typical}), but they sometimes refer to a brown banana as \emph{the brown banana}, and they almost always refer to a blue banana as \emph{the blue banana} (see \figref{fig:atypical}). Similar typicality effects have been shown for other (non-color) properties. For example, \citeA{Mitchell2013} showed that speakers are more likely to include an atypical than a typical property (either shape or material) when referring to everyday objects like boxes when mentioning at least one property was necessary for unique reference. 
 
 \begin{figure}
 \begin{subfigure}{.5\textwidth}
@@ -184,15 +183,8 @@ Modifier type and amount of scene variation are not the only factors determining
 \label{fig:pin}
 \end{figure}
 
-Whether speakers are more likely to mention atypical properties over typical properties because they are more salient to \emph{them} or because they are trying to make reference resolution easier for the listener, for whom presumably these properties are also salient, is an open question \cite{Westerbeek2015}. Some support for the audience design account comes from a study by \citeA{Huettig2011}, who found that listeners, after hearing a noun with a diagnostic color (e.g., \emph{frog}), are more likely to fixate objects of that diagnostic color (green), indicating that typical object features are rapidly activated and aid visual search. Similarly, \citeA{Arts2011} showed that overspecified expressions result in faster referent identification.  Nevertheless, the benefit for listeners and the salience for speakers might simply be a happy coincidence and speakers might not, in fact, be designing their utterances for their addressees. We will remain agnostic about the underlying reason for typicality effects for the time being and will return to this issue in the General Discussion. % \jd{will we, though? the model assumes that typicality affects the literal listener, who speakers reason about, so in a sense we're making a strong audience design claim.}
+Whether speakers are more likely to mention atypical properties over typical properties because they are more salient to \emph{them} or because they are trying to make reference resolution easier for the listener, for whom presumably these properties are also salient, is an open question \cite{Westerbeek2015}. Some support for the audience design account comes from a study by \citeA{Huettig2011}, who found that listeners, after hearing a noun with a diagnostic color (e.g., \emph{frog}), are more likely to fixate objects of that diagnostic color (green), indicating that typical object features are rapidly activated and aid visual search. Similarly, \citeA{Arts2011} showed that overspecified expressions result in faster referent identification.  Nevertheless, the benefit for listeners and the salience for speakers might simply be a happy coincidence and speakers might not, in fact, be designing their utterances for their addressees. We will remain agnostic about the underlying reason for typicality effects for the time being and will return to this issue in the General Discussion. 
 
-
-
-%Irrespective of the source of typicality effects, it is unclear how the PRO model could accommodate them. 
-%In addition to explaining typicality effects themselves, we would like to explain how scene variation and typicality should interact. 
-%We show in \sectionref{sec:colortypicality} that the production model we propose straightforwardly accounts for these typicality effects in a principled way. In addition, we provide a principled way in which distractor typicality can be taken into account in modifier choice.
-
-\ndg{i tried to remove repetitive "we will show later" remarks. let's just get the phenomena out and then we can show... also decreased discussion of PRO that is just badmouthing.}
 
 \subsection{Nominal referring expressions}
 \label{sec:nominalintro}
@@ -260,7 +252,7 @@ Here we propose a computational model of referring expression production that ac
 \label{sec:basicrsa}
 
 As has been pointed out by \citeA{GattEtAl2013}, the basic Rational Speech Act model as formulated by \citeA{frank2012} does not generate overinformative referring expressions for two reasons: first, it trivially cannot do so because it is limited to one-word utterances \cite<see also>{Baumann2014}. 
-\ndg{why does everyone say this? the model was formulated for utterances, it was only applied to one word utterances...}
+\ndg{why does everyone say this? the model was formulated for utterances, it was only applied to one word utterances...}\jd{because it's an easy strawman -- we can take this out, but we do need a hook}
 But even when allowing two-word (or $n$-word) utterances, the speaker's utility function does not allow for producing redundant referring expressions as long as additional words contribute non-negative costs to the overall utterance cost. To see this, and as a basis for the innovation introduced in \sectionref{sec:modifiedmodel} it is useful to reiterate the basic form of the model.
 
 The production component of RSA aims to soft-maximize the utility of utterances, where utility is defined in terms of the contextual informativeness of an utterance, given each utterance's literal semantics. Formally, this is treated as a pragmatic speaker $S_1$ reasoning about a literal listener $L_0$, who can be described by the following formula:
@@ -593,6 +585,7 @@ In this section, we reported the results of a dataset of freely collected referr
 
 Some readers may find themselves wondering about the status of these semantic values: are we claiming that color modifiers have inherently higher semantic values than size modifiers? Is the difference constant? What if the color modifier is a less well known one like \emph{mauve}? The way we have set the model up thus far, there would indeed be no difference in semantic value between \emph{red} and \emph{mauve}. Moreover, the model is not equipped to handle potential object-level idiosyncracies such as the typicality effects discussed in \sectionref{sec:colortypicalityintro}. We defer a fuller discussion of the status of the semantic value term to the General Discussion and turn first to continuous semantics RSA's potential for capturing these typicality effects.
 
+\jd{will have to discuss here already and then just summarize in GD}
 
 \section{Modified referring expressions: color typicality}
 \label{sec:colortypicality}
@@ -824,7 +817,7 @@ Proportions of type-only (\emph{banana}), color-and-type (\emph{yellow banana}),
 	
 	\begin{subfigure}{.85\textwidth}
 		\centering
-		\includegraphics[width=.8\textwidth]{pics/exp2-none-fixedplusempirical-predictives}
+		\includegraphics[width=.77\textwidth]{pics/exp2-none-fixedplusempirical-predictives}
 		\caption{MAP model predicted utterance probabilities}
 		\label{fig:exp2model}
 	\end{subfigure}
@@ -836,7 +829,7 @@ Proportions of type-only (\emph{banana}), color-and-type (\emph{yellow banana}),
 
 
 
-The following questions are of interest. First, do we replicate the previously documented typicality effect on redundant color mention beyond the one-item visual inspection? \rdh{what does one-item visual inspection refer to?} Second, does typicality affect color mention even when color is informative (i.e., technically necessary for establishing unique reference)? Third, are speakers sensitive to the presence of color competitors in their use of color or are typicality effects immune to the nature of the distractor items?
+The following questions are of interest. First, do we replicate the previously documented typicality effect on redundant color mention (as suggested by the visual inspection of the banana item)? Second, does typicality affect color mention even when color is informative (i.e., technically necessary for establishing unique reference)? Third, are speakers sensitive to the presence of color competitors in their use of color or are typicality effects immune to the nature of the distractor items?
 
 To address these questions we conducted a mixed effects logistic regression predicting color use from fixed effects of typicality, informativeness, and color competitor presence. We used the typicality norms obtained in the \emph{type}/object typicality elicitation study reported above (see \figref{fig:obj}) as the continuous typicality predictor. The informativeness condition was coded as a binary variable (color informative vs.~color overinformative trial) as was color competitor presence (absent vs.~present). All predictors were centered before entering the analysis. The model included by-speaker and by-item random intercepts, which was the maximal random effects structure that allowed the model to converge.
 
@@ -873,7 +866,7 @@ Note that this allows us to perform a nested model comparison, since the first m
 
 For the purpose of evaluating the model in \sectionref{sec:rsaevaluationbasicscene} we inferred two constant costs (one for color and one for size), and found in the Bayesian Data Analysis that the role of cost in explaining the data was minimal at best. Here, we compared two different versions of utterance cost. In the \emph{fixed cost} model we treated cost the same way as in the previous section and included only a color and type level cost, inferred from the data. We then compared this model to an \emph{empirical cost model}, in which we included a more complex cost function. 
 Specifically, we defined utterance cost $c(u)$ as follows:
-\begin{equation}
+\begin{equation} \label{eq:exp2cost}
 c(u) = \beta_F\cdot p(u) + (1-\beta_F)\cdot l(u)
 \end{equation}
 
@@ -908,7 +901,7 @@ In comparison, additional cost-related parameters were not justified, with $BF =
 \label{tab:exp2-modelcomparison}
 \end{table}
 
-The correlation between empirical utterance proportions and the best model's MAP predictions at the by-item level was $r=.94$. Predictions for the best-performing model are visualized alongside empirical proportions in \figref{fig:exp2model}. The model successfully reproduces the empirically observed typicality effects in all four experimental conditions. However, we note that it diverges somewhat from the empirical data in conditions without color competitors. Here, \emph{color-and-type} utterances are systematically underpredicted in the informative condition, and systematically overpredicted in the overinformative condition \rdh{is this true? the green line in the overinformative condition looks almost exactly the same}. The reverse is true for \emph{color-only} utterances. It is worth looking at the posterior over parameters, shown in \figref{fig:typparamposteriors}, to understand the pattern. In particular, the utterance type level semantic value of type is inferred to be systematically higher than that of color, capturing that type utterances are less noisy than color utterances.\footnote{Interestingly, the inferred semantic value for color is very similar in absolute terms to that in Exp.~1.} An increase in \emph{color-only} mentions in the overinformative condition could be achieved by reducing the semantic value for type. However, that would lead to a further increase in \emph{color-only} mentions in the informative condition as well. That is, the two conditions are in a tug-of-war with each other.
+The correlation between empirical utterance proportions and the best model's MAP predictions at the by-item level was $r=.94$. Predictions for the best-performing model are visualized alongside empirical proportions in \figref{fig:exp2model}. The model successfully reproduces the empirically observed typicality effects in all four experimental conditions. However, we note that it diverges somewhat from the empirical data in conditions without color competitors. Here, \emph{color-and-type} utterances are systematically somewhat underpredicted in the informative condition, and systematically somewhat overpredicted in the overinformative condition. The reverse is true for \emph{color-only} utterances. It is worth looking at the posterior over parameters, shown in \figref{fig:typparamposteriors}, to understand the pattern. In particular, the utterance type level semantic value of type is inferred to be systematically higher than that of color, capturing that type utterances are less noisy than color utterances.\footnote{Interestingly, the inferred semantic value for color is very similar in absolute terms to that in Exp.~1.} An increase in \emph{color-only} mentions in the overinformative condition could be achieved by reducing the semantic value for type. However, that would lead to a further increase in \emph{color-only} mentions in the informative condition as well. That is, the two conditions are in a tug-of-war with each other.
 
 \begin{figure}
 \centering
@@ -926,7 +919,7 @@ Two further things of note: the interpolation weight between the fixed and empir
 
 \subsection{Discussion}
 
-In this section we demonstrated that the continuous semantics RSA model predicts color typicality effects in the production of referring expressions. The model employed here did not differ in its architecture from that employed in \sectionref{sec:rsaevaluationbasicscene}, but only in that a) semantic values were assumed to operate at the individual utterance/object level (in addition to at the utterance type/object level); b) semantic values were empirically elicited via typicality norming studies (in addition to inferred from the data); and c) an utterance's cost was assumed to be a function of its mean empirical length and its corpus frequency as estimated from a large corpus (instead of having a constant utterance type level value, though utterance cost ultimately was found not to play a role in predicting utterance choice).\footnote{See \tableref{tab:modeldiffs} for a more extensive overview of the ways in which the models reported across sections differed.} 
+In this section we demonstrated that the continuous semantics RSA model predicts color typicality effects in the production of referring expressions. The model employed here did not differ in its architecture from that employed in \sectionref{sec:rsaevaluationbasicscene}, but only in that a) semantic values were assumed to operate at the individual utterance/object level in addition to at the utterance type/object level; b) semantic values were empirically elicited via typicality norming studies in addition to being inferred from the data; and c) an utterance's cost was assumed to be a function of its mean empirical length and its corpus frequency as estimated from a large corpus instead of having a constant utterance type level value, though utterance cost ultimately was found not to play a role in predicting utterance choice.\footnote{See \tableref{tab:modeldiffs} for a more extensive overview of the ways in which the models reported across sections differed.} 
 
 This suggests that the dynamics at work in the choice of color vs.~size and in the choice of color as a function of the object's color typicality are very similar: speakers choose utterances by considering the fine-grained differences in information about the intended referent communicated by the ultimately chosen utterance compared to its competitor utterances. For noisier utterances (e.g., \emph{banana} as applied to a blue banana), including the `overinformative' color modifier is useful because it provides information. For less noisy utterances (e.g., \emph{banana} as applied to a yellow banana), including the color modifier is useless because the unmodified utterance is already highly informative with respect to the speaker's intention. These dynamics can sometimes even result in the color modifier being left out altogether, even when there is another object of the same type present that is very atypical, simply because the literal listener asymmetry in probability of choosing the intended referent over the competitor object is big enough.
 
@@ -939,9 +932,10 @@ In the next section, we move beyond the choice of modifier and ask whether conti
 
 In this section we investigate whether continuous semantics RSA accounts for referring expression production beyond the choice of modifier. In particular, we focus on speakers' choice of taxonomic level of reference in nominal referring expressions. A particular object can be referred to at its subordinate (\emph{dalmatian}), basic (\emph{dog}), or superordinate (\emph{animal}) level, among other choices. As discussed in \sectionref{sec:nominalintro},  multiple factors play a role in the choice of nominal referring expression, including an expression's contextual informativeness, its cognitive cost \cite<short and frequent terms are preferred over long and infrequent ones,>{griffin1998,jescheniak1994}, and its typicality \cite<an utterance is more likely to be used if the object is a good instance of it,> {Jolicoeur1984}.
 
-Choice of taxonomic level (e.g., between \emph{dog} and \emph{dalmatian}) is analogous to the choice of modified referring expressions (e.g., between \emph{dog} and \emph{big dog}) in that the two expressions differ in how much information about the intended referent is provided. In contrast to adding additional adjectives, choosing a level of reference implies no additional word-cost, but instead entails trading-off the cost (i.e., length and frequency) of the different nouns. Thus, the same factors we have seen to govern choice of modifier over the previous two sections are also involved in nominal choice.
+Choice of taxonomic level (e.g., between \emph{dog} and \emph{dalmatian}) is analogous to the choice of modified referring expressions (e.g., between \emph{dog} and \emph{big dog}) in that the two expressions differ in how much information about the intended referent is provided. However, cost-wise, in contrast to the modifier case, the choice between different levels of reference does not result in a choice between a shorter or longer utterance in terms of the number of words required, but it is possible that differences in length and frequency of the different nouns affect the choice. Thus, effects of the same factors we previously tested for in the choice of modifier in the previous two sections can also be tested for their involvement in nominal choice.
 
-In order to evaluate continuous semantics RSA for nominal choice, we proceeded as in \sectionref{sec:colortypicality}: we collected production data within the same reference game setting, but varied the contextual informativeness of utterances by varying whether distractors shared the same basic or superordinate category with the target (see \figref{fig:dogcontexts}). We also elicited typicality ratings for object-utterance combinations, which entered the model as the semantic values via the lexicon. We then conducted the same type of Bayesian data analysis as reported in the previous sections for model evaluation.
+In order to evaluate continuous semantics RSA for nominal choice, we proceeded as in \sectionref{sec:colortypicality}: we collected production data within the same reference game setting, but varied the contextual informativeness of utterances by varying whether distractors shared the same basic or superordinate category with the target (see \figref{fig:dogcontexts}). We also elicited typicality ratings for object-utterance combinations, which entered the model as the semantic values via the lexicon. We then conducted the same type of Bayesian data analysis as reported in the previous sections for model comparison.
+
 
 \subsection{Experiment 3: taxonomic level of reference in nominal referring expressions}
 \label{sec:exp3}
@@ -1003,7 +997,7 @@ We collected 2193 referring expressions. To determine the level of reference for
 \subsubsection{Results and discussion}
 
 
-Proportions of sub, basic, and super level utterances are shown in \figref{fig:exp2results}. Overall, super level mentions are highly dispreferred ($< 2\%$), so we focus in this section only on predictors of sub over basic level mentions. The clearest pattern of note is that sub level mentions are only preferred in the most constrained context that necessitates the sub level mention for unique reference (e.g., target: dalmatian, distractor: greyhound; see \figref{fig:item12}). Nevertheless, even in these contexts there is a non-negligible proportion of basic level mentions (28\%). In the remaining contexts, where the sub and basic level are equally informative, there is a clear preference for the basic level. In addition, mitigating this context effect, sub level mentions increased with increasing typicality of the object as an instance of the sub level utterance.
+Proportions of sub, basic, and super level utterances are shown in \figref{fig:exp2results}. Overall, super level mentions are highly dispreferred ($< 2\%$), so we focus in this section only on predictors of sub over basic level mentions. The clearest pattern of note is that sub level mentions are only preferred in the most constrained context that necessitates the sub level mention for unique reference (e.g., target: dalmatian, distractor: greyhound; see \figref{fig:item12}). Nevertheless, even in these contexts there is a non-negligible proportion of basic level mentions (28\%).\footnote{This context is analogous to the informative contexts from Exp.~2, where we also observed some `underinformative' referring expressions, but note that here this proportion is even higher.} In the remaining contexts, where the sub and basic level are equally informative, there is a clear preference for the basic level. In addition, mitigating this context effect, sub level mentions increased with increasing typicality of the object as an instance of the sub level utterance.
 
 
 \begin{figure}
@@ -1054,9 +1048,9 @@ The log odds of mentioning the sub level term were greater in the \emph{sub nece
 
 
 Unsurprisingly, there was also significant by-participant and by-domain variation in sub level term mention. %\figref{fig:bigscatterplot} shows the by-domain variation in utterance choice. 
-For instance, mentioning the sub over the basic level term was preferred more in some domains (e.g. in the ``candy'' domain) than in others. Likewise, some domains had a greater preference for basic level terms (e.g. the ``shirt'' domain). Using the super term also ranged from hardly being observable (e.g. the ``flower'' domain) to being used more frequently (e.g. in the ``table'' and ``car'' domain). 
+For instance, mentioning the sub over the basic level term was preferred more in some domains (e.g. in the ``candy'' domain) than in others. Likewise, some domains had a greater preference for basic level terms (e.g. the ``shirt'' domain). Using the super term also ranged from hardly being observable (e.g., \emph{plant} in the ``flower'' domain) to being used more frequently (e.g., \emph{furniture} in the ``table'' domain and \emph{vehicle} in the ``car'' domain). 
 
-We thus replicated the well-documented preference to refer to objects at the basic level, which is partly modulated by contextual informativeness and partly a result of the basic level term's cognitive cost and typicality compared to its sub level competitor. 
+We thus replicated the well-documented preference to refer to objects at the basic level, which is partly modulated by contextual informativeness and partly a result of the basic level term's cognitive cost and typicality compared to its sub level competitor, mirroring the results from Exp.~2. 
 
 Perhaps surprisingly, we did not observe an effect of frequency on sub level term mention. This is likely due to the modality of the experiment: the current study was a written production study, while most studies that have identified frequency as a factor governing production choices are spoken production studies. It may be that the cognitive cost of typing longer words may be disproportionately higher than that of producing longer words in speech, thus obscuring a potential effect of frequency. Support for this hypothesis comes from studies comparing written and spoken language, which has found that spoken descriptions are likely to be longer than written descriptions and, in English, seem to have a lower propositional information density than written descriptions \cite{VanMiltenburg2018}.
 
@@ -1068,10 +1062,13 @@ Perhaps surprisingly, we did not observe an effect of frequency on sub level ter
 
 We evaluated the continuous semantics RSA model on the obtained production data from Exp.~3. The architecture of the model is identical to that of the model presented in \sectionref{sec:colorypicalitymodel}. The only difference is that the set of alternatives contained only the three potential target utterances (i.e., the target's sub, basic, and super label).\footnote{See \tableref{tab:modeldiffs} for an overview of the models reported in the paper.} Whereas the modifier models from the previous sections treat all individual features and feature combinations represented in the display as utterance alternatives, the nominal choice model considers only the three different levels of reference to the target as alternatives, e.g., \emph{dalmatian}, \emph{dog}, \emph{animal}. That is, assuming a German Shepherd as a distractor, \emph{German Shepherd} is \emph{not} considered an alternative.
 
-Just as we did for capturing color typicality effects in \sectionref{sec:colorypicalitymodel}, we elicited empirical typicality values for object-utterance combinations and used those values as the semantic values in the model.\footnote{See \appref{app:typicalitynorms2} for details of typicality elicitation experiment.} 
+For the previous dataset, we tested which of three different semantics was most justified -- a fixed semantics with type-level semantic values, the empirically elicited semantics, or a combination of the two. For the current dataset, this question did not arise, because we investigated only one type of utterance -- nouns. We hence only considered the \emph{empirical} semantics. However, like in the previous dataset, we evaluated which cost function was best supported by the data: the one defined in \eqref{eq:exp2cost}, repeated here, or a simpler baseline in which utterances were assumed to have no cost: 
 
+\begin{equation}
+c(u) = \beta_F\cdot p(u) + (1-\beta_F)\cdot l(u)
+\end{equation} 
 
-To evaluate the model we employed the same Bayesian data analysis procedure as reported in the previous section. We used Markov Chain Monte Carlo (MCMC) with a burn-in of \jd{robert? XXX} and lag of \jd{robert? XXX} to draw 970 samples from the joint posteriors on the four free parameters  $\beta_i  \sim \mathcal{U}(0,20)$,  $\beta_{c(\textrm{freq})} \sim \mathcal{U}(0,5)$, $\beta_{c(\textrm{len})} \sim \mathcal{U}(0,5)$,, $\beta_t  \sim \mathcal{U}(0,5)$.
+We employed the same procedure as in the previous section to compute the Bayes Factor for the comparison between the two cost models, and to compute the posteriors over parameters  $\beta_i  \sim \mathcal{U}(0,20)$,  $\beta_{c(\textrm{freq})} \sim \mathcal{U}(0,5)$, $\beta_{c(\textrm{len})} \sim \mathcal{U}(0,5)$,, $\beta_t  \sim \mathcal{U}(0,5)$.
 
 Posteriors over parameters are shown in \figref{fig:nomparamposteriors}. While an absolute comparison between the informativity and cost weights is not possible, it is worth noting that the weight on frequency is close to zero, i.e., in line with the results from the mixed effects regression, an utterance's length, but not its frequency, factors into the probabilitiy with which it is produced. The posterior on the typicality weight also suggests that the typicality values elicited empirically should be stretched somewhat to yield semantic values that are appropriate for computing informativity from.
 
@@ -1227,7 +1224,9 @@ How do speakers choose a referring expression? Here we have shown that they do s
 \toprule
 & Color/size & Color typicality & Nominal choice \\
 \midrule
-Semantic values were\dots & inferred & elicited experimentally & elicited experimentally\\
+Semantic values applied at \dots & type level (size, color) & type level (color, type) and utterance-object level (e.g., \emph{yellow banana} applied to various bananas) & utterance-object level (e.g., \emph{dalmatian} applied to various dogs)\\
+\midrule
+Semantic values were\dots & inferred & inferred/elicited experimentally  & elicited experimentally\\
 \midrule
 Size of lexicon $\mathcal{L}(u,o)$  & 8 (all combinations of \emph{size}, \emph{color}, \emph{othersize}, and \emph{othercolor}) & 814 (1 for each $u,o$ combination) & \jd{XXX} (1 for each $u,o$ combination)\\
 \midrule
@@ -1235,13 +1234,13 @@ Contextual set of alternatives & all contextually available feature combinations
 \midrule
 Size of contextual set of alternatives & 8 & 8 or 9 & 3 \\
 \midrule
-Compositionality & $\mathcal{L}(u_{\text{size}},o) \times \mathcal{L}(u_{\text{color}},o)$ & elicited experimentally & NA \\
+Compositionality & $\mathcal{L}(u_{\text{size}},o) \times \mathcal{L}(u_{\text{color}},o)$ & $\mathcal{L}(u_{\text{size}},o) \times \mathcal{L}(u_{\text{color}},o)$ for type level values; elicited experimentally for utterance-object level values & NA \\
 \midrule
-Cost function & $\beta_{c(\textrm{color})}\mathbbm{1}_{color}(u)+\beta_{c(\textrm{size})}\mathbbm{1}_{size}(u)$ & $\beta_{c(\textrm{freq})}p(u) + \beta_{c(\textrm{len})}l(u)$ & $\beta_{c(\textrm{freq})}p(u) + \beta_{c(\textrm{len})}l(u)$ \\
+Cost function & $\beta_{c(\textrm{color})}\mathbbm{1}_{color}(u)+\beta_{c(\textrm{size})}\mathbbm{1}_{size}(u)$ & comparison between $\beta_{c(\textrm{freq})}p(u) + \beta_{c(\textrm{len})}l(u)$ vs.~ $\beta_{c(\textrm{color})}\mathbbm{1}_{color}(u)+\beta_{c(\textrm{type})}\mathbbm{1}_{size}(u)$ vs.~none & $\beta_{c(\textrm{freq})}p(u) + \beta_{c(\textrm{len})}l(u)$ \\
 \midrule
-Costs were\dots & 1 when property mentioned, otherwise 0 & estimated: $l(u)$  from production data and $p(u)$  from corpora & estimated: $l(u)$  from production data and $p(u)$  from corpora \\
-\midrule
-Free parameters inferred in BDA & $x_{\textrm{color}}$, $x_{\textrm{size}}$, $\beta_{c(\textrm{color})}$,  $\beta_{c(\textrm{size})}$, $\beta_i$ & $\beta_{c(\textrm{freq})}$, $\beta_{c(\textrm{len})}$, $\beta_i$, $\beta_t$ & $\beta_{c(\textrm{freq})}$, $\beta_{c(\textrm{len})}$, $\beta_i$, $\beta_t$ \\
+%Costs were\dots & 1 when property mentioned, otherwise 0 & estimated: $l(u)$  from production data and $p(u)$  from corpora & estimated: $l(u)$  from production data and $p(u)$  from corpora \\
+%\midrule
+Free parameters inferred in BDA \jd{update} & $x_{\textrm{color}}$, $x_{\textrm{size}}$, $\beta_{c(\textrm{color})}$,  $\beta_{c(\textrm{size})}$, $\beta_i$ & $\beta_{c(\textrm{freq})}$, $\beta_{c(\textrm{len})}$, $\beta_i$, $\beta_t$ & $\beta_{c(\textrm{freq})}$, $\beta_{c(\textrm{len})}$, $\beta_i$, $\beta_t$ \\
 \midrule
 %Grammatical penalty & none & \jd{negative type cost param?} & none \\
 %\midrule
