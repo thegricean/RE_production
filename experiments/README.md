@@ -6,7 +6,13 @@ This directory contains all the experiments reported in the paper.
 
 The main experiments reported in the paper are available in the directories `production_*`. Exps. 1 and 3 were run within the same experiment. To run the experiments locally on your machine
 
-FIXME add instructions
+1. `cd production`
+
+2. `npm install` to locally install dependencies
+
+3. `node app.js <experimentname>` (i.e. `production_exp2` or `production_exp1_exp3`)
+
+4. go to `localhost:8889/<experimentname>/experiment/index.html` in your browser
 
 ## Typicality norming experiments
 
