@@ -1,7 +1,5 @@
 // run using:
 // webppl BDA.wppl --require ./refModule/ -- --modelVersion colorSize
-// webppl BDA.wppl --require ./refModule/ -- --modelVersion colorSize --constraint yokeCosts
-// webppl BDA.wppl --require ./refModule/ -- --modelVersion colorSize --constraint yokeTyps
 
 // model version can be <colorSize> <typicality> <nominal>
 
@@ -31,6 +29,11 @@ var getSemanticParams = function(semantics) {
     return {
       typWeight :  uniformDrift({a: 0, b: 5, w: 1})
     };
+  } else if (semantics === 'truthconditionalplusempirical') {
+    return {
+      typWeight :  uniformDrift({a: 0, b: 5, w: 1}),
+      fixedVsEmpirical: uniformDrift({a: 0, b: 1, w: 1/20})      
+    };
   } else {
     console.error('unknown modelspecification: model version: ' + config.modelVersion +
 		  '; costs: ' + config.costs + '; semantics: ' + config.semantics);
@@ -47,20 +50,22 @@ var paramPrior = function() {
     colorCost : uniformDrift({a: 0, b: 5, w: 40/20}),
     sizeCost :  config.modelVersion == 'colorSize' ? uniformDrift({a: 0, b: 5, w: 40/20}) : 0,
     typeCost :  config.modelVersion == 'typicality' ? uniformDrift({a: 0, b: 5, w: 40/20}) : 0
-  } : config.costs === 'none'  ? {
-    colorCost : 0, sizeCost :  0, typeCost :  0
+  } : config.costs === 'none' ? {
+    colorCost: 0, sizeCost: 0, typeCost: 0
   } : config.costs === 'empirical' ? {
     lengthCostWeight : uniformDrift({a: 0, b: 5, w: 1}),
     freqCostWeight :   uniformDrift({a: 0, b: 5, w: 1})
   } : console.error('unknown modelspecification: ' + config.modelVersion + ' ' +
 		    config.costs + ' ' + config.semantics));
   
-  var semanticParams = (config.semantics == 'fixedplusempirical' ?
-			extend(getSemanticParams('fixed'), getSemanticParams('empirical'),
-			       {fixedVsEmpirical: uniformDrift({a: 0, b: 1, w: 1/20})}) :
-			getSemanticParams(config.semantics));
+  var semanticParams = (
+    config.semantics == 'fixedplusempirical' ?
+      extend(getSemanticParams('fixed'), getSemanticParams('empirical'),
+	     {fixedVsEmpirical: uniformDrift({a: 0, b: 1, w: 1/20})}) :
+      getSemanticParams(config.semantics));
   return extend(config, baseParams, costParams, semanticParams);
 };
+
 
 var modelAnalysis = function() {
 
