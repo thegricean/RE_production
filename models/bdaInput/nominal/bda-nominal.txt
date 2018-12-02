@@ -1,0 +1,8 @@
+nominal,none,truthconditionalplusempirical,1
+nominal,none,truthconditionalplusempirical,2
+nominal,none,truthconditionalplusempirical,3
+nominal,none,truthconditionalplusempirical,4
+nominal,empirical,truthconditionalplusempirical,1
+nominal,empirical,truthconditionalplusempirical,2
+nominal,empirical,truthconditionalplusempirical,3
+nominal,empirical,truthconditionalplusempirical,4

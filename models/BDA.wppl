@@ -96,9 +96,9 @@ var modelAnalysis = function() {
 // Some versions take longer to run than others, so we tune settings to match
 var inferenceSettings = {
   model: modelAnalysis, method:'MCMC', verbose: true,
-  samples: 10,
+  samples: 2000,
   lag: 10,
-  burn: 100
+  burn: 20000
 };
 
 var outputERP = Infer(inferenceSettings);
