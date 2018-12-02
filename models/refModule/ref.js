@@ -152,9 +152,14 @@ var constructLexicon = function(params) {
       return params.semantics == 'fixed' ? lex : interpolateLexicons(lex, empirical, params);
     }
   } else if (params.modelVersion === 'nominal') {
-    console.assert(params.semantics == 'empirical', 'fixed semantics not defined for nominal');
-    console.log('TODO: allow interpolation w/ truth-conditional instead');
-    return require('./json/nominal-meanings.json');
+    console.assert(params.semantics != 'fixed', 'fixed semantics not defined for nominal');
+    var empirical = require('./json/nominal-meanings.json');
+    var deterministic = require('./json/nominal-meanings-truth-conditional.json');
+    if(params.semantics == 'empirical') {
+      return empirical;
+    } else {
+      return interpolateLexicons(deterministic, empirical, params);
+    }
   } else {
     return console.error('unknown modelVersion: ' + params.modelVersion);
   }
@@ -279,7 +284,7 @@ var getHeader = function(versionStr) {
   } else if (version[0] == 'nominal') {
     if (version[3] == 'params') {
       return ['infWeight', 'lengthCostWeight', 'freqCostWeight', 'typWeight',
-	      'logLikelihood', 'outputProb'];
+	      'empiricalVsTruthConditional', 'logLikelihood', 'outputProb'];
     } else if (version[3] == 'predictives') {
       return ['condition',"target_item", 'd1_item', "d2_item",
 	      "response", "logModelProb", "zeros"];
@@ -364,8 +369,18 @@ function _logsumexp(a) {
   return m + Math.log(sum);
 }
 
-var uttCost = function(params, utt) {    
-  if (_.has(params, 'colorCost') && _.has(params, 'sizeCost') && _.has(params,'typeCost')) {
+var hasColorSizeType = function(params) {
+  return (_.has(params, 'colorCost') &&
+	  _.has(params, 'sizeCost') &&
+	  _.has(params,'typeCost'));
+};
+
+var uttCost = function(params, utt) {
+  if (params.costs == 'none') {
+    return 0;
+  } else  if (hasColorSizeType(params)) {
+    console.assert(params.modelVersion != 'nominal',
+		   'fixed costs not defined for nominal');
     var sizeMention = _.intersection(sizes, utt.split('_')).length;
     var colorMention = _.intersection(colors, utt.split('_')).length;
     var typeMention = _.intersection(types, utt.split('_')).length;
