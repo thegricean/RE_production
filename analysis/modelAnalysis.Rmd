@@ -469,7 +469,7 @@ ggsave("../writing/pics/exp3-empirical-predictives.pdf",height=4,width=11)
 Load BF results
 
 ```{r}
-AIS.samples <- read_csv('../models/BF_output.txt') %>%
+AIS.samples <- read_csv('../models/BFOutput/BF_typicality.txt') %>%
   group_by(modelVersion, costs, semantics) %>%
   summarize(m = mean(margLikelihood))
 
@@ -491,8 +491,8 @@ AIS.samples %>% filter(semantics == 'fixedplusempirical') %>%
 
 Read parameter data from BDA and compute MAPs and HDIs.
 ```{r}
-params <- read_csv("../models/bdaOutput/nominal_params.csv") %>%
-  gather(parameter, value, infWeight:typWeight)
+params <- read_csv("../models/bdaOutput/nominal_cost-empirical_sem-truthconditionalplusempirical_params1.csv") %>%
+  gather(parameter, value, infWeight:empiricalVsTruthConditional)
 
 params %>% 
   group_by(parameter) %>%
@@ -503,34 +503,43 @@ params %>%
 
 ```{r}
 params.samples <- getSamples(params)
-params.samples$parameter2 = factor(params.samples$parameter,labels = c("informativity","frequency","length","typicality"))
+params.samples$parameter2 = factor(params.samples$parameter,
+                                   labels = c("informativity","frequency","length","typicality", "semanticInterp"),
+                                   levels = c("infWeight","freqCostWeight","lengthCostWeight","typWeight", "empiricalVsTruthConditional"))
   
-nomParamPosteriors = ggplot(params.samples, aes(x=value))+
+nomParamPosteriors = ggplot(params.samples, aes(x=value, alpha = .2))+
     geom_histogram(aes(y=..density..),
-                   data=subset(params.samples, parameter == "infWeight"),
+                   data=subset(params.samples, parameter2 == "informativity"),
                    binwidth = .1, colour="black", fill="white") +
     geom_histogram(aes(y=..density..),
-                 data =subset(params.samples, parameter == "lengthCost" ),
+                 data =subset(params.samples, parameter2 == "length" ),
                  binwidth = .1, colour="black", fill="white") +
       geom_histogram(aes(y=..density..),
-                   data=subset(params.samples, parameter == "freqCost"),
+                   data=subset(params.samples, parameter2 == "frequency"),
                    binwidth = .1, colour="black", fill="white") +
     geom_histogram(aes(y=..density..),
-                 data =subset(params.samples, parameter == "typWeight" ),
+                 data =subset(params.samples, parameter2 == "typicality" ),
+                 binwidth = .1, colour="black", fill="white") +
+    geom_histogram(aes(y=..density..),
+                 data =subset(params.samples, parameter2 == "semanticInterp" ),
                  binwidth = .1, colour="black", fill="white") +
 
     geom_density(aes(y=..density..),
-                 data=subset(params.samples, parameter == "infWeight"),
+                 data=subset(params.samples, parameter2 == "informativity"),
                  adjust = 1, infWeight=.2, fill="#FF6666")+
     geom_density(aes(y=..density..),
-                 data=subset(params.samples, parameter == "lengthCost"),
+                 data=subset(params.samples, parameter2 == "length"),
                  adjust = 1, infWeight=.2, fill="#FF6666")+
       geom_density(aes(y=..density..),
-                 data=subset(params.samples, parameter == "freqCost"),
+                 data=subset(params.samples, parameter2 == "frequency"),
                  adjust = 1, infWeight=.2, fill="#FF6666")+
     geom_density(aes(y=..density..),
-                 data=subset(params.samples, parameter == "typWeight"),
+                 data=subset(params.samples, parameter2 == "typicality"),
                  adjust = 1, infWeight=.2, fill="#FF6666")+
+      geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter2 == "semanticInterp"),
+                 adjust = 1, infWeight=.2, fill="#FF6666")+
+
     # ggtitle("Param Posteriors (2000 samples; lag = 10; burnin=10000)") +
     facet_wrap( ~ parameter2, scales = 'free',nrow=1) +
     theme_bw() +
@@ -583,7 +592,7 @@ empirical = tmp_prob %>%
 
 Load predictives and get into right format.
 ```{r}
-pred = read.csv("../models/bdaOutput/nominal_predictives.csv",quote="")
+pred = read.csv("../models/bdaOutput/nominal_cost-empirical_sem-truthconditionalplusempirical_predictives2.csv",quote="")
 colnames(pred)=c("Cond","Target","Dist1","Dist2","Utt","logProbability","Zero") 
 predictives = pred %>%
     mutate(Condition = 
@@ -610,12 +619,15 @@ d = left_join(empirical,predictives,by=c("Condition","Target","Utterance"))
 ggplot(d, aes(x=ModelProb,y=Probability,color=relevel(as.factor(Utterance),"sub"))) +
   geom_errorbar(aes(ymin=YMin,ymax=YMax)) +
   geom_errorbarh(aes(xmin=ModelYMin,xmax=ModelYMax)) +
+  geom_abline(intercept = 0, slope = 1) +
   geom_point() +
   xlab("Model predicted probability") +
   ylab("Empirical utterance proportion") +
   facet_wrap(~Condition) +
   # facet_wrap(~relevel(as.factor(Condition),"sub necessary")) +
-  guides(color=guide_legend(title="Utterance"))
+  guides(color=guide_legend(title="Utterance")) +
+  theme_bw() +
+  theme(aspect.ratio = 1) 
 ggsave("../writing/pics/exp3-empirical-predictives.pdf",height=4,width=11)
 ```
 Plot just model predictions. First add typicality values, then make same plot as Fig 19 but with model predictions instead of empirical
@@ -637,14 +649,24 @@ ggplot(d, aes(x=typ_sub,y=ModelProb,color=relevel(as.factor(Utterance),"sub"))) 
   guides(color=guide_legend(title="Utterance"))
 ```
 
+## Model comparison
+
+Load BF results
+
+```{r}
+AIS.samples <- read_csv('../models/BFOutput/BF_nominal.txt', col_names = c('modelVersion', 'costs', 'semantics', 'margLikelihood')) %>%
+  group_by(modelVersion, costs, semantics) %>%
+  summarize(m = mean(margLikelihood))
+
+# no cost vs. cost
+AIS.samples %>% 
+  spread(costs, m) %>%
+  mutate(noneVsEmpBF = exp(empirical - none)) %>%
+  select(noneVsEmpBF)
+```
 
 
-
-
-
-
-
-## Plot predictives w/ empirical data
+# Miscellaneous (out-dated)
 
 ```{r}
 combined <- left_join(agr, predictive)
@@ -674,8 +696,6 @@ summary(lm(Probability ~ modelProbability, data = combined))
 ```
 
 
-## Import predictives data
-
 ```{r}
 colors <- c("yellow","orange","red","pink", "green","blue","brown","black")
 types <- c('apple', 'avocado', 'banana', 'carrot', 'pear', 'tomato', 'pepper')
@@ -689,8 +709,6 @@ predictive<-read.csv("../models/bdaOutput/typicality_cost-empirical_sem-fixedplu
   group_by(condition, utterance, target_item) %>%
   summarize(modelProbability=mean(logModelProb)) 
 ```
-
-## Plot predictives w/ empirical data
 
 ```{r}
 combined <- left_join(agr, predictive)
