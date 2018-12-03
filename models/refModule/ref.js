@@ -138,7 +138,8 @@ var completeContexts = {
 var constructLexicon = function(params) {
   var completeContext = completeContexts[params.modelVersion];
   if(params.modelVersion === 'colorSize') {
-    console.assert(params.semantics == 'fixed', 'empirical semantics not defined for colorSize');
+    console.assert(params.semantics == 'fixed',
+		   'empirical semantics not defined for colorSize');
     var utts = getColorSizeUtterances(completeContext);
     return constructDeterministicLexicon(utts, completeContext, params);
   } else if (params.modelVersion === 'typicality') {
@@ -152,7 +153,8 @@ var constructLexicon = function(params) {
       return params.semantics == 'fixed' ? lex : interpolateLexicons(lex, empirical, params);
     }
   } else if (params.modelVersion === 'nominal') {
-    console.assert(params.semantics != 'fixed', 'fixed semantics not defined for nominal');
+    console.assert(params.semantics != 'fixed',
+		   'fixed semantics not defined for nominal');
     var empirical = require('./json/nominal-meanings.json');
     var deterministic = require('./json/nominal-meanings-truth-conditional.json');
     if(params.semantics == 'empirical') {
@@ -169,7 +171,8 @@ var interpolateLexicons = function(det, emp, params) {
   return _.mapValues(emp, function(subtree, utt) {
     return _.mapValues(subtree, function(empVal, obj) {
       var detVal = det[utt][obj];
-      return (1 - params.fixedVsEmpirical) * empVal + (params.fixedVsEmpirical) * detVal;
+      var interp = _.toFinite(params.fixedVsEmpirical);
+      return (1 - interp) * empVal + (interp) * detVal;
     });
   });
 };
@@ -397,18 +400,12 @@ var uttCost = function(params, utt) {
 };
 
 var getSpeakerUtility = function(target, utt, context, params) {
-  // console.log(utt);
-  // console.log(getL0score(target, utt, context, params));
   var inf = params.infWeight * getL0score(target, utt, context, params);
   var cost = uttCost(params, utt);
-  
-  // console.log(utt);
-  // console.log('inf' + inf);
-  // console.log('cost' + cost);
   return inf - cost; 
 }
 
-var getPossibleUtts = function(params, target, context) {
+var getPossibleUtts = function(target, context, params) {
   if (params.modelVersion === 'colorSize') {
     return getColorSizeUtterances(context);
   } else if(params.modelVersion === 'nominal') {
@@ -421,7 +418,7 @@ var getPossibleUtts = function(params, target, context) {
 };
 
 var getSpeakerScore = function(trueUtt, target, context, params) {
-  var possibleUtts = getPossibleUtts(params, target, context);
+  var possibleUtts = getPossibleUtts(target, context, params);
 
   var scores = [];
   // note: could memoize this for moderate optimization...
@@ -457,8 +454,8 @@ module.exports = {
   constructLexicon, powerset, getSubset, 
   bayesianErpWriter, writeERP, writeCSV, readCSV, getTestContexts,
   getData, getConditions, getParamPosterior, getManualParams,
-  obj_product,
-  getL0score,getSpeakerScore, uttCost,
+  obj_product, meaning,
+  getL0score,getSpeakerScore, uttCost, getPossibleUtts,
   getRelativeLength, getRelativeLogFrequency, getTypSubset,
   colors, sizes
 };

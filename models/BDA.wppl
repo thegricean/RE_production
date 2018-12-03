@@ -18,9 +18,6 @@ var config = {
 var data = refModule.getData(config.modelVersion);
 console.log("Loading data... found" + data.length + " data points");
 
-var conditions = refModule.getConditions(config.modelVersion);
-console.log("Loading unique conditions... found" + conditions.length);
-
 var getSemanticParams = function(semantics) {
   if(semantics === 'fixed') {
     return {

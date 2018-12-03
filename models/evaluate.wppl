@@ -20,19 +20,16 @@ var getParams = function() {
   if (config.paramSource == "inferred") {
     var paramPosterior = refModule.getParamPosterior(config);
     var map_likelihood = _.min(_.map(paramPosterior, 'logLikelihood'));
-    // console.log(map_likelihood);
     return find(function(x) {
       return _.toFinite(x.logLikelihood) == _.toFinite(map_likelihood);
     }, paramPosterior);
   } else {
     var manualParams = refModule.getManualParams(config.modelVersion)[0];
-    // console.log(manualParams);
     return manualParams;
   };
 };
 
 var params = extend({}, getParams(), config);
-console.log(params);
 var modelAnalysis = function() {
 
   var lexicon = refModule.constructLexicon(params);
@@ -46,7 +43,6 @@ var modelAnalysis = function() {
     // console.log(target, context);
     // Run model
     var modelOutput = speakerModel(target, context);
-
     // Store predives
     foreach(modelOutput.support(), function(s){
       var key = _.values(_.omit(c, 'context')).concat(s);
@@ -56,7 +52,8 @@ var modelAnalysis = function() {
   });
   // console.log(params.modelVersion + '_' + params.costs + '_empirical_predictives:obj');
   return {output: globalStore.predictives,
-	  version : params.modelVersion + '_' + params.costs + '_empirical_predictives:obj',
+	  version : (params.modelVersion + '_cost-' + params.costs +
+		     '_sem-' + params.semantics + '_predictives:obj'),
 	  chainNumber: config.chainNumber
 	  }; //predictive: globalStore.predictives, 
 };

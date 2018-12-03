@@ -1,30 +1,10 @@
 var initializeModel = function(params) {
-  // TODO
-  // 1. make sure context is in same format for all (i.e. list of lists?)
-  var possibleUtts = function(target, context) {
-    if (params.modelVersion === 'colorSize') {
-      return refModule.getColorSizeUtterances(context);
-    } else if(params.modelVersion === 'nominal') {
-      return refModule.getNominalUtterances(target.item, params.lexicon);
-    } else if(params.modelVersion === 'typicality') {
-      return refModule.getTypicalityUtterances(context);
-    } else {
-      return console.error('unknown modelVersion: ' + params.modelVersion);
-    }
-  };
-  
-  // Looks up meaning in given lexicon
-  var meaning = function(utt, object) {
-    var objStr = _.values(object).join("_");
-    var lexicalEntry = params.lexicon[utt];
-    return _.has(lexicalEntry, objStr) ? lexicalEntry[objStr] : 0; 
-  };
-  
+
   // Selects among objects in context using lexicon
   var literalListener = cache(function(utt, context){
     return Infer({method:'enumerate', model: function(){
       var object = uniformDraw(context);
-      factor(params.typWeight * meaning(utt,object)); 
+      factor(params.typWeight * refModule.meaning(utt,object,params)); 
       return object;
     }});
   });
@@ -33,7 +13,7 @@ var initializeModel = function(params) {
   // marginalizing over possible noise in perception of context
   // Timeit note: marginalizing over listener takes about 200-300ms per utt; pure js is faster
   var speaker = function(target, context) {
-    var utts = possibleUtts(target, context);
+    var utts = refModule.getPossibleUtts(target, context, params);
     return Infer({method:'enumerate', model: function(){
       var utt = uniformDraw(utts);
       // this is a fast shortcut for literalListener(utt, context).score(target)
