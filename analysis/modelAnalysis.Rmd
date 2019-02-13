@@ -9,6 +9,7 @@ output: html_notebook
 library(tidyverse)
 library(coda)
 library(lme4)
+library(magrittr)
 #library(gridExtra)
 estimate_mode <- function(s) {
   d <- density(s)
@@ -489,7 +490,7 @@ AIS.samples %>% filter(semantics == 'fixedplusempirical') %>%
 
 ## Parameters
 
-Read parameter data from BDA and compute MAPs and HDIs.
+Read parameter data from BDA and compute MAPs and HDIs for cost-model.
 ```{r}
 params <- read_csv("../models/bdaOutput/nominal_cost-empirical_sem-truthconditionalplusempirical_params1.csv") %>%
   gather(parameter, value, infWeight:empiricalVsTruthConditional)
@@ -504,49 +505,56 @@ params %>%
 ```{r}
 params.samples <- getSamples(params)
 params.samples$parameter2 = factor(params.samples$parameter,
-                                   labels = c("informativity","frequency","length","typicality", "semanticInterp"),
-                                   levels = c("infWeight","freqCostWeight","lengthCostWeight","typWeight", "empiricalVsTruthConditional"))
+                                   labels = c("beta_i","beta_F","beta_L","beta_typ", "semanticInterp"),
+                                   levels = c("infWeight","freqCostWeight","lengthCostWeight","typWeight", "empiricalVsTruthConditional")) 
+
+params.samples %<>%
+  filter(parameter != "empiricalVsTruthConditional") %>%
+  droplevels()
   
 nomParamPosteriors = ggplot(params.samples, aes(x=value, alpha = .2))+
     geom_histogram(aes(y=..density..),
-                   data=subset(params.samples, parameter2 == "informativity"),
+                   data=subset(params.samples, parameter2 == "beta_i"),
                    binwidth = .1, colour="black", fill="white") +
     geom_histogram(aes(y=..density..),
-                 data =subset(params.samples, parameter2 == "length" ),
-                 binwidth = .1, colour="black", fill="white") +
+                 data =subset(params.samples, parameter2 == "beta_L" ),
+                 binwidth = .05, colour="black", fill="white") +
       geom_histogram(aes(y=..density..),
-                   data=subset(params.samples, parameter2 == "frequency"),
-                   binwidth = .1, colour="black", fill="white") +
+                   data=subset(params.samples, parameter2 == "beta_F"),
+                   binwidth = .01, colour="black", fill="white") +
     geom_histogram(aes(y=..density..),
-                 data =subset(params.samples, parameter2 == "typicality" ),
-                 binwidth = .1, colour="black", fill="white") +
-    geom_histogram(aes(y=..density..),
-                 data =subset(params.samples, parameter2 == "semanticInterp" ),
-                 binwidth = .1, colour="black", fill="white") +
+                 data =subset(params.samples, parameter2 == "beta_typ" ),
+                 binwidth = .01, colour="black", fill="white") +
+    #geom_histogram(aes(y=..density..),
+     #            data =subset(params.samples, parameter2 == "semanticInterp" ),
+      #           binwidth = .1, colour="black", fill="white") +
 
     geom_density(aes(y=..density..),
-                 data=subset(params.samples, parameter2 == "informativity"),
-                 adjust = 1, infWeight=.2, fill="#FF6666")+
+                 data=subset(params.samples, parameter2 == "beta_i"),
+                 adjust = 1, alpha=.2, fill="#FF6666") +
     geom_density(aes(y=..density..),
-                 data=subset(params.samples, parameter2 == "length"),
-                 adjust = 1, infWeight=.2, fill="#FF6666")+
+                 data=subset(params.samples, parameter2 == "beta_L"),
+                 adjust = 1, alpha=.2, fill="#FF6666") +
       geom_density(aes(y=..density..),
-                 data=subset(params.samples, parameter2 == "frequency"),
-                 adjust = 1, infWeight=.2, fill="#FF6666")+
+                 data=subset(params.samples, parameter2 == "beta_F"),
+                 adjust = 1, alpha=.2, fill="#FF6666") +
     geom_density(aes(y=..density..),
-                 data=subset(params.samples, parameter2 == "typicality"),
-                 adjust = 1, infWeight=.2, fill="#FF6666")+
-      geom_density(aes(y=..density..),
-                 data=subset(params.samples, parameter2 == "semanticInterp"),
-                 adjust = 1, infWeight=.2, fill="#FF6666")+
+                 data=subset(params.samples, parameter2 == "beta_typ"),
+                 adjust = 1, alpha=.2, fill="#FF6666") +
+   #   geom_density(aes(y=..density..),
+    #             data=subset(params.samples, parameter2 == "semanticInterp"),
+     #            adjust = 1, alpha=.2, fill="#FF6666") +
 
     # ggtitle("Param Posteriors (2000 samples; lag = 10; burnin=10000)") +
     facet_wrap( ~ parameter2, scales = 'free',nrow=1) +
     theme_bw() +
-  ylab("Density") 
+  theme(legend.position="none") +
+    ylab("Density") 
 nomParamPosteriors
 ggsave(file="../writing/pics/exp3-paramposteriors.pdf",width=8,height=2)
 ```
+
+
 
 ## Predictives
 
@@ -592,7 +600,7 @@ empirical = tmp_prob %>%
 
 Load predictives and get into right format.
 ```{r}
-pred = read.csv("../models/bdaOutput/nominal_cost-empirical_sem-truthconditionalplusempirical_predictives2.csv",quote="")
+pred = read.csv("../models/bdaOutput/nominal_cost-empirical_sem-truthconditionalplusempirical_predictives1.csv",quote="")
 colnames(pred)=c("Cond","Target","Dist1","Dist2","Utt","logProbability","Zero") 
 predictives = pred %>%
     mutate(Condition = 
@@ -614,7 +622,14 @@ predictives = pred %>%
 
 Bind empirical and predictives and plot (like Fig 8 in paper).
 ```{r}
-d = left_join(empirical,predictives,by=c("Condition","Target","Utterance"))
+d = left_join(empirical,predictives,by=c("Condition","Target","Utterance")) %>%
+  mutate(Condition = relevel(as.factor(Condition), "sub necessary"))
+
+cor(d$ModelProb,d$Probability)
+
+cors = d %>%
+  group_by(Condition) %>%
+  summarize(Correlation=cor(ModelProb,Probability))
 
 ggplot(d, aes(x=ModelProb,y=Probability,color=relevel(as.factor(Utterance),"sub"))) +
   geom_errorbar(aes(ymin=YMin,ymax=YMax)) +
@@ -628,8 +643,11 @@ ggplot(d, aes(x=ModelProb,y=Probability,color=relevel(as.factor(Utterance),"sub"
   guides(color=guide_legend(title="Utterance")) +
   theme_bw() +
   theme(aspect.ratio = 1) 
-ggsave("../writing/pics/exp3-empirical-predictives.pdf",height=4,width=11)
+ggsave("../writing/pics/exp3-empirical-predictives.pdf",height=2.5,width=7)
 ```
+
+
+
 Plot just model predictions. First add typicality values, then make same plot as Fig 19 but with model predictions instead of empirical
 ```{r}
 typs = read.table("../data/typicality_exp3.csv",header=T,quote="",sep=",")
@@ -665,74 +683,3 @@ AIS.samples %>%
   select(noneVsEmpBF)
 ```
 
-
-# Miscellaneous (out-dated)
-
-```{r}
-combined <- left_join(agr, predictive)
-answer_plots = ggplot(combined, aes(x = exp(modelProbability), y = Probability)) +
-  geom_errorbar(aes(ymax = YMax, ymin = YMin), infWeight = .2) 
-  geom_point(aes(colour = condition))
-  geom_abline(intercept = 0, slope = 1, linetype = "dotted")
-  + scale_x_continuous(lim = c(0,1), breaks=c(0,.5,1))
-  + ggtitle("Answerer Posterior Predictive")
-  #+ geom_smooth(method = "lm")
-  + xlab("Model predicted probability")
-  + ylim(0,1)
-  + facet_wrap(~ utterance)
-  #+ geom_text(aes(label=utterance), size = 2)
-  + ylab("Empirical Probability")
-  + theme_bw()   
-  + theme(text = element_text(size = 10),  axis.text.x = element_text(angle=90, vjust=1), aspect.ratio = 1)
-
-answer_plots
-#dev.off()
-```
-
-Look at R^2
-
-```{r}
-summary(lm(Probability ~ modelProbability, data = combined))
-```
-
-
-```{r}
-colors <- c("yellow","orange","red","pink", "green","blue","brown","black")
-types <- c('apple', 'avocado', 'banana', 'carrot', 'pear', 'tomato', 'pepper')
-predictive<-read.csv("../models/bdaOutput/typicality_cost-empirical_sem-fixedplusempirical_predictives.csv") %>%
-  rowwise() %>%
-  mutate(target_item = paste0(c(as.character(t_color), as.character(t_item)), collapse = '_')) %>%
-  filter(response %in% c(as.character(t_color), as.character(t_item), target_item)) %>%
-  mutate(utterance = ifelse(as.character(response) %in% colors, 'color', 
-                            ifelse(as.character(response) %in% types, 'item',
-                                   'color_item'))) %>%
-  group_by(condition, utterance, target_item) %>%
-  summarize(modelProbability=mean(logModelProb)) 
-```
-
-```{r}
-combined <- left_join(agr, predictive)
-answer_plots = (ggplot(combined, aes(x = modelProbability, y = Probability))
-  + geom_errorbar(aes(ymax = YMax, ymin = YMin), infWeight = .2) 
-  + geom_point(aes(colour = condition))
-  + geom_abline(intercept = 0, slope = 1, linetype = "dotted")
-  + scale_x_continuous(lim = c(0,1), breaks=c(0,.5,1))
-  + ggtitle("Answerer Posterior Predictive")
-  #+ geom_smooth(method = "lm")
-  + xlab("Model predicted probability")
-  + ylim(0,1)
-  + facet_wrap(~ utterance)
-  #+ geom_text(aes(label=utterance), size = 2)
-  + ylab("Empirical Probability")
-  + theme_bw()   
-  + theme(text = element_text(size = 10),  axis.text.x = element_text(angle=90, vjust=1), aspect.ratio = 1)
-)
-answer_plots
-#dev.off()
-```
-
-Look at R^2
-
-```{r}
-summary(lm(Probability ~ modelProbability, data = combined))
-```
