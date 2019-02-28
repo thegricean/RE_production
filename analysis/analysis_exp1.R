@@ -21,12 +21,13 @@ agr = d %>%
   ungroup() %>%
   mutate(YMin = Probability - ci.low, YMax = Probability + ci.high, Distractors=as.factor(NumDistractors))
 
-ggplot(agr, aes(x=SceneVariation,y=Probability,color=Distractors,group=1)) +
+ggplot(agr, aes(x=SceneVariation,y=Probability,shape=Distractors,group=1)) +
   geom_point() +
   geom_errorbar(aes(ymin=YMin,ymax=YMax)) +
   xlab("Scene variation") +
-  ylab("Probability of redundancy") +
-  facet_wrap(~RedundantProperty)
+  ylab("Probability of redundant modifier") +
+  scale_shape_discrete(name = "Number of\ndistractors") +
+  facet_wrap(~RedundantProperty) 
 
 ############################
 # Mixed effects regression #

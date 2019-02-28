@@ -26,6 +26,8 @@ HPDlo<- function(s){
 options("scipen"=10) 
 
 source("./helper_scripts/model_helpers.R")
+# get color-blind palette
+cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
 ```
 
 # Analyze color-size results
@@ -37,7 +39,8 @@ Read parameter data from BDA and compute MAPs and HDIs.
 params <- read_csv("../models/bdaOutput/colorSize_params.csv") %>%
   mutate(costDiff = colorCost - sizeCost) %>%
   mutate(typDiff = colorTyp - sizeTyp) %>%
-  gather(parameter, value, infWeight:typWeight, costDiff, typDiff)
+  gather(parameter, value, alpha:typWeight, costDiff, typDiff)
+  # gather(parameter, value, infWeight:typWeight, costDiff, typDiff)
 
 params %>% 
   group_by(parameter) %>%
@@ -205,18 +208,44 @@ predictives = pred %>%
          YMax = NA)
 ```
 
-Bind empirical and predictives and plot (Fig 8 in paper).
+Bind empirical and predictives.
 ```{r}
 d = rbind(empirical,predictives)
 
-ggplot(d, aes(x=Variation,y=Probability,color=Data)) +
+redundant = d %>%
+  filter(Utterance == "size_color") %>%
+  mutate(NumDistractors = as.factor(as.character(NumDistractors)),RedundantDimension=ifelse(SufficientDimension == "color","size redundant","color redundant")) %>%
+  droplevels()
+```
+
+Make Fig 8 plot analogous to Fig 6.
+```{r} 
+ggplot(redundant, aes(x=Variation,y=Probability,color=Data,shape=NumDistractors)) +
   geom_errorbar(aes(ymin=YMin,ymax=YMax)) +
-  geom_point(aes(shape=as.character(NumDistractors))) +
+  geom_point() +
+  scale_color_manual(values=cbPalette[6:7]) +
   xlab("Scene variation") +
-  ylab("Utterance probability") +
+  ylab("Probability of redundant modifier") +
   labs(shape="Number of\ndistractors") +
-  facet_grid(SufficientDimension~Utterance)
-ggsave("../writing/pics/exp1-empirical-predictives.pdf",height=3.5,width=6.7)
+  facet_wrap(~RedundantDimension)
+ggsave("../writing/pics/exp1-empirical-predictives.pdf",height=2.5,width=6)
+```
+
+Make Fig 9 a scatterplot of all data points fit in Exp 1.
+```{r} 
+predictives$ModelProbability = predictives$Probability
+predictives$Probability = NULL
+scatterd = empirical %>%
+  left_join(predictives,by=c("SufficientDimension","NumDistractors","Variation","Utterance")) %>%
+  mutate(RedundantDimension=ifelse(SufficientDimension == "color","size redundant","color redundant"))
+
+ggplot(scatterd, aes(x=ModelProbability,y=Probability,color=Utterance,shape=RedundantDimension)) +
+  geom_point() +
+  scale_color_manual(values=cbPalette) +
+  labs(shape="Condition") +
+  xlab("MAP model predicted utterance probability") +
+  ylab("Empirical utterance proportion")
+ggsave("../writing/pics/exp1-scatterplot.pdf",height=3,width=4.8)
 ```
 
 
