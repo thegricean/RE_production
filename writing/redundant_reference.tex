@@ -560,7 +560,7 @@ Point-wise maximum a posteriori (MAP) estimates of the model's posterior predict
 \begin{figure}
 \centering
 \includegraphics[width=.6\textwidth]{pics/exp1-scatterplot}
-\caption{Scatterplot of empirical utterance proportions against point-wise maximum a posteriori (MAP) estimates of the RSA model's posterior predictives.}
+\caption{Scatterplot of empirical utterance proportions against point-wise maximum a posteriori (MAP) estimates of the RSA model's posterior predictives. Each dot represents a condition mean.}
 \label{fig:exp1predictives}
 \end{figure}
 
@@ -594,7 +594,7 @@ In \sectionref{sec:rsaevaluationbasicscene} we showed that continuous semantics 
 So far we have not included any typicality effects in the semantics of our RSA model, hence the model so far would not capture this asymmetry.
 
 A natural first step is to introduce a more nuanced semantics for nouns in our model. 
-In particular, we could imagine a continuous semantics in which \emph{banana} fits better (i.e. has a semantic value closer to 1 for) the yellow banana than the brown, and fits the brown better than the blue; specific such values are shown in the first row of \tableref{tab:colorobjectfidelities}.
+In particular, we could imagine a continuous semantics in which \emph{banana} fits better (i.e. has a semantic value closer to 1 for) the yellow banana than the brown, and fits the brown better than the blue; specific such hypothetical values are shown in the first row of \tableref{tab:colorobjectfidelities}.
 If we then use the same semantic values for color adjectives (close to deterministic) and the same composition rule (product), we get the utterance-level semantic value shown in the remainder of \tableref{tab:colorobjectfidelities}.
 Notice that while the utterance \emph{banana} on its own has significant semantic gradience, the utterances \emph{yellow/brown/blue banana} have very little gradience---this is because the color adjectives are very close to noiseless. \ndg{rephrase to point out that RSA only cares up to normalization. perhaps normalize rows in the table?}
 
@@ -829,7 +829,7 @@ See \appref{sec:exp1typicality} for a comparison of our question and the Westerb
 Slider values were coded as falling between 0 (`very atypical') and 1 (`very typical'). 
 For each utterance-object combination, we computed mean typicality ratings. 
 As an example, the means for the banana items are shown in \tableref{tab:bananatypicalities}. 
-The values are very similar to those hypothesized for the purpose of the example in \tableref{tab:colorobjectfidelities}. \ndg{might need to say up to normalization of rows, depending on what we do in the earlier table?}
+The values exhibit the same gradient as those hypothesized for the purpose of the example in \tableref{tab:colorobjectfidelities}. \ndg{might need to say up to normalization of rows, depending on what we do in the earlier table?}
 The means for all items are visualized in \figref{fig:exp2colortypicalitymeans}.
 Mean typicality values for utterance-object pairs obtained in the norming studies are used in the analyses and visualizations in the following.
 
@@ -914,7 +914,7 @@ Specifically, we defined utterance cost $c(u)$ as follows:
 c(u) = \beta_F\cdot p(u) + \beta_L\cdot l(u)
 \end{equation}
 
-Here, $p(u)$ is utterance frequency \ndg{log frequency? or inverse frequency?} as estimated from the Google Books corpus (years 1950 to 2008); $l(u)$ is the mean empirical length of the utterance in characters in the production data (e.g., sometimes \emph{yellow} was abbreviated as \emph{yel}, leading to an $l(u)$ smaller than 6); $\beta_F$ is a weight on frequency; and $\beta_L$ is a weight on length. Both $p(u)$ and $l(u)$ were normalized to fall into the interval $[0,1]$. The empirical cost function thus prefers short and frequent utterances (e.g., \emph{blue}) over long and infrequent ones (\emph{turquoise-ish bananaesque thing}).
+Here, $p(u)$ is negative log utterance frequency, as estimated from the Google Books corpus (years 1950 to 2008); $l(u)$ is the mean empirical length of the utterance in characters in the production data (e.g., sometimes \emph{yellow} was abbreviated as \emph{yel}, leading to an $l(u)$ smaller than 6); $\beta_F$ is a weight on frequency; and $\beta_L$ is a weight on length. Both $p(u)$ and $l(u)$ were normalized to fall into the interval $[0,1]$.\footnote{Note that we changed the sign on frequency, which means that values closer to 1 in the normalized space reflect greater cost on both the length and the frequency dimension.} The empirical cost function thus prefers short and frequent utterances (e.g., \emph{blue}) over long and infrequent ones (\emph{turquoise-ish bananaesque thing}).
 We compared both of these models to a simpler baseline in which utterances were assumed to have no cost.
 
 \subsubsection{Model comparison}
@@ -973,7 +973,7 @@ This suggests that the dynamics at work in the choice of color vs.~size and in t
 
 Model comparison demonstrated the need for assuming a semantics that interpolates between a noisy truth-conditional semantics as employed in Exp.~1 and empirically elicited typicality values. 
 This may reflect semantic knowledge that goes beyond graded category membership, additional effects of compositionality, or perhaps simply differences between our empirical typicality measure and the ``semantic fit'' expected by RSA models.
-\ndg{say something here about why the model couldn't fit the higher color-only production in the overinformative (no cc) condition? may be connected to semantic model??}
+\ndg{say something here about why the model couldn't fit the higher color-only production in the overinformative (no cc) condition? may be connected to semantic model??}\jd{ndg, is what you're referring to the issue that is discussed at the end of subsection 4.2?}
 %This suggests that speakers, in choosing utterances, take into account both an utterance's literal semantics and its noisiness, as well as the graded category membership of the objects under consideration. 
 Perhaps surprisingly, we replicated the result from Exp.~1 that utterance cost does not add any predictive power, even when quantified via a more sophisticated cost function that takes into account an utterance's length and frequency.
 
