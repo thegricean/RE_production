@@ -18,6 +18,10 @@
 \usepackage{epigraph}
 \usepackage{bbm}
 
+% For line breaks in table cells...
+\usepackage{makecell}
+\renewcommand{\cellalign}{tl}
+
 %\newcommand{\url}[1]{$#1$}
 
 \definecolor{Blue}{RGB}{50,50,200}
@@ -1206,33 +1210,57 @@ We have thus shown that with one key innovation -- a continuous semantics  -- on
  %when the prima facie sufficiently informative expression is substantially noisier than its redundant/overly specific counterpart -- because in this case, the prima facie sufficiently informative expression is more likely to lead a literal listener to draw a wrong inference about the intended referent. 
 This innovation thus not only provides a unified explanation for a number of key patterns within the overinformative referring expression literature that have thus far eluded a unified explanation; it also extends to the domain of nominal choice. And in contrast to previously proposed computational models, it is straightforwardly extendable to any instance of definite referring expressions of the sort we have examined here. 
 
+\subsection{Comparison of model components across experiments}
 
+While the core architecture with relaxed semantics remained constant throughout the paper, some peripheral components were adjusted to accommodate the aims of different experiments.
+These different choices are fully consistent with one another, and many of them were justified against alternatives via model comparison.
+Still, it is valuable to highlight the dimensions along which these components varied.
+We have provided an overview of the best-fitting RSA models for each of the three reported production datasets in \tableref{tab:modeldiffs}. 
 
-We have provided an overview of the RSA models evaluated for the three reported production datasets in \tableref{tab:modeldiffs}. \ndg{we really need to say more here about the diversity of models. at the moment this big table just makes it look like we did a bunch of post-hoc model tweaking and really weakens our case. probably a small subsection? basically we need to comment on the differences, why they were made, and how they aren't really substantive (we hope).}
+Most prominently, because Exps.~2 and 3 aimed to predict patterns of reference via typicality at the \emph{object-level}, we needed semantic values for each utterance-object pair in the lexicon.
+While these values could have in principle been inferred from the data, as we inferred the two type-level values in Exp.~1, it would have introduced a large number of additional parameters (see \emph{size of lexicon}). 
+Instead, we addressed this problem by empirically eliciting these values in an independent task and introducing a single free concentration parameter $\beta_t$ that modulated their strength.
+In the case of Exp. 2, we found that the best-fitting model smoothly integrated these empirical values with type-level values used in Exp.~1.
+
+The need to make object-level predictions also drove decisions about what to use as the cost function and the set of alternative utterances.
+For instance, in Exp.~3 we could have inferred the cost of each noun but this again would have introduced a large number of free parameters and risked overfitting. 
+Instead we used the empirically estimated \emph{length} and \emph{frequency} of each word. 
+For Exp.~2, we tested models both using fixed costs for each modifier as in Exp.~1 and empirical length and frequency costs as in Exp.~3, but our model comparison showed that neither sufficiently improved the model's predictions.
+
+Finally, the set of alternative utterances differed slightly across the three experiments for computational reasons.
+Because Exp.~1 collapsed over the particular levels of size and color, it was practical to consider all utterances in the lexicon for every target. 
+In Exp.~2 and Exp.~3, however, the space of possible utterances was large enough that this exhaustive approach became impractical. 
+We noticed that the probability of using some utterances (e.g. `table' to refer to a Dalmatian)  was low enough that we could prune the utterance space to only those that could plausibly apply to the objects in context without substantially altering the model's behavior.
+Future work must address how predictions may change as more complex referring expressions outside the scope of this paper enter the set of alternatives (e.g. the option of combining adjectives with nominal expressions, as in \emph{the cute, spotted dog}).
 
 \begin{table}
-\caption{Overview of the models used for the three different production datasets Color/size (Exp.~1), Color typicality (Exp.~2), and Nominal choice (Exp.~3). Parameter names:  $x_{\textrm{color}}$: semantic value of color; $x_{\textrm{size}}$: semantic value of size; $\beta_{c(\textrm{color})}$: cost of color;  $\beta_{c(\textrm{size})}$: cost of size; $\beta_i$: weight on informativity; $\beta_F$: weight on cost (as estimated by utterance frequency); $\beta_L$: weight on cost (as estimated by utterance length); $\beta_t$: weight on elicited typicality values} 
-\begin{tabular}{p{4cm} p{3.9cm} p{3.9cm} p{3.9cm} }
+\caption{Overview of the best-performing models used for the three different production datasets Color/size (Exp.~1), Color typicality (Exp.~2), and Nominal choice (Exp.~3). Parameter names:  $x_{\textrm{color}}$: semantic value of color; $x_{\textrm{size}}$: semantic value of size; $\beta_{c(\textrm{color})}$: cost of color;  $\beta_{c(\textrm{size})}$: cost of size; $\beta_i$: weight on informativity; $\beta_F$: weight on cost (as estimated by utterance frequency); $\beta_L$: weight on cost (as estimated by utterance length); $\beta_t$: weight on elicited typicality values; $w_{\textrm{emp}}$: interpolation weight between type-level and empirical semantic values} 
+\begin{tabular}{p{2.5cm} p{4.2cm} p{4.2cm} p{4.2cm} }
 \toprule
 & Color/size & Color typicality & Nominal choice \\
 \midrule
-Semantic values applied to \dots & modifier type (size, color) & modifier type (color, type) and utterance-object pair (e.g., how \emph{yellow banana} fits various bananas) & utterance-object pair (e.g., how \emph{dalmatian} fits various dogs)\\
+\makecell{Semantic \\ values} & at type-level (inferred) & \makecell{at type-level (inferred) \\ + object-level (elicited)} & at object-level (elicited) \\
+%\midrule
+%Semantic values were\dots & inferred & inferred and elicited & elicited \\
 \midrule
-Semantic values were\dots & inferred & inferred and elicited experimentally  & elicited experimentally\\
+\makecell{Size of \\lexicon $\mathcal{L}(u,o)$}  & 8 (all combinations of \emph{size} and \emph{color}) & 814 (1 for each utterance-object pair) & 51 (1 for each utterance-object pair)\\
 \midrule
-Size of lexicon $\mathcal{L}(u,o)$  & 8 (all combinations of \emph{size}, \emph{color}, \emph{othersize}, and \emph{othercolor}) & 814 (1 for each $u,o$ combination) & 51 (1 for each target $u,o$ combination)\\
-\midrule
-Contextual set of alternatives & 8 contextually available feature combinations (size, color) & 8 or 9 contextually available feature combinations (type, color) & 3 target alternatives (level of reference: \emph{sub, basic, super}) \\
+\makecell{Set of \\alternatives} & 8 contextually available feature combinations (size, color) & 8 or 9 contextually available feature combinations (type, color) & 3 target alternatives (level of reference: \emph{sub, basic, super}) \\
 \midrule
 %Size of contextual set of alternatives & 8 & 8 or 9 & 3 \\
 %\midrule
-Compositionality & $\mathcal{L}(u_{\text{size}},o) \times \mathcal{L}(u_{\text{color}},o)$ & $\mathcal{L}(u_{\text{color}},o) \times \mathcal{L}(u_{\text{type}},o)$ for utterance type values; elicited experimentally for utterance-object combination values & NA \\
+%Compositionality & $\mathcal{L}(u_{\text{size}},o) \times \mathcal{L}(u_{\text{color}},o)$ & $\mathcal{L}(u_{\text{color}},o) \times \mathcal{L}(u_{\text{type}},o)$ for utterance type values; elicited experimentally for utterance-object combination values & NA \\
+%\midrule
+Cost & \makecell{type-level \\ (color and size)}& none necessary & \makecell{empirical \\ (length and frequency)} \\
 \midrule
-Cost function & $\beta_{c(\textrm{color})}\mathbbm{1}_{color}(u)+\beta_{c(\textrm{size})}\mathbbm{1}_{size}(u)$ & comparison between $\beta_Fp(u) + \beta_Ll(u)$ vs.~ $\beta_{c(\textrm{color})}\mathbbm{1}_{color}(u)+\beta_{c(\textrm{type})}\mathbbm{1}_{size}(u)$ vs.~none & comparison between $\beta_Fp(u) + \beta_Ll(u)$ vs.~none \\
-\midrule
+%  $\beta_{c(\textrm{color})}\mathbbm{1}_{color}(u)+\beta_{c(\textrm{size})}\mathbbm{1}_{size}(u)$
+% between $\beta_Fp(u) + \beta_Ll(u)$ 
 %Costs were\dots & 1 when property mentioned, otherwise 0 & estimated: $l(u)$  from production data and $p(u)$  from corpora & estimated: $l(u)$  from production data and $p(u)$  from corpora \\
 %\midrule
-Free parameters inferred in BDA & $x_{\textrm{color}}$, $x_{\textrm{size}}$, $\beta_{c(\textrm{color})}$,  $\beta_{c(\textrm{size})}$, $\beta_i$ & $\beta_F$, $\beta_L$, $\beta_i$, $\beta_t$ & $\beta_F$, $\beta_L$, $\beta_i$, $\beta_t$ \\
+\makecell{Free\\ parameters} & 
+	\makecell{$x_{\textrm{color}}$, $x_{\textrm{size}}$, \\ $\beta_{c(\textrm{color})}$,  $\beta_{c(\textrm{size})}$, $\beta_i$} & 
+	\makecell{$x_{\textrm{color}}$, $x_{\textrm{type}}$, \\ $\beta_i$, $\beta_t$, $w_{\textrm{emp}}$} & 
+	$\beta_F$, $\beta_L$, $\beta_i$, $\beta_t$ \\
 \bottomrule
 \end{tabular}
 \label{tab:modeldiffs}
