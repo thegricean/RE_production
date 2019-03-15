@@ -594,18 +594,29 @@ In \sectionref{sec:rsaevaluationbasicscene} we showed that cs-RSA successfully c
 So far we have not included any typicality effects in the semantics of our RSA model, hence the model so far would not capture this asymmetry.
 
 A natural first step is to introduce a more nuanced semantics for nouns in our model. 
-In particular, we could imagine a continuous semantics in which \emph{banana} fits better (i.e. has a semantic value closer to 1 for) the yellow banana than the brown, and fits the brown better than the blue; specific such hypothetical values are shown in the first row of \tableref{tab:colorobjectfidelities}.
-If we then use the same semantic values for color adjectives (close to deterministic) and the same composition rule (product), we get the utterance-level semantic value shown in the remainder of \tableref{tab:colorobjectfidelities}.
-Notice that while the utterance \emph{banana} on its own has significant semantic gradience, the utterances \emph{yellow/brown/blue banana} have very little gradience---this is because the color adjectives are very close to noiseless. \ndg{rephrase to point out that RSA only cares up to normalization. perhaps normalize rows in the table?}
+In particular, we could imagine a continuous semantics in which \emph{banana} fits better (i.e. has a semantic value closer to 1 for) the yellow banana than the brown, and fits the brown better than the blue; specific such hypothetical values are shown in the first row of \tableref{tab:colorobjectfidelities}. Let us further assume that modifying the noun with a color adjective leads to uniformly high semantic values close to 1 for those objects that a simple truth-conditional semantics would return `true' for (see diagonal in \tableref{tab:colorobjectfidelities}) and a very low semantic value close to 0 for any utterance applied to any object that a simple truth-conditional semantics would return `false' for.
 
-Using these contexts and semantic values in the RSA model, with $\beta_i$ = 12 and $\beta_c$ = 5 (that is, both informativeness and utterance cost receive a substantial weight), the resulting speaker probabilities for the (minimal) utterance \emph{banana} are \ndg{fixme} .99, .37, and .05, to refer to the yellow banana, the brown banana, and the blue banana, respectively. In contrast, the resulting speaker probabilities for the redundant \emph{yellow banana}, \emph{brown banana}, and \emph{blue banana} are .01, .63, and .95, respectively. That is, redundant color mention increases with decreasing semantic value of the simple \emph{banana} utterance.
-This shows that the relaxed semantics RSA can predict typicality effects if the semantic fit of the noun (and hence also of color-noun compounds) to an object is modulated by typicality.
+%%%%NDG original version
+\begin{table}
+\centering
+\caption{Hypothetical semantic values for utterances (rows) as applied to objects (columns). Values where a Boolean semantics would return `true' are bolded.}
+\begin{tabular}{l l l l l}
+\toprule
+ & yellow banana & brown banana & blue banana & other\\
+\midrule
+\emph{banana} & \bf{.9} & \bf{.35} & \bf{.1} & .01 \\
+\midrule
+\emph{yellow banana} & \bf{.99} & .01 & .01 & .01 \\
+\emph{brown banana} & .01 & \bf{.99} & .01 & .01 \\
+\emph{blue banana} & .01 & .01 & \bf{.99} & .01 \\
+\midrule
+other & .01 & .01 & .01 & \bf{.99} \\
+\bottomrule
+\end{tabular}
+\label{tab:colorobjectfidelities}
+\end{table}
 
-%Continuous semantics RSA as we have set it up thus far does not capture this asymmetry: it knows that a particular modifier is a color modifier with a particular semantic value; it does not know anything about the typicality of the denoted properties for the referent. 
-%
-%We would like to warn and disillusion the reader upfront: we will not solve the problem of how to get overmodification behavior from the typicality of features compositionally. This is a problem for all theories of modification \cite{kamp1995}. However, we would like to offer a proof of concept showing that, if the non-determinism in the RSA semantics is not at the adjective type (color, size) level, but instead at the level of combinations of referring expressions and objects, the model produces precisely the sorts of typicality effects reported in the literature. 
-%
-%Let us elaborate. Where before we took a semantic value to be a number between 0 and 1 indicating how likely a type of modifier (size, color) was to correctly apply to an object, we now treat it as indicating how good an instance of a particular referring expression the object in question is. For example, take the banana case: assume the three contexts in \figref{fig:bananaexamples}. The target object in each is the banana, which varies in how typical its color is. The banana is the only object of its type, making type mention (\emph{banana}) sufficient for unique reference and color redundant. Additionally, each context contains a distractor of the same color as the target, further making color redundant, as well as a distractor of a different color. Assume further the hypothetical semantic values shown in \tableref{tab:colorobjectfidelities}. These values should be read as follows: a yellow banana is a very good or typical instance of a \emph{banana} -- \emph{banana} applied to yellow bananas has a high semantic value of .9. In contrast, brown bananas are less typical instances of \emph{banana}s (.35), and blue bananas are highly atypical \emph{banana}s (.1) but still better than objects of an other non-banana type (.015). Going along the diagonal, we assume for each remaining utterance that its semantic value is very high (.99) when applied to an object in its (deterministic truth-conditional) extension and very low otherwise (.015).
+The effect of running the speaker model forward with the standard literal listener treatment of the values in \tableref{tab:colorobjectfidelities} for the three contexts in \figref{fig:bananaexamples}, where \emph{banana} is the strictly sufficient utterance for unique reference (i.e., color is redundant under the standard view) is as follows:  with $\beta_i$ = 12 and $\beta_c$ = 5,\footnote{The results hold qualitatively for any informativeness weight $> 1$ and any cost weight $> 0$.} the resulting speaker probabilities for the minimal utterance \emph{banana} are .95, .29, and .04, to refer to the yellow banana, the brown banana, and the blue banana, respectively. In contrast, the resulting speaker probabilities for the redundant \emph{yellow banana}, \emph{brown banana}, and \emph{blue banana} are .05, .71, and .96, respectively. That is, redundant color mention increases with decreasing semantic value of the simple \emph{banana} utterance. 
 
 \begin{figure}[bt!]
 	\begin{subfigure}{.33\textwidth}
@@ -631,59 +642,36 @@ This shows that the relaxed semantics RSA can predict typicality effects if the 
 	\label{fig:bananaexamples}
 \end{figure}
 
-%%%%NDG: compositional version:
-\begin{table}
-\centering
-\caption{Hypothetical semantic values for utterances (rows) as applied to objects (columns). We derive values for complex utterances from individual words using a product rule, and assuming $x_{\text{color}} = .999$.}
-\begin{tabular}{l l l l l}
-\toprule
- & yellow banana & brown banana & blue banana & other\\
-\midrule
-\emph{banana} & .9 & .35 & .1 & .015 \\
-\midrule
-\emph{yellow banana} & .8991 & .00035 &  .0001 & .000015 \\
-\emph{brown banana} & .0009 & .34965 & .0001 & .000015 \\
-\emph{blue banana} & .0009 & .00035 & .0999 & .000015 \\
-\bottomrule
-\end{tabular}
-\label{tab:colorobjectfidelities}
-\end{table}
+This shows that cs-RSA can predict typicality effects if the semantic fit of the noun (and hence also of color-noun compounds) to an object is modulated by typicality. The reason the typicality effect arises is that, with the hypothetical values we assumed, the gain in informativeness between using the unmodified \emph{banana} and the modified \emph{COLOR banana} is greater in the blue than in the yellow banana case. 
 
-%%%%NDG original version
+
+
+%%%%NDG: compositional version:
 %\begin{table}
 %\centering
-%\caption{Hypothetical semantic values for utterances (rows) as applied to objects (columns).}
+%\caption{Hypothetical semantic values for utterances (rows) as applied to objects (columns). We derive values for complex utterances from individual words using a product rule, and assuming $x_{\text{color}} = .999$.}
 %\begin{tabular}{l l l l l}
 %\toprule
 % & yellow banana & brown banana & blue banana & other\\
 %\midrule
 %\emph{banana} & .9 & .35 & .1 & .015 \\
 %\midrule
-%\emph{yellow banana} & .99 & .015 & .015 & .015 \\
-%\emph{brown banana} & .015 & .99 & .015 & .015 \\
-%\emph{blue banana} & .015 & .015 & .99 & .015 \\
-%\midrule
-%other & .015 & .015 & .015 & .99 \\
+%\emph{yellow banana} & .8991 & .00035 &  .0001 & .000015 \\
+%\emph{brown banana} & .0009 & .34965 & .0001 & .000015 \\
+%\emph{blue banana} & .0009 & .00035 & .0999 & .000015 \\
 %\bottomrule
 %\end{tabular}
 %\label{tab:colorobjectfidelities}
 %\end{table}
-
-%Inputting these contexts and semantic values into the RSA model used thus far, with $\beta_i$ = 12 and $\beta_c$ = 5 (that is, both informativeness and utterance cost receive a substantial weight), the resulting speaker probabilities for the (minimal) \emph{banana} are .99, .37, and .05, to refer to the yellow banana, the brown banana, and the blue banana, respectively. In contrast, the resulting speaker probabilities for the redundant \emph{yellow banana}, \emph{brown banana}, and \emph{blue banana} are .01, .63, and .95, respectively. That is, redundant color mention increases with decreasing semantic value of the simple \emph{banana} utterance.
-
-%So far we have shown that continuous semantics RSA can capture typicality effects in principle if we assume that semantic values do not operate at the adjective type level but instead captures the typicality of an object for the (minimal and redundant) referring expressions. If an object is more typical for the redundant expression than for the minimal expression, then the bigger the difference in typicality, the greater the relative informativeness of the redundant expression, and the greater the probability of it being produced. 
+ 
 
 This example is somewhat oversimplified. In practice, speakers sometimes mention an object's color without mentioning the noun. In the contexts presented in \figref{fig:bananaexamples} this does not make much sense because there is always a competitor of the same color present. In contrast, in the contexts in \figref{fig:condInf} and \figref{fig:condOverinf}, color alone disambiguates the target. This suggests that we should consider among the set of utterance alternatives not just the simple type mentions (e.g., \emph{banana}) and color-and-type mentions (e.g., \emph{yellow banana}), but also simple color mentions (e.g., \emph{yellow}). The dynamics of the model proceed as before.
 
-Two additional, more theoretically fraught, simplifications concern where typicality can enter into the semantics and how compositions proceeds. In the above, we have assumed that typicality directly affects only noun interpretations, however, it is very plausible that color adjectives are also affected by typicality---for instance, a color nearby blue, like purple, may still be a better fit to \emph{blue} than a far one, like orange. More importantly, there may be complex interactions between colors and kinds, such that what is a typical blue for one category (e.g. the sky) is actually unusual for another (e.g. fruit). Indeed, compositional semantics of typicality is a well known problem for theories of modification \cite{kamp1995}. Rather than try to solve it here, we note that RSA works at the level of whole utterances. Hence, if we can reasonably measure the semantic fit of each utterance to each possible referent, then RSA will make predictions for production without the need to derive the semantic values compositionally. 
-That is, if we can measure the typicality of the phrase \emph{blue banana} for a banana, we don't need to derive it from \emph{blue}, \emph{banana}, and a theory of composition.
-This separates pragmatic aspects of reference, which are the topic of this paper, from issues in compositional semantics, which are not; hence we will take this approach for experimentally testing the predictions of relaxed semantics RSA for typicality effects.
+An additional, more theoretically fraught, simplification concerns where typicality can enter into the semantics and how compositions proceeds. In the above, we have assumed that the semantic value of the modified expression is uniformly high, which is qualitatively what is necessary (and, as we will see below, empirically correct) in order for the typicality effects to emerge. However, there is no straightforward way to compositionally derive such uniformly high values from the semantic values of the nouns and the semantic values of the color modifiers, which we have not yet discussed. Indeed, compositional semantics of graded meanings is a well known problem for theories of modification \cite{kamp1995}. Rather than try to solve it here, we note that RSA works at the level of whole utterances. Hence, if we can reasonably measure the semantic fit of each utterance to each possible referent, then cs-RSA will make predictions for production without the need to derive the semantic values compositionally. That is, if we can measure the typicality of the phrase \emph{blue banana} for a banana, we don't need to derive it from \emph{blue}, \emph{banana}, and a theory of composition. This separates pragmatic aspects of reference, which are the topic of this paper, from issues in compositional semantics, which are not; hence we will take this approach for experimentally testing the predictions of relaxed semantics RSA for typicality effects.
 
 
 %We can now ask whether taking into account this more fine-grained notion of a continuous semantics affects the probability of redundantly mentioning color. 
-The stimuli for Exp.~1 were specifically designed to be realistic objects with low color-diagnosticity, so they do not include objects with low typicality values or large degrees of variation in typicality. This makes the dataset from Exp.~1 not well-suited for investigating typicality effects.\footnote{We did elicit typicality norms for the items in Exp.~1 and replicated the previously documented typicality effects on the four items that did exhibit variation in typicality. See \appref{sec:exp1typicality} for details.} We therefore conducted a separate production experiment in the same paradigm but with two broad changes: first, objects' color varied in typicality; and second, we did not manipulate object size, focusing only on color mention. This allows us to ask three questions: first, do we replicate the typicality effects reported in the literature -- that is, are less color-typical objects more likely to lead to redundant color use than more color-typical objects? Second, does RSA with empirically elicited typicality values as proxy for a continuous semantics capture speakers' behavior? Third, does the semantic value depend only on typicality, or is there still a role for modifier type noise of the kind we investigated in the previous section? In addition, we can investigate the extent to which utterance cost, which we found not to play a role in the previous section, affects the choice of referring expression.
-
-%Additionally, the proposed RSA model allows us to ask questions that have not been addressed previously. In particular, it allows us to test for complex interactions of contextual informativeness of color and type, by manipulating both whether there is a distractor of the same type present and whether there is a distractor of the same color present. 
+The stimuli for Exp.~1 were specifically designed to be realistic objects with low color-diagnosticity, so they did not include objects with low typicality values or large degrees of variation in typicality. This makes the dataset from Exp.~1 not well-suited for investigating typicality effects.\footnote{We did elicit typicality norms for the items in Exp.~1 and replicated the previously documented typicality effects on the four items that did exhibit variation in typicality. See \appref{sec:exp1typicality} for details.} We therefore conducted a separate production experiment in the same paradigm but with two broad changes: first, objects' color varied in typicality; and second, we did not manipulate object size, focusing only on color mention. This allows us to ask three questions: first, do we replicate the typicality effects reported in the literature -- that is, are less color-typical objects more likely to lead to redundant color use than more color-typical objects? Second, does cs-RSA with empirically elicited typicality values as proxy for a continuous semantics capture speakers' behavior? Third, does the semantic value depend only on typicality, or is there still a role for modifier type noise of the kind we investigated in the previous section? In addition, we can investigate the extent to which utterance cost, which we found not to play a role in the previous section, affects the choice of referring expression.
 
 
 \subsection{Experiment 2: color typicality effects}
@@ -1145,7 +1133,7 @@ Despite the greater number of parameters associated with adding the cost functio
 
 Empirical utterance proportions are shown against MAP model  predictions in \figref{fig:nompredictives}. 
 The correlation between empirical utterance proportions and the model's MAP predictions at the level of targets, utterances, and conditions was $r = .86$. Further collapsing across targets yields a correlation of $r = .95$.
-While the model overpredicts subordinate level  and underpredicts basic level choices in the \emph{sub necessary} condition, it otherwise captures the patterns in the data very well. 
+While the model overpredicts subordinate	 level  and underpredicts basic level choices in the \emph{sub necessary} condition, it otherwise captures the patterns in the data very well. 
 
 
 \begin{figure}
@@ -1207,8 +1195,9 @@ While the model overpredicts subordinate level  and underpredicts basic level ch
 
 \subsection{Summary}
 
-How do speakers choose a referring expression? Here we have shown that they do so by trading off various factors, including the contextual informativeness of the referring expression and its cognitive cost, compared to its plausible alternatives. Importantly, computing contextual informativeness with respect to a \emph{continuous} rather than Boolean underlying semantics was crucial for capturing various aspects of speakers' referring behavior. First, the continuous semantics allowed us to capture the basic well-documented asymmetry for speakers to be more likely to redundantly use color adjectives rather than size adjectives. In addition, it predicted an interaction between sufficient dimension and scene variation on the probability of redundancy, which was very clearly borne out in the data: increased scene variation resulted in a much greater increase in redundant color than in redundant size adjective use. And finally, treating empirically elicited typicality values as continuous semantic values yielded well-documented effects of typicality in both color modifier choice and noun choice. A modifier was more likely to be mentioned redundantly when the object was (out of context) a substantially less good instance of the unmodified than of the modified expression. Analogously, a noun at a taxonomically lower level than necessary for establishing reference was more likely to be produced when the object was (out of context) a substantially less good instance of the higher than of the lower level. 
+In this paper we have provided a unified account of referring expression choice that solves a long-recognized puzzle for rational theories of language use: why do speakers'  referring expressions often and systematically exhibit seeming overinformativeness? We have shown here that by allowing contextual utterance informativeness to be computed with respect to a continuous or noisy rather than a Boolean semantics for utterances, utterances that seem overinformative can in fact be sufficiently informative when what seems like the prima facie sufficiently informative utterance is in fact noisy and may lead a literal listener astray. This simple modification allowed us to capture the basic well-documented asymmetry for speakers to be more likely to redundantly use color adjectives rather than size adjectives; the interaction between sufficient dimension and scene variation in the probability of redundancy; and typicality effects in both color modifier choice and noun choice. 
 
+We have thus shown that with one key innovation -- a continuous semantics  -- one can retain the assumption that speakers rationally trade off informativeness and cost of utterances in language production. Rather than being wastefully overinformative, adding redundant modifiers or referring at a lower taxonomic level than strictly necessary \emph{is} in fact informative when the prima facie sufficiently informative expression is substantially noisier than its redundant/overly specific counterpart -- because in this case, the prima facie sufficiently informative expression is more likely to lead a literal listener to draw a wrong inference about the intended referent. This innovation thus not only provides a unified explanation for a number of key patterns within the overinformative referring expression literature that have thus far eluded a unified explanation; it also extends to the domain of nominal choice. And in contrast to previously proposed computational models, it is likely to be straightforwardly extendable to any instance of definite referring expressions of the sort we have examined here. We have provided an overview of the RSA models evaluated for the three reported production datasets in \tableref{tab:modeldiffs}.
 
 \begin{table}
 \caption{Overview of the models used for the three different production datasets Color/size (Exp.~1), Color typicality (Exp.~2), and Nominal choice (Exp.~3). Parameter names:  $x_{\textrm{color}}$: semantic value of color; $x_{\textrm{size}}$: semantic value of size; $\beta_{c(\textrm{color})}$: cost of color;  $\beta_{c(\textrm{size})}$: cost of size; $\beta_i$: weight on informativity; $\beta_F$: weight on cost (as estimated by utterance frequency); $\beta_L$: weight on cost (as estimated by utterance length); $\beta_t$: weight on elicited typicality values} %\red{[rh: still need to explain typicality weight in text; for others editing, this is the soft-max temp. inside L0 that stretches/compresses the empirically elicited typicality values]}
@@ -1240,9 +1229,7 @@ Free parameters inferred in BDA & $x_{\textrm{color}}$, $x_{\textrm{size}}$, $\b
 \end{table}
 
 
-We have thus shown that with one key innovation -- a continuous semantics  -- one can retain the assumption that speakers rationally trade off informativeness and cost of utterances in language production. Rather than being wastefully overinformative, adding redundant modifiers or referring at a lower taxonomic level than strictly necessary \emph{is} in fact informative when the prima facie sufficiently informative expression is substantially noisier than its redundant/overly specific counterpart -- because in this case, the prima facie sufficiently informative expression is more likely to lead a literal listener to draw a wrong inference about the intended referent. This innovation thus not only provides a unified explanation for a number of key patterns within the overinformative referring expression literature that have thus far eluded a unified explanation; it also extends to the domain of nominal choice. And in contrast to previously proposed computational models, it is likely to be straightforwardly extendable to any instance of definite referring expressions of the sort we have examined here.
-
-In the following we discuss a number of intriguing questions this work raises and avenues for future research that it suggests.
+In the following we discuss a number of intriguing questions that this work raises and avenues for future research it suggests.
 
 \subsection{`Overinformativeness'}
 

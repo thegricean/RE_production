@@ -654,11 +654,14 @@ Bind empirical and predictives and plot (like Fig 8 in paper).
 d = left_join(empirical,predictives,by=c("Condition","Target","Utterance")) %>%
   mutate(Condition = relevel(as.factor(Condition), "sub necessary"))
 
+# correlation at the condition-target-utterance level (324 data points)
 cor(d$ModelProb,d$Probability)
 
+# correlation at the condition-utterance level
 cors = d %>%
-  group_by(Condition) %>%
-  summarize(Correlation=cor(ModelProb,Probability))
+  group_by(Condition,Utterance) %>%
+  summarize(MeanModel=mean(ModelProb),MeanEmp=mean(Probability))
+cor(cors$MeanModel,cors$MeanEmp)
 
 ggplot(d, aes(x=ModelProb,y=Probability,color=relevel(as.factor(Utterance),"sub"))) +
   geom_errorbar(aes(ymin=YMin,ymax=YMax)) +
