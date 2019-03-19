@@ -1,11 +1,12 @@
-\documentclass[11pt]{article}
+\documentclass[man,floatsintext]{apa6}
 
 \usepackage{apacite}
 \usepackage{amsmath,amssymb}
 \usepackage{graphicx}
 \usepackage{color}
 \usepackage{url}
-\usepackage{fullpage}
+\usepackage[left=1in, right=1in, top=1in, bottom=1in]{geometry}
+%\usepackage{fullpage}
 \usepackage{setspace}
 \usepackage{booktabs}
 \usepackage{multirow}
@@ -17,6 +18,26 @@
 \usepackage{fancyvrb}
 \usepackage{epigraph}
 \usepackage{bbm}
+\usepackage{setspace}
+\usepackage{authblk}
+%\usepackage{fancyhdr}
+%\usepackage{endfloat}
+
+\doublespacing
+
+%\fancypagestyle{firststyle}
+%{
+%  \fancyhf{}
+%\fancyhead[L]{RUNNING HEAD: RATIONALLY REDUNDANT REFERRING EXPRESSIONS}
+%\fancyhead[R]{\thepage}
+%}
+%
+%\fancypagestyle{mainstyle}
+%{
+%  \fancyhf{}
+%\fancyhead[L]{RATIONALLY REDUNDANT REFERRING EXPRESSIONS}
+%\fancyhead[R]{\thepage}
+%}
 
 % For line breaks in table cells...
 \usepackage{makecell}
@@ -50,31 +71,50 @@
 \newcommand{\appref}[1]{Appendix \ref{#1}}
 \newcommand{\sectionref}[1]{Section \ref{#1}}
 
+\setcounter{secnumdepth}{4}
+
 \VerbatimFootnotes
 
-\title{A Bayesian approach to redundancy in reference
-%\ndg{consider alternatives: "rationally redundant referring expressions", "A Bayesian approach to redundancy in reference", Over `overinformativeness': rationally redundant referring expressions }
-}
+%\pagestyle{firststyle}
 
-%\acknowledgments{Adele Goldberg, Florian Jaeger, Sarah Brown-Schmidt, Michael Franke, Herb Clark, audiences at CogSci 2016, CUNY 2017, Colloquia in Tuebingen, OSU Linguistics, Stanford Linguistics, CMU Philosophy, UC Davis Linguistics, Berkeley Psychology, Dartmouth Linguistics, CoCoLab, IMBS Quantitative Approaches to Language, Irvine}
- 
- \author{Judith Degen \and Robert X.D.~Hawkins \and Caroline Graf \and Elisa Kreiss \and Noah D.~Goodman}
-%   jdegen@stanford.edu\\
-%  Department of Linguistics, 450 Serra Mall \\
-%  Stanford, CA 94305 USA
+\title{When redundancy is rational: A Bayesian approach to `overinformative' referring expressions}%\thanks{Discussions with Craige Roberts and Mandy Simons over the years have greatly influenced our thinking about projective content and the research reported on in this paper. For helpful feedback, we also thank M\'arta Abrus\'an, audiences at many universities and conferences since 2015, as well as David Barner and three anonymous reviewers of {\em Journal of Semantics}. This work was partially supported by NSF grants BCS-1452674 (JT) and BCS-1452663 (DIB).}}
+
+\shorttitle{Rationally redundant referring expressions}
+
+\threeauthors{Judith Degen and Robert X.D.~Hawkins}{Caroline Graf}{Elisa Kreiss and Noah D.~Goodman}
+\threeaffiliations{Stanford University}{XXX}{Stanford University}
+
+\authornote{We are grateful to many audiences and individuals for discussions that have made this paper better, in particular Sarah Brown-Schmidt, Herb Clark, Michael Franke, Gerhard J\"ager, Florian Jaeger, Timo Roettger, Greg Scontras, Mike Tanenhaus, audiences at the RefNet Round Table Event 2015, CogSci 2016, CUNY 2017, XPrag 2017, the IMBS Quantitative Approaches to Language Workshop 2018, colloquium talks given by the first author at the Bay Area Philosophy of Science Group, Berkeley Psychology, CMU Philosophy, Dartmouth Linguistics, McGill Linguistics, OSU Linguistics, Stanford Linguistics, T\"ubingen Linguistics, UC Davis Linguistics. All remaining errors are our own. \\Correspondence concerning this article should be addressed to Judith Degen, Department of Linguistics, Stanford University, 450 Serra Mall, Stanford, CA 94305. E-mail: jdegen@stanford.edu.}
+
+%\author[$\bullet$]{Judith Degen}
+%\author[$\bullet$]{Robert X.D.~Hawkins}
+%\author[$\triangleright$]{Caroline Graf,}
+%\author[$\bullet$]{Elisa Kreiss}
+%\author[$\bullet$]{Noah D.~Goodman}
+
+
+%\affil[$\bullet$]{Stanford University}
+%\affil[$\triangleright$]{XXX CAROLINE}
+
+%\renewcommand\Authands{ and }
+
+\abstract{Referring is one of the most basic and prevalent uses of language. How do speakers choose from the wealth of referring expressions at their disposal? Rational theories of language use have come under attack for decades for not being able to account for the seemingly irrational overinformativeness ubiquitous in referring expressions. Here we present a novel production model of referring expressions within the Rational Speech Act framework that treats speakers as agents that rationally trade off cost and informativeness of utterances. Crucially, we relax the assumption of deterministic meaning in favor of a graded semantics. This innovation allows us to capture a large number of seemingly disparate phenomena within one unified framework: the basic asymmetry in speakers' propensity to overmodify with color rather than size; the increase in overmodification in complex scenes; the increase in overmodification with atypical features; and the preference for basic level nominal reference. These findings cast a new light on the production of referring expressions: rather than being wastefully overinformative, reference is rationally redundant. }
+
+\keywords{language production; reference; overinformativeness; experimental pragmatics; Bayesian modeling}
+
 
 \begin{document}
 
 \maketitle
+%\thispagestyle{firststyle}
+
+%\pagebreak
+
+%\pagestyle{mainstyle}
 
 
-\begin{abstract}
-Referring is one of the most basic and prevalent uses of language. How do speakers choose from the wealth of referring expressions at their disposal? Rational theories of language use have come under attack for decades for not being able to account for the seemingly irrational overinformativeness ubiquitous in referring expressions. Here we present a novel production model of referring expressions within the Rational Speech Act framework that treats speakers as agents that rationally trade off cost and informativeness of utterances. Crucially, we relax the assumption of deterministic meaning in favor of a graded semantics. This innovation allows us to capture a large number of seemingly disparate phenomena within one unified framework: the basic asymmetry in speakers' propensity to overmodify with color rather than size; the increase in overmodification in complex scenes; the increase in overmodification with atypical features; and the preference for basic level nominal reference. These findings cast a new light on the production of referring expressions: rather than being wastefully overinformative, reference is rationally redundant. 
-%This supports the view of a language production system geared towards communicative efficiency.
 
-\textbf{Keywords:} 
-experimental pragmatics; probabilistic pragmatics; reference; referring expressions; informativeness; overinformativeness; adjectives
-\end{abstract}
+%\pagebreak
 
 %\tableofcontents
 
@@ -90,10 +130,14 @@ experimental pragmatics; probabilistic pragmatics; reference; referring expressi
 %}
 %\end{flushright}
 
-\section{Introduction}
+%When redundancy is rational: A Bayesian approach to `overinformative' referring expressions
+
+\setcounter{section}{0}
+
+\section[]{Overinformativeness in referring expressions}
 \label{sec:intro}
 
-Reference to objects is one of the most basic and prevalent uses of language. In order to refer, speakers must choose from amongst a wealth of referring expressions they have at their disposal. How does a speaker choose whether to refer to an object as \emph{the animal}, \emph{the dog}, \emph{the dalmatian}, or \emph{the big mostly white dalmatian}? The context within which the object occurs (other non-dogs, other dogs, other dalmatians) plays a large part in determining which features the speaker chooses to include in their utterance -- speakers aim to be sufficiently informative to establish unique reference to the intended object. However, speakers' utterances often exhibit what has been claimed to be \emph{overinformativeness}: referring expressions are often more specific than necessary for establishing unique reference, and they are more specific in systematic ways. For instance, speakers are likely to produce referring expressions like \emph{the small blue pin} instead of  \emph{the small pin} in contexts like \figref{fig:sizesufficient}, even though the color modifier provides no additional information \cite{gatt2011, Gatt2014, Arts2011, Koolen2011}. Similar use of redundant \emph{size} modifiers, in contrast, is rare. %\ndg{include basic example of over-informativeness here? eg point to fig 1, and include a bit more explanation either in caption or here. (a speaker often says "little blue pin" when "little pin" is sufficient.)} 
+Reference to objects is one of the most basic and prevalent uses of language. In order to refer, speakers must choose from among a wealth of referring expressions they have at their disposal. How does a speaker choose whether to refer to an object as \emph{the animal}, \emph{the dog}, \emph{the dalmatian}, or \emph{the big mostly white dalmatian}? The context within which the object occurs (other non-dogs, other dogs, other dalmatians) plays a large part in determining which features the speaker chooses to include in their utterance -- speakers aim to be sufficiently informative to establish unique reference to the intended object. However, speakers' utterances often exhibit what has been claimed to be \emph{overinformativeness}: referring expressions are often more specific than necessary for establishing unique reference, and they are more specific in systematic ways. For instance, speakers are likely to produce referring expressions like \emph{the small blue pin} instead of  \emph{the small pin} in contexts like \figref{fig:sizesufficient}, even though the color modifier provides no additional information \cite{gatt2011, Gatt2014, Arts2011, Koolen2011}. Similar use of redundant \emph{size} modifiers, in contrast, is rare. %\ndg{include basic example of over-informativeness here? eg point to fig 1, and include a bit more explanation either in caption or here. (a speaker often says "little blue pin" when "little pin" is sufficient.)} 
 Providing a unified theory for speakers' systematic patterns of overinformativeness has so far proven elusive.
 
 This paper is concerned with accounting for these systematic patterns in overinformative referring expressions. We restrict ourselves to definite descriptions of the form \emph{the (ADJ}?\emph{)}+ \emph{NOUN}, that is, noun phrases that minimally contain the definite determiner \emph{the} followed by a head noun, with any number of adjectives occurring between the determiner and the noun.\footnote{In contrast, we will \emph{not} provide a treatment of pronominal referring expressions, indefinite descriptions, names, or definite descriptions with post-nominal modification, though we offer some speculative remarks on how the approach outlined here can be applied to these cases.} 
@@ -101,7 +145,7 @@ A model of such referring expressions will allow us to unify two domains in lang
 The choice of adjectives in (purportedly) overmodified referring expressions has been a primary focus of the language production literature
 \cite{herrmann1976, Pechmann1989, nadig2002, sedivy2003a, Maes2004, Engelhardt2006, Arts2011, Koolen2011, rubiofernandez2016}, while the choice of noun in simple nominal expressions has so far mostly received attention in the concepts and categorization literature \cite{Rosch1973, Rosch1976} and in the developmental literature on generalizing basic level terms \cite{Xu2007}. %\cg{@jd: "Adele Goldberg?" Do you mean to cite her book "Constructions at Work. The Nature of Generalization"? If yes, you can use the citation key goldberg2006constructions. Among others, Beach (1964), Reed (1972), Murphy \& Smith (1982), and Cruse (1977) also did work on this, perhaps we want to cite them also? reed1972pattern, beach1964cue, murphy1982basic, cruse1977pragmatics}. 
 
-In the following, we review some of the key phenomena and puzzles in each of these literatures. We then present a model of referring expression production within the Rational Speech Act framework \cite{frank2012, goodman2016}, which treats speakers as boundedly rational agents who optimize the tradeoff between utterance cost and informativeness. Our key innovation is to relax the assumption that semantic truth functions are deterministic. Under this relaxed semantics, where certain terms may apply better than others without strictly being true or false, it can be useful and informative to add seemingly overinformative modifiers or use nouns that are seemingly too specific; not doing so might allow the listener to go astray, or to invest too much processing effort in inferring the speaker's correct intention. This model provides a unified explanation for a number of seemingly disparate phenomena from the modified and nominal referring expression literature. 
+In the following, we review some of the key phenomena and puzzles in each of these literatures. We then present a model of referring expression production within the Rational Speech Act framework \cite{frank2012, goodman2016, FrankeJaeger2016}, which treats speakers as boundedly rational agents who optimize the tradeoff between utterance cost and informativeness. Our key innovation is to relax the assumption that semantic truth functions are deterministic. Under this relaxed semantics, where certain terms may apply better than others without strictly being true or false, it can be useful and informative to add seemingly overinformative modifiers or use nouns that are seemingly too specific; not doing so might allow the listener to go astray, or to invest too much processing effort in inferring the speaker's  intention. This model provides a unified explanation for a number of seemingly disparate phenomena from the modified and nominal referring expression literature. 
 
 We spend the remainder of the paper demonstrating how this account applies to various phenomena. In \sectionref{sec:intro} we spell out the problem and introduce the key overinformativeness phenomena. In \sectionref{sec:models} we introduce the basic Rational Speech Act framework with deterministic semantics and show how it can be extended to a relaxed semantics. In Sections 3 - 5 we evaluate the relaxed semantics RSA model on data from interactive online reference game experiments that exhibit the phenomena introduced in \sectionref{sec:intro}: size and color modifier choice under varying conditions of scene complexity; typicality effects in the choice of color modifier; and choice of nominal level of reference. We wrap up in \sectionref{sec:gd} by summarizing our findings and discussing the far-reaching implications of and further challenges for this line of work.
 
@@ -193,7 +237,7 @@ Modifier type and amount of scene variation are not the only factors determining
 \label{fig:atypical}
 \end{subfigure}
 \caption{Example contexts where type (\emph{banana}) is sufficient for unique reference and color is (a) typical or (b) atypical. A green border marks the intended referent.}
-\label{fig:pin}
+\label{fig:banana}
 \end{figure}
 
 Whether speakers are more likely to mention atypical properties over typical properties because they are more salient to \emph{them} or because they are trying to make reference resolution easier for the listener, for whom presumably these properties are also salient, is an open question \cite{Westerbeek2015}. Some support for the audience design account comes from a study by \citeA{Huettig2011}, who found that listeners, after hearing a noun with a diagnostic color (e.g., \emph{frog}), are more likely to fixate objects of that diagnostic color (green), indicating that typical object features are rapidly activated and aid visual search. Similarly, \citeA{Arts2011} showed that overspecified expressions result in faster referent identification.  Nevertheless, the benefit for listeners and the salience for speakers might simply be a happy coincidence and speakers might not, in fact, be designing their utterances for their addressees. We return to this issue in the General Discussion. 
@@ -256,7 +300,7 @@ Section & Effect & Description \\ %& Reported by \\
 To date, there is no theory to account for all of these different phenomena; and no model has attempted to unify overinformativeness in the domain of modified and nominal referring expressions. We touched on some of the explanations that have been proposed for these phenomena. We also indicated where computational models have been proposed for individual phenomena. In the next section, we present the Rational Speech Act modeling framework, which we then use to capture these disparate phenomena in one model.
 
 
-\section{Modeling speakers' choice of referring expression}
+\section[]{Modeling speakers' choice of referring expression}
 \label{sec:models}
 
 Here we propose a computational model of referring expression production that accounts for the phenomena introduced above. The model is formulated within the Rational Speech Act (RSA) framework \cite{frank2012, goodman2016}.\footnote{All RSA models and Bayesian data analyses reported in this paper were implemented in the probabilistic programming language WebPPL \cite{GoodmanStuhlmuller14_DIPPL} and can be viewed at \url{https://github.com/thegricean/RE_production}. All experimental materials and analysis scripts are available in the same repository.} It provides a principled explanation for the phenomena reviewed in the previous section and  holds promise for being generalizable to many further production phenomena related to overinformativeness, which we discuss in \sectionref{sec:gd}. We proceed by first presenting the general framework in \sectionref{sec:basicrsa}, and show why the most basic model, as formulated by \citeNP{frank2012}, does not produce the phenomena outlined above due to its strong focus on speakers maximizing the informativeness of expressions under a deterministic semantics. In \sectionref{sec:modifiedmodel} we introduce the crucial innovation: relaxing the assumption of a deterministic semantics. We show that the model can qualitatively account both for speakers' asymmetric propensity to overmodify with color rather than with size and (in \sectionref{sec:modelkoolen}) for speakers' propensity to overmodify more with increasing scene variation. 
@@ -475,7 +519,7 @@ In general: increased scene variation is predicted to lead to a greater increase
 RSA with a continuous semantics thus captures the qualitative effects of color-size asymmetry and scene variation in production of redundant expressions, and it makes quantitative predictions for both. Testing these quantitative predictions, however, will require more data. 
 In Sections 3, 4, and 5 we quantitatively evaluate cs-RSA on datasets capturing the phenomena described in the Introduction (\tableref{tab:effects}): modifier type and scene variation effects on modified referring expressions, typicality effects on color mention, and the choice of taxonomic level of reference in nominal choice.
 
-\section{Modified referring expressions: size and color modifiers under different scene variation conditions}
+\section[]{Modified referring expressions: size and color modifiers under different scene variation conditions}
 \label{sec:rsaevaluationbasicscene}
 
 Adequately assessing the explanatory value of RSA with continuous semantics requires evaluating how well it does at predicting the probability of various types of utterances occurring in large datasets of naturally produced referring expressions. We first report the results of a web-based interactive reference game in which we systematically manipulate scene variation (in a somewhat different way than \citeA{Koolen2013} did). 
@@ -594,7 +638,7 @@ These results raise interesting questions regarding the status of the inferred s
 
 %\jd{will have to discuss here already? not sure how to do that with all the typicality stuff not yet introduced, and i'm actually kinda happy with how the section 6.4 discussion on this issue turned out}
 
-\section{Modified referring expressions: color typicality}
+\section[]{Modified referring expressions: color typicality}
 \label{sec:colortypicality}
 
 
@@ -816,6 +860,10 @@ See \appref{sec:exp1typicality} for a comparison of our question and the Westerb
 		\emph{yellow banana} & \textbf{.97} & .30 & .15 & .05 \\
 		\emph{brown banana} & .22 & \textbf{.91} & .15 & .04\\
 		\emph{blue banana} & .16 & .15 & \textbf{.92} & .06\\
+		\midrule
+		\emph{yellow} & \textbf{.77} & .05 & .06 & .09 \\
+		\emph{brown} & .11 & \textbf{.87} & .01 & .12\\
+		\emph{blue} & .06 & .06 & \textbf{.92} & .07\\		
 		\bottomrule
 	\end{tabular}
 	\vspace{5mm}
@@ -824,7 +872,7 @@ See \appref{sec:exp1typicality} for a comparison of our question and the Westerb
 
 Slider values were coded as falling between 0 (`very atypical') and 1 (`very typical'). 
 For each utterance-object combination, we computed mean typicality ratings. 
-As an example, the means for the banana items are shown in \tableref{tab:bananatypicalities}. 
+As an example, the means for the banana items and associated color patches are shown in \tableref{tab:bananatypicalities}. 
 The values exhibit the same gradient as those hypothesized for the purpose of the example in \tableref{tab:colorobjectfidelities}. 
 %\ndg{might need to say up to normalization of rows, depending on what we do in the earlier table?}
 The means for all items are visualized in \figref{fig:exp2colortypicalitymeans}.
@@ -842,7 +890,7 @@ Mean typicality values for utterance-object pairs obtained in the norming studie
 
 Proportions of type-only (\emph{banana}), color-and-type (\emph{yellow banana}), color-only (\emph{yellow}), and other (\emph{funky carrot}) utterances are shown in \figref{fig:exp2empirical} as a function of the described item's mean type-only (\emph{banana}) typicality. Visually inspecting just the explicitly marked \emph{yellow banana}, \emph{brown banana}, and \emph{blue banana} cases suggests a large typicality effect in the overinformative conditions as well as a smaller typicality effect in the informative conditions, such that color is less likely to be produced with increasing typicality of the object. 
 
-\begin{figure}
+\begin{figure}[H]
 \centering
 	\begin{subfigure}{.85\textwidth}
 		\centering
@@ -943,10 +991,10 @@ In comparison, additional cost-related parameters were not justified, with $BF =
 \end{table}
 
 The correlation between empirical utterance proportions and the best model's MAP predictions at the by-item level was $r=.94$. Predictions for the best-performing model are visualized alongside empirical proportions in \figref{fig:exp2model}. The model successfully reproduces the empirically observed typicality effects in all four experimental conditions, with a reasonably good quantitative agreement. 
-The interpolation weight between the fixed and empirical semantic values (\figref{fig:typparamposteriors}) is in the intermediate range: this provides evidence that a noisy truth-conditional semantics as employed in Exp.~1 is justified, but that taking into account graded category membership or typicality in an utterance's final semantic value is also necessary. 
+The interpolation weight between the fixed and empirical semantic values $\beta_{\textrm{fixed}}$ (\figref{fig:typparamposteriors}) is in the intermediate range: this provides evidence that a noisy truth-conditional semantics as employed in Exp.~1 is justified, but that taking into account graded category membership or typicality in an utterance's final semantic value is also necessary. 
 %That the weight on the empirically elicited typicalities is slightly higher than 1 suggests that the empirically elicited typicalities were somewhat less extreme than represented underlyingly.
 
-There is one major, and interesting, divergence from the empirical data in conditions without color competitors. Here, \emph{color-and-type} utterances are systematically somewhat underpredicted in the informative condition, and systematically somewhat overpredicted in the overinformative condition. The reverse is true for \emph{color-only} utterances. It is worth looking at the posterior over parameters, shown in \figref{fig:typparamposteriors}, to understand the pattern. In particular, the utterance type level semantic value of type is inferred to be systematically higher than that of color, capturing that type utterances are less noisy than color utterances.\footnote{Interestingly, the inferred semantic value for color is very similar in absolute terms to that in Exp.~1.} An increase in \emph{color-only} mentions in the overinformative condition could be achieved by reducing the semantic value for type. However, that would lead to a further increase in \emph{color-only} mentions in the informative condition as well. That is, the two conditions are in a tug-of-war with each other.
+There is one major, and interesting, divergence from the empirical data in conditions without color competitors. Here, \emph{color-and-type} utterances are systematically somewhat underpredicted in the informative condition, and systematically somewhat overpredicted in the overinformative condition. The reverse is true for \emph{color-only} utterances. It is worth looking at the posterior over parameters, shown in \figref{fig:typparamposteriors}, to understand the pattern. In particular, the utterance type level semantic value of type is inferred to be systematically higher than that of color, capturing that type utterances are less noisy than color utterances.\footnote{Interestingly, the inferred semantic value for color is very similar in absolute terms to that in Exp.~1.} An increase in \emph{color-only} mentions in the overinformative condition could be achieved by reducing the semantic value for type. However, that would lead to a further and undesirable increase in \emph{color-only} mentions in the informative condition as well. That is, the two conditions are in a tug-of-war with each other.
 
 
 \begin{figure}
@@ -970,13 +1018,13 @@ This suggests that the dynamics at work in the choice of color vs.~size and in t
 
 Model comparison demonstrated the need for assuming a semantics that interpolates between a noisy truth-conditional semantics as employed in Exp.~1 and empirically elicited typicality values. 
 This may reflect semantic knowledge that goes beyond graded category membership, additional effects of compositionality, or perhaps simply differences between our empirical typicality measure and the ``semantic fit'' expected by RSA models.
-\ndg{say something here about why the model couldn't fit the higher color-only production in the overinformative (no cc) condition? may be connected to semantic model??}\jd{ndg, is what you're referring to the issue that is discussed at the end of subsection 4.2?}\ndg{yes, but there we only say why model doesn't fit. it would be good to speculate (briefly) about where the problem may lie and hence where solutions may lie.}
+%\ndg{say something here about why the model couldn't fit the higher color-only production in the overinformative (no cc) condition? may be connected to semantic model??}\jd{ndg, is what you're referring to the issue that is discussed at the end of subsection 4.2?}\ndg{yes, but there we only say why model doesn't fit. it would be good to speculate (briefly) about where the problem may lie and hence where solutions may lie.}
 %This suggests that speakers, in choosing utterances, take into account both an utterance's literal semantics and its noisiness, as well as the graded category membership of the objects under consideration. 
 Perhaps surprisingly, we replicated the result from Exp.~1 that utterance cost does not add any predictive power, even when quantified via a more sophisticated cost function that takes into account an utterance's length and frequency.
 
 In the next section, we move beyond the choice of modifier and ask whether cs-RSA provides a good account of content selection in referring expressions more generally. To answer this question we turn to simple nominal referring expressions.
 
-\section{Unmodified referring expressions: nominal taxonomic level}
+\section[]{Unmodified referring expressions: nominal taxonomic level}
 \label{sec:nominal}
 
 In this section we investigate whether cs-RSA accounts for referring expression production beyond the choice of modifier. In particular, we focus on speakers' choice of taxonomic level of reference in nominal referring expressions. A particular object can be referred to at its subordinate (\emph{dalmatian}), basic (\emph{dog}), or superordinate (\emph{animal}) level, among other choices. As discussed in \sectionref{sec:nominalintro},  multiple factors play a role in the choice of nominal referring expression, including an expression's contextual informativeness, its cognitive cost \cite<short and frequent terms are preferred over long and infrequent ones,>{griffin1998,jescheniak1994}, and its typicality \cite<an utterance is more likely to be used if the object is a good instance of it,> {Jolicoeur1984}.
@@ -1054,7 +1102,7 @@ We collected 2193 referring expressions. To determine the level of reference for
 \subsubsection{Results and discussion}
 
 
-Proportions of sub, basic, and super level utterances are shown in \figref{fig:exp2results}. Overall, super level mentions are highly dispreferred ($< 2\%$), so we focus in this section only on predictors of sub over basic level mentions. The clearest pattern of note is that sub level mentions are only preferred in the most constrained context that necessitates the sub level mention for unique reference (e.g., target: dalmatian, distractor: greyhound; see \figref{fig:item12}). Nevertheless, even in these contexts there is a non-negligible proportion of basic level mentions (28\%).\footnote{This context is analogous to the informative contexts from Exp.~2, where we also observed some `underinformative' referring expressions, but note that here this proportion is even higher.} In the remaining contexts, where the sub and basic level are equally informative, there is a clear preference for the basic level. In addition, mitigating this context effect, sub level mentions increased with increasing typicality of the object as an instance of the sub level utterance.
+Proportions of sub, basic, and super level utterances are shown in \figref{fig:exp3results}. Overall, super level mentions are highly dispreferred ($< 2\%$), so we focus in this section only on predictors of sub over basic level mentions. The clearest pattern of note is that sub level mentions are only preferred in the most constrained context that necessitates the sub level mention for unique reference (e.g., target: dalmatian, distractor: greyhound; see \figref{fig:item12}). Nevertheless, even in these contexts there is a non-negligible proportion of basic level mentions (28\%).\footnote{This context is analogous to the informative contexts from Exp.~2, where we also observed some `underinformative' referring expressions, but note that here this proportion is even higher.} In the remaining contexts, where the sub and basic level are equally informative, there is a clear preference for the basic level. In addition, mitigating this context effect, sub level mentions increased with increasing typicality of the object as an instance of the sub level utterance.
 
 
 \begin{figure}
@@ -1062,7 +1110,7 @@ Proportions of sub, basic, and super level utterances are shown in \figref{fig:e
 %\includegraphics[width=.7\textwidth]{pics/qualitativepattern-fulldataset-typicalities-hmc}
 \includegraphics[width=.9\textwidth]{pics/results-exp3.png}
 \caption{Utterance proportions for each target item across different informativeness conditions as a function of the object's subordinate level typicality. Example target items \emph{polo shirt} (basic: \emph{shirt}, super: \emph{clothes}),  \emph{SUV} (basic: \emph{car}, super: \emph{vehicle}), and \emph{parrot} (basic: \emph{bird}, super: \emph{animal}) that were characteristic of relatively low to relatively high sub typicality items are labeled explicitly.}
-\label{fig:exp2results}
+\label{fig:exp3results}
 \end{figure}
 
 What explains these preferences? In order to test for effects of informativeness, length, frequency, and typicality on nominal choice we conducted a mixed effects logistic regression predicting sub over basic level mention from centered predictors for the factors of interest and the maximal random effects structure that allowed the model to converge (random by-speaker and by-target intercepts).\footnote{In order to address convergence issues with \verb+lmer+ when specifying the full random effects structure -- i.e., by-speaker and by-item random intercepts and slopes for all fixed effects -- we also ran a Bayesian binomial mixed effects model with weakly informative priors using the \verb+brms+ package \cite{brms} that included the same fixed effects structure as the lmer model and the full random effects structure. The results were qualitatively identical, yielding  evidence for main effects of context (sub vs basic sufficient: posterior mean $\beta$ = 2.44, $95\%$ CI = $[$1.87,3.06$]$, $p(\beta > 0)$ = 1; basic vs super sufficient: posterior mean $\beta$ = 0.70, $95\%$ CI = $[$0.32,1.09$]$, $p(\beta > 0)$ = 1), typicality (posterior mean $\beta$ = 9.96, $95\%$ CI = $[$3.55,17.51$]$, $p(\beta > 0)$ = 1), and length (posterior mean $\beta$ = -1.12, $95\%$ CI = $[$-2.00,-0.31$]$, $p(\beta < 0)$ = 1).} 
@@ -1073,7 +1121,7 @@ What explains these preferences? In order to test for effects of informativeness
 
 \emph{Typicality} was coded as the ratio of the target's sub to basic level label typicality.\footnote{Typicalities were elicited in a separate norming study that was identical in procedure to that of Exp.~1a. See \appref{app:typicalitynorms2} for details about the study.} That is, the higher the ratio, the more typical the object was for the sub level label compared to the basic level; or in other words, a higher ratio indicates that the object was relatively atypical for the basic label compared to the sub label. For instance, the panda was relatively atypical for its basic level ``bear'' (mean rating 0.75) compared to the sub level term ``panda bear'' (mean rating 0.98), which resulted in a relatively \emph{high} typicality ratio.
 
-\emph{Informativeness} condition was coded as a three-level factor: \emph{sub necessary}, \emph{basic sufficient}, and \emph{super sufficient}, where \emph{basic sufficient (two superordinate distractors)} and \emph{basic sufficient (one superordinate distractor)} were collapsed into \emph{basic sufficient}. Condition was Helmert-coded: two contrasts over the three condition levels were included in the model, comparing each level against the mean of the remaining levels (in order: \emph{sub necessary}, \emph{basic sufficient}, \emph{super sufficient}). This allowed us to determine whether the probabilities of type mention  for neighboring conditions were significantly different from each other, as suggested by \figref{fig:exp2results}.
+\emph{Informativeness} condition was coded as a three-level factor: \emph{sub necessary}, \emph{basic sufficient}, and \emph{super sufficient}, where \emph{basic sufficient (two superordinate distractors)} and \emph{basic sufficient (one superordinate distractor)} were collapsed into \emph{basic sufficient}. Condition was Helmert-coded: two contrasts over the three condition levels were included in the model, comparing each level against the mean of the remaining levels (in order: \emph{sub necessary}, \emph{basic sufficient}, \emph{super sufficient}). This allowed us to determine whether the probabilities of type mention  for neighboring conditions were significantly different from each other, as suggested by \figref{fig:exp3results}.
 
 %\begin{table}[!tbp]
 %\begin{center}
@@ -1189,7 +1237,7 @@ While the model overpredicts subordinate	 level  and underpredicts basic level c
 
 
 
-\section{General Discussion}
+\section{[]General Discussion}
 \label{sec:gd}
 
 
@@ -1204,7 +1252,7 @@ While the model overpredicts subordinate	 level  and underpredicts basic level c
 
 %\subsection{Summary}
 
-In this paper we have provided a unified account of referring expression choice that solves a long-recognized puzzle for rational theories of language use: why do speakers'  referring expressions often and systematically exhibit seeming overinformativeness? We have shown here that by allowing contextual utterance informativeness to be computed with respect to a continuous (or noisy) rather than a Boolean semantics, utterances that seem overinformative can in fact be sufficiently informative. This happens when what seems like the prima facie sufficiently informative utterance is in fact noisy and may lead a literal listener astray; adding redundancy ensures successful communication. This simple modification to the Rational Speech Acts approach allowed us to capture: the basic well-documented asymmetry for speakers to be more likely to redundantly use color adjectives than size adjectives; the interaction between sufficient dimension and scene variation in the probability of redundancy; and typicality effects in both color modifier choice and noun choice. 
+In this paper we have provided a unified account of referring expression choice that solves a long-recognized puzzle for rational theories of language use: why do speakers'  referring expressions often and systematically exhibit seeming overinformativeness? We have shown here that by allowing contextual utterance informativeness to be computed with respect to a continuous (or noisy) rather than a Boolean semantics, utterances that seem overinformative can in fact be sufficiently informative. This happens when what seems like the prima facie sufficiently informative utterance is in fact noisy and may lead a literal listener astray; adding redundancy ensures successful communication. This simple modification to the Rational Speech Act approach allowed us to capture: the basic well-documented asymmetry for speakers to be more likely to redundantly use color adjectives than size adjectives; the interaction between sufficient dimension and scene variation in the probability of redundancy; and typicality effects in both color modifier choice and noun choice. 
 
 We have thus shown that with one key innovation -- a continuous semantics  -- one can retain the assumption that speakers rationally trade off informativeness and cost of utterances in language production. Rather than being wastefully overinformative, adding redundant modifiers or referring at a lower taxonomic level than strictly necessary \emph{is} in fact appropriately informative.
  %when the prima facie sufficiently informative expression is substantially noisier than its redundant/overly specific counterpart -- because in this case, the prima facie sufficiently informative expression is more likely to lead a literal listener to draw a wrong inference about the intended referent. 
@@ -1212,12 +1260,12 @@ This innovation thus not only provides a unified explanation for a number of key
 
 \subsection{Comparison of model components across experiments}
 
-While the core architecture with relaxed semantics remained constant throughout the paper, some peripheral components were adjusted to accommodate the aims of different experiments.
+While the core architecture with relaxed semantics remained constant throughout the paper, some peripheral components were adjusted to accommodate the aims of the different experiments.
 These different choices are fully consistent with one another, and many of them were justified against alternatives via model comparison.
 Still, it is valuable to highlight the dimensions along which these components varied.
 We have provided an overview of the best-fitting RSA models for each of the three reported production datasets in \tableref{tab:modeldiffs}. 
 
-Most prominently, because Exps.~2 and 3 aimed to predict patterns of reference via typicality at the \emph{object-level}, we needed semantic values for each utterance-object pair in the lexicon.
+Most prominently, Exps.~2 and 3 aimed to predict patterns of reference via typicality at the \emph{object-level}; in those cases the model thus required semantic values for each utterance-object pair in the lexicon.
 While these values could have in principle been inferred from the data, as we inferred the two type-level values in Exp.~1, it would have introduced a large number of additional parameters (see \emph{size of lexicon}). 
 Instead, we addressed this problem by empirically eliciting these values in an independent task and introducing a single free concentration parameter $\beta_t$ that modulated their strength.
 In the case of Exp. 2, we found that the best-fitting model smoothly integrated these empirical values with type-level values used in Exp.~1.
@@ -1234,7 +1282,7 @@ We noticed that the probability of using some utterances (e.g. `table' to refer 
 Future work must address how predictions may change as more complex referring expressions outside the scope of this paper enter the set of alternatives (e.g. the option of combining adjectives with nominal expressions, as in \emph{the cute, spotted dog}).
 
 \begin{table}
-\caption{Overview of the best-performing models used for the three different production datasets Color/size (Exp.~1), Color typicality (Exp.~2), and Nominal choice (Exp.~3). Parameter names:  $x_{\textrm{color}}$: semantic value of color; $x_{\textrm{size}}$: semantic value of size; $\beta_{c(\textrm{color})}$: cost of color;  $\beta_{c(\textrm{size})}$: cost of size; $\beta_i$: weight on informativity; $\beta_F$: weight on cost (as estimated by utterance frequency); $\beta_L$: weight on cost (as estimated by utterance length); $\beta_t$: weight on elicited typicality values; $w_{\textrm{emp}}$: interpolation weight between type-level and empirical semantic values} 
+\caption{Overview of the best-performing models used for the three different production datasets Color/size (Exp.~1), Color typicality (Exp.~2), and Nominal choice (Exp.~3). Parameter names:  $x_{\textrm{color}}$: semantic value of color; $x_{\textrm{size}}$: semantic value of size; $\beta_{c(\textrm{color})}$: cost of color;  $\beta_{c(\textrm{size})}$: cost of size; $\beta_i$: weight on informativity; $\beta_F$: weight on cost (as estimated by utterance frequency); $\beta_L$: weight on cost (as estimated by utterance length); $\beta_t$: weight on elicited typicality values; $\beta_{\textrm{fixed}}$: interpolation weight between fixed type-level and empirical semantic values} 
 \begin{tabular}{p{2.5cm} p{4.2cm} p{4.2cm} p{4.2cm} }
 \toprule
 & Color/size & Color typicality & Nominal choice \\
@@ -1259,7 +1307,7 @@ Cost & \makecell{type-level \\ (color and size)}& none necessary & \makecell{emp
 %\midrule
 \makecell{Free\\ parameters} & 
 	\makecell{$x_{\textrm{color}}$, $x_{\textrm{size}}$, \\ $\beta_{c(\textrm{color})}$,  $\beta_{c(\textrm{size})}$, $\beta_i$} & 
-	\makecell{$x_{\textrm{color}}$, $x_{\textrm{type}}$, \\ $\beta_i$, $\beta_t$, $w_{\textrm{emp}}$} & 
+	\makecell{$x_{\textrm{color}}$, $x_{\textrm{type}}$, \\ $\beta_i$, $\beta_t$, $\beta_{\textrm{fixed}}$} & 
 	$\beta_F$, $\beta_L$, $\beta_i$, $\beta_t$ \\
 \bottomrule
 \end{tabular}
@@ -1404,7 +1452,7 @@ More generally, the approach should extend to any content selection phenomenon t
 \subsection{Conclusion}
 \label{sec:conclusion}
 
-In conclusion, we have provided an account of redundant referring expressions that challenges the traditional notion of `overinformativeness', unifies multiple language production literatures, and has the potential for many further extensions. For the time being, we take this work to suggest that, rather than being wastefully overinformative, speakers are rationally redundant.
+In conclusion, we have provided an account of redundant referring expressions that challenges the traditional notion of `overinformativeness', unifies multiple language production literatures, and has the potential for many further extensions. We take this work to provide evidence that, rather than being wastefully overinformative, speakers are rationally redundant.
 
 
 \appendix
