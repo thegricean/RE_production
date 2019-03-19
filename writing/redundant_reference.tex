@@ -1,4 +1,5 @@
-\documentclass[man,floatsintext]{apa6}
+%\documentclass[man,floatsintext]{apa6}
+\documentclass[11pt]{article}
 
 \usepackage{apacite}
 \usepackage{amsmath,amssymb}
@@ -20,24 +21,31 @@
 \usepackage{bbm}
 \usepackage{setspace}
 \usepackage{authblk}
-%\usepackage{fancyhdr}
+\usepackage{fancyhdr}
+
 %\usepackage{endfloat}
 
 \doublespacing
+%\onehalfspacing
 
-%\fancypagestyle{firststyle}
-%{
-%  \fancyhf{}
-%\fancyhead[L]{RUNNING HEAD: RATIONALLY REDUNDANT REFERRING EXPRESSIONS}
-%\fancyhead[R]{\thepage}
-%}
-%
-%\fancypagestyle{mainstyle}
-%{
-%  \fancyhf{}
-%\fancyhead[L]{RATIONALLY REDUNDANT REFERRING EXPRESSIONS}
-%\fancyhead[R]{\thepage}
-%}
+\fancypagestyle{firststyle}
+{
+  \fancyhf{}
+\fancyhead[L]{RUNNING HEAD: RATIONALLY REDUNDANT REFERRING EXPRESSIONS}
+\fancyhead[R]{\thepage}
+\textheight = 400pt
+\fancyfoot[L]{Author note:\\ACKNOWLEDGMENTS REMOVED FOR REVIEWING\\Correspondence concerning this article should be addressed to Judith Degen, Department of Linguistics, Stanford University, 450 Serra Mall, Stanford, CA 94305. E-mail: jdegen@stanford.edu.}
+}
+
+%We are grateful to many audiences and individuals for discussions that have made this paper better, in particular Sarah Brown-Schmidt, Herb Clark, Michael Franke, Gerhard J\"ager, Florian Jaeger, Timo Roettger, Greg Scontras, Mike Tanenhaus, audiences at the RefNet Round Table Event 2015, CogSci 2016, CUNY 2017, XPrag 2017, the IMBS Quantitative Approaches to Language Workshop 2018, colloquium talks given by the first author at the Bay Area Philosophy of Science Group, Berkeley Psychology, CMU Philosophy, Dartmouth Linguistics, McGill Linguistics, OSU Linguistics, Stanford Linguistics, T\"ubingen Linguistics, UC Davis Linguistics. All remaining errors are our own.
+
+\fancypagestyle{mainstyle}
+{
+  \fancyhf{}
+\fancyhead[L]{RATIONALLY REDUNDANT REFERRING EXPRESSIONS}
+\fancyhead[R]{\thepage}
+\textheight = 660pt
+}
 
 % For line breaks in table cells...
 \usepackage{makecell}
@@ -71,50 +79,54 @@
 \newcommand{\appref}[1]{Appendix \ref{#1}}
 \newcommand{\sectionref}[1]{Section \ref{#1}}
 
-\setcounter{secnumdepth}{4}
+%\setcounter{secnumdepth}{4}
 
 \VerbatimFootnotes
 
-%\pagestyle{firststyle}
+\pagestyle{firststyle}
 
-\title{When redundancy is rational: A Bayesian approach to `overinformative' referring expressions}%\thanks{Discussions with Craige Roberts and Mandy Simons over the years have greatly influenced our thinking about projective content and the research reported on in this paper. For helpful feedback, we also thank M\'arta Abrus\'an, audiences at many universities and conferences since 2015, as well as David Barner and three anonymous reviewers of {\em Journal of Semantics}. This work was partially supported by NSF grants BCS-1452674 (JT) and BCS-1452663 (DIB).}}
+\title{When redundancy is rational: A Bayesian approach to `overinformative' referring expressions}
 
-\shorttitle{Rationally redundant referring expressions}
+%\shorttitle{Rationally redundant referring expressions}
 
-\threeauthors{Judith Degen and Robert X.D.~Hawkins}{Caroline Graf}{Elisa Kreiss and Noah D.~Goodman}
-\threeaffiliations{Stanford University}{XXX}{Stanford University}
+%\threeauthors{Judith Degen and Robert X.D.~Hawkins}{Caroline Graf}{Elisa Kreiss and Noah D.~Goodman}
+%\threeaffiliations{Stanford University}{XXX}{Stanford University}
 
-\authornote{We are grateful to many audiences and individuals for discussions that have made this paper better, in particular Sarah Brown-Schmidt, Herb Clark, Michael Franke, Gerhard J\"ager, Florian Jaeger, Timo Roettger, Greg Scontras, Mike Tanenhaus, audiences at the RefNet Round Table Event 2015, CogSci 2016, CUNY 2017, XPrag 2017, the IMBS Quantitative Approaches to Language Workshop 2018, colloquium talks given by the first author at the Bay Area Philosophy of Science Group, Berkeley Psychology, CMU Philosophy, Dartmouth Linguistics, McGill Linguistics, OSU Linguistics, Stanford Linguistics, T\"ubingen Linguistics, UC Davis Linguistics. All remaining errors are our own. \\Correspondence concerning this article should be addressed to Judith Degen, Department of Linguistics, Stanford University, 450 Serra Mall, Stanford, CA 94305. E-mail: jdegen@stanford.edu.}
+%\authornote{We are grateful to many audiences and individuals for discussions that have made this paper better, in particular Sarah Brown-Schmidt, Herb Clark, Michael Franke, Gerhard J\"ager, Florian Jaeger, Timo Roettger, Greg Scontras, Mike Tanenhaus, audiences at the RefNet Round Table Event 2015, CogSci 2016, CUNY 2017, XPrag 2017, the IMBS Quantitative Approaches to Language Workshop 2018, colloquium talks given by the first author at the Bay Area Philosophy of Science Group, Berkeley Psychology, CMU Philosophy, Dartmouth Linguistics, McGill Linguistics, OSU Linguistics, Stanford Linguistics, T\"ubingen Linguistics, UC Davis Linguistics. All remaining errors are our own. \\Correspondence concerning this article should be addressed to Judith Degen, Department of Linguistics, Stanford University, 450 Serra Mall, Stanford, CA 94305. E-mail: jdegen@stanford.edu.}
 
-%\author[$\bullet$]{Judith Degen}
-%\author[$\bullet$]{Robert X.D.~Hawkins}
-%\author[$\triangleright$]{Caroline Graf,}
-%\author[$\bullet$]{Elisa Kreiss}
-%\author[$\bullet$]{Noah D.~Goodman}
+\author[$\bullet$]{Judith Degen}
+\author[$\bullet$]{Robert X.D.~Hawkins}
+\author[$\triangleright$]{Caroline Graf}
+\author[$\bullet$]{Elisa Kreiss}
+\author[$\bullet$]{Noah D.~Goodman}
 
 
-%\affil[$\bullet$]{Stanford University}
-%\affil[$\triangleright$]{XXX CAROLINE}
+\affil[$\bullet$]{Stanford University}
+\affil[$\triangleright$]{Freie Universit\"at Berlin}
 
-%\renewcommand\Authands{ and }
-
-\abstract{Referring is one of the most basic and prevalent uses of language. How do speakers choose from the wealth of referring expressions at their disposal? Rational theories of language use have come under attack for decades for not being able to account for the seemingly irrational overinformativeness ubiquitous in referring expressions. Here we present a novel production model of referring expressions within the Rational Speech Act framework that treats speakers as agents that rationally trade off cost and informativeness of utterances. Crucially, we relax the assumption of deterministic meaning in favor of a graded semantics. This innovation allows us to capture a large number of seemingly disparate phenomena within one unified framework: the basic asymmetry in speakers' propensity to overmodify with color rather than size; the increase in overmodification in complex scenes; the increase in overmodification with atypical features; and the preference for basic level nominal reference. These findings cast a new light on the production of referring expressions: rather than being wastefully overinformative, reference is rationally redundant. }
-
-\keywords{language production; reference; overinformativeness; experimental pragmatics; Bayesian modeling}
-
+\renewcommand\Authands{ and }
 
 \begin{document}
 
 \maketitle
-%\thispagestyle{firststyle}
+\thispagestyle{firststyle}
 
-%\pagebreak
+\pagebreak
 
-%\pagestyle{mainstyle}
+\pagestyle{mainstyle}
+%
+%\abstract{Referring is one of the most basic and prevalent uses of language. How do speakers choose from the wealth of referring expressions at their disposal? Rational theories of language use have come under attack for decades for not being able to account for the seemingly irrational overinformativeness ubiquitous in referring expressions. Here we present a novel production model of referring expressions within the Rational Speech Act framework that treats speakers as agents that rationally trade off cost and informativeness of utterances. Crucially, we relax the assumption of deterministic meaning in favor of a graded semantics. This innovation allows us to capture a large number of seemingly disparate phenomena within one unified framework: the basic asymmetry in speakers' propensity to overmodify with color rather than size; the increase in overmodification in complex scenes; the increase in overmodification with atypical features; and the preference for basic level nominal reference. These findings cast a new light on the production of referring expressions: rather than being wastefully overinformative, reference is rationally redundant. }
+%
+%\keywords{language production; reference; overinformativeness; experimental pragmatics; Bayesian modeling}
+
+\begin{abstract}
+Referring is one of the most basic and prevalent uses of language. How do speakers choose from the wealth of referring expressions at their disposal? Rational theories of language use have come under attack for decades for not being able to account for the seemingly irrational overinformativeness ubiquitous in referring expressions. Here we present a novel production model of referring expressions within the Rational Speech Act framework that treats speakers as agents that rationally trade off cost and informativeness of utterances. Crucially, we relax the assumption of deterministic meaning in favor of a graded semantics. This innovation allows us to capture a large number of seemingly disparate phenomena within one unified framework: the basic asymmetry in speakers' propensity to overmodify with color rather than size; the increase in overmodification in complex scenes; the increase in overmodification with atypical features; and the preference for basic level nominal reference. These findings cast a new light on the production of referring expressions: rather than being wastefully overinformative, reference is rationally redundant. 
+\end{abstract}
+
+\emph{Keywords:} language production; reference; overinformativeness; experimental pragmatics; Bayesian modeling
 
 
-
-%\pagebreak
+\pagebreak
 
 %\tableofcontents
 
@@ -130,9 +142,9 @@
 %}
 %\end{flushright}
 
-%When redundancy is rational: A Bayesian approach to `overinformative' referring expressions
+When redundancy is rational: A Bayesian approach to `overinformative' referring expressions
 
-\setcounter{section}{0}
+%\setcounter{section}{0}
 
 \section[]{Overinformativeness in referring expressions}
 \label{sec:intro}
@@ -162,18 +174,6 @@ How should a cooperative speaker choose between competing referring expressions?
 
 That is, speakers should aim to produce neither under- nor overinformative utterances. While much support has been found for the avoidance of underinformativeness \cite{brennan1996, brown1958words, olson1970language, levinson1983pragmatics, Engelhardt2006, Davies2013}, speakers seem remarkably willing to systematically violate Quantity-2. In modified referring expressions, they routinely produce modifiers that are not necessary for uniquely establishing reference (e.g., \emph{the small blue pin} instead of \emph{the small pin} in contexts like \figref{fig:sizesufficient}). In simple nominal expressions, speakers routinely choose to refer to an object with a basic level term even when a superordinate level term would have been sufficient for establishing reference \cite<e.g., \emph{the dog} instead of \emph{the animal} in contexts like \figref{fig:dogcontexts};>{Rosch1976, hoffmann1983objektidentifikation, TanakaTaylor91_BasicLevelAndExpertise, Johnson1997, brown1958words}.
 
-These observations have posed a challenge for theories of language production, especially those positing rational language use (including the Gricean one): why this extra expenditure of useless effort? Why this seeming blindness to the level of informativeness requirement? Many have argued from these observations that speakers are in fact not economical \cite{Engelhardt2006, Pechmann1989}. Some have derived a built-in preference for referring at the basic level from considerations of perceptual factors such as shape \cite{Rosch1976, Rosch1973, murphy1982basic}. Others have argued for salience-driven effects on willingness to overmodify \cite{Gatt2014, Westerbeek2015}. In all cases, it is argued that informativeness cannot be the key factor in determining the content of speakers' referring expressions. 
-
-Here we revisit this claim and show that systematically relaxing the requirement of a deterministic semantics for referring expressions also systematically changes the informativeness of utterances. This results in a reconceptualization of what have been termed \emph{overinformative referring expressions} as \emph{rationally redundant referring expressions}. We begin by reviewing the phenomena of interest that a revised theory of definite referring expressions should be able to account for. 
-
-\subsection{Modified referring expressions}
-\label{sec:modified}
-
-
-Most of the literature on overinformative referring expressions has been devoted to the use of overinformative modifiers in modified referring expressions. The prevalent observation is that speakers frequently do not include only the minimal modifiers required for establishing reference, but often also include redundant modifiers \cite{Pechmann1989, nadig2002, Maes2004, Engelhardt2006, Arts2011, Koolen2011}. However, not all modifiers are created equal: there are systematic differences in the overmodification patterns observed for size adjectives (e.g., \emph{big, small}), color adjectives (e.g., \emph{blue, red}), material adjectives (e.g., \emph{plastic, wooden}), and others \cite{sedivy2003a}. Here we review some key patterns of overmodification that have been observed, before spelling out our account of these phenomena in \sectionref{sec:models}.
-
-
-
 \begin{figure}
 \begin{subfigure}{.5\textwidth}
 \includegraphics[width=\textwidth]{pics/size-sufficient.png}
@@ -188,6 +188,16 @@ Most of the literature on overinformative referring expressions has been devoted
 \caption{Example contexts where (a) size only (e.g., \emph{the small pin}) or (b) color only (e.g., \emph{the blue pin}) is sufficient for unique reference. Green border marks the intended referent.}
 \label{fig:pin}
 \end{figure}
+
+These observations have posed a challenge for theories of language production, especially those positing rational language use (including the Gricean one): why this extra expenditure of useless effort? Why this seeming blindness to the level of informativeness requirement? Many have argued from these observations that speakers are in fact not economical \cite{Engelhardt2006, Pechmann1989}. Some have derived a built-in preference for referring at the basic level from considerations of perceptual factors such as shape \cite{Rosch1976, Rosch1973, murphy1982basic}. Others have argued for salience-driven effects on willingness to overmodify \cite{Gatt2014, Westerbeek2015}. In all cases, it is argued that informativeness cannot be the key factor in determining the content of speakers' referring expressions. 
+
+Here we revisit this claim and show that systematically relaxing the requirement of a deterministic semantics for referring expressions also systematically changes the informativeness of utterances. This results in a reconceptualization of what have been termed \emph{overinformative referring expressions} as \emph{rationally redundant referring expressions}. We begin by reviewing the phenomena of interest that a revised theory of definite referring expressions should be able to account for. 
+
+\subsection{Modified referring expressions}
+\label{sec:modified}
+
+
+Most of the literature on overinformative referring expressions has been devoted to the use of overinformative modifiers in modified referring expressions. The prevalent observation is that speakers frequently do not include only the minimal modifiers required for establishing reference, but often also include redundant modifiers \cite{Pechmann1989, nadig2002, Maes2004, Engelhardt2006, Arts2011, Koolen2011}. However, not all modifiers are created equal: there are systematic differences in the overmodification patterns observed for size adjectives (e.g., \emph{big, small}), color adjectives (e.g., \emph{blue, red}), material adjectives (e.g., \emph{plastic, wooden}), and others \cite{sedivy2003a}. Here we review some key patterns of overmodification that have been observed, before spelling out our account of these phenomena in \sectionref{sec:models}.
 
 
 
@@ -270,13 +280,6 @@ Contextual informativeness is another factor that has been shown to affect speak
 \label{fig:dogexamples}
 \end{figure}
 
-\subsection{Summary}
-\label{sec:introsummary}
-
-In sum, the production of modified and simple nominal referring expressions is governed by many factors, including an utterance's informativeness, its cost relative to alternative utterances, and the typicality of an object or its features. 
-Critically, these factors are all in play at once, potentially interacting in rich and complex ways.
-In the next section, we provide an explicit computational account of these different factors and how they interact, with a focus on cases where speakers appear to be overinformative -- either by adding more modifiers or by referring at a more specific level than necessary for establishing unique reference. A summary of the effects we will focus on in the remainder of the paper is provided in \tableref{tab:effects}.
-
 \begin{table}
 \caption{List of effects a theory of referring expression production should account for and paper section(s) in which they are treated.}
 \begin{tabular}{l l l } %p{5.5cm} }
@@ -295,6 +298,15 @@ Section & Effect & Description \\ %& Reported by \\
 \end{tabular}
 \label{tab:effects}
 \end{table}
+
+\subsection{Summary}
+\label{sec:introsummary}
+
+In sum, the production of modified and simple nominal referring expressions is governed by many factors, including an utterance's informativeness, its cost relative to alternative utterances, and the typicality of an object or its features. 
+Critically, these factors are all in play at once, potentially interacting in rich and complex ways.
+In the next section, we provide an explicit computational account of these different factors and how they interact, with a focus on cases where speakers appear to be overinformative -- either by adding more modifiers or by referring at a more specific level than necessary for establishing unique reference. A summary of the effects we will focus on in the remainder of the paper is provided in \tableref{tab:effects}.
+
+
 
 
 To date, there is no theory to account for all of these different phenomena; and no model has attempted to unify overinformativeness in the domain of modified and nominal referring expressions. We touched on some of the explanations that have been proposed for these phenomena. We also indicated where computational models have been proposed for individual phenomena. In the next section, we present the Rational Speech Act modeling framework, which we then use to capture these disparate phenomena in one model.
@@ -890,7 +902,7 @@ Mean typicality values for utterance-object pairs obtained in the norming studie
 
 Proportions of type-only (\emph{banana}), color-and-type (\emph{yellow banana}), color-only (\emph{yellow}), and other (\emph{funky carrot}) utterances are shown in \figref{fig:exp2empirical} as a function of the described item's mean type-only (\emph{banana}) typicality. Visually inspecting just the explicitly marked \emph{yellow banana}, \emph{brown banana}, and \emph{blue banana} cases suggests a large typicality effect in the overinformative conditions as well as a smaller typicality effect in the informative conditions, such that color is less likely to be produced with increasing typicality of the object. 
 
-\begin{figure}[H]
+\begin{figure}
 \centering
 	\begin{subfigure}{.85\textwidth}
 		\centering
@@ -1237,7 +1249,7 @@ While the model overpredicts subordinate	 level  and underpredicts basic level c
 
 
 
-\section{[]General Discussion}
+\section{General Discussion}
 \label{sec:gd}
 
 
