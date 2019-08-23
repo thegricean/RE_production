@@ -1209,7 +1209,7 @@ Despite the greater number of parameters associated with adding the cost functio
 
 Empirical utterance proportions are shown against MAP model  predictions in \figref{fig:nompredictives}. 
 The correlation between empirical utterance proportions and the model's MAP predictions at the level of targets, utterances, and conditions was $r = .86$. Further collapsing across targets yields a correlation of $r = .95$.
-While the model overpredicts subordinate	 level  and underpredicts basic level choices in the \emph{sub necessary} condition, it otherwise captures the patterns in the data very well. 
+While the model overpredicts subordinate	 level  and underpredicts basic level choices in the \emph{sub necessary} condition, it otherwise captures the patterns in the data very well. It also accounts for the strong preference against super level mentions. The reason is that the semantics for each utterance (eg., \emph{dalmatian}, \emph{dog}, \emph{animal}) is taken from the empirically elicited typicality values for each utterance-object pair. As can be seen in the left panel of \figref{fig:typicalityboxplots},  the target images used in this experiment were generally rated as less typical instances of the superordinate level term than of the basic or subordinate level term. This difference is enough to lead to a general bias against using the superordinate level term, especially when coupled with the fact that superordinate terms tend to be costlier than basic level terms.
 
 
 \begin{figure}
@@ -1334,6 +1334,10 @@ Cost & \makecell{type-level \\ (color and size)}& none necessary & \makecell{emp
 
 
 In the following we discuss a number of intriguing questions that this work raises and avenues for future research it suggests.
+
+\subsection{Comparison with PRO}
+
+While a detailed comparison of cs-RSA with PRO \cite{VanGompel2019}, the hitherto most state-of-the-art computational model of human production of modified referring expressions, is outside the scope of this paper, we include some comparative remarks here. PRO has the advantage of being computationally more efficient than cs-RSA, partly because it aims to be an algorithmic-level model, which may be of importance for applications. PRO may further have the advantage of having fewer parameters, though this is a bit harder to evaluate in general: while PRO as applied to the choice of color and size in principle involves 2 parameters, $s$ (size preference) and $e$ (overspecification eagerness), in the 2019 paper the maximum likelihood parameter values are estimated on each of the experimental conditions separately, effectively resulting in 6 parameters. In the extension to 3 properties, this results in 14 parameters, and this number increases further as more properties and conditions are added. If the parameter values had been estimated on all conditions jointly, which is what we did in the evaluation of cs-RSA instead of separately, then indeed PRO would have fewer effective parameters than cs-RSA, though it iss unclear how this would affect the data fit. One advantage of the cs-RSA approach is greater generality. For instance, it is not immediately clear how PRO should be extended to contexts that vary in the number and nature of distractors, where empirical overmodification proportions  change, but the PRO predictions would not. We see this as one of the great strengths of cs-RSA: scene variation effects fall out of the model directly. Finally, we have proposed here a way to account for typicality effects. PRO may be able to accommodate typicality effects if its preference parameters can be made to be sensitive to typicality. In general, a systematic comparison and possible combination of these models is an important next step.
 
 \subsection{`Overinformativeness'}
 
