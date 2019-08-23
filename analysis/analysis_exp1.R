@@ -2,12 +2,23 @@ library(tidyverse)
 library(gridExtra)
 library(brms)
 theme_set(theme_bw(18))
+
+# set working directory to directory of script
+this.dir <- dirname(rstudioapi::getSourceEditorContext()$path)
+setwd(this.dir)
+
 source("helper_scripts/helpers.r")
 source("helper_scripts/createLaTeXTable.R")
 
 # Read data
 d = read.table(file="../data/data_exp1.csv",sep="\t", header=T, quote="")
 nrow(d)
+
+# Get color-blind friendly palette that also looks good in black and white
+# #9ad0f3 -- light-blue -- 4
+# #0072B2 -- dark blue -- 5
+# #D55E00 -- red -- 6
+cbbPalette <- c("#000000", "#009E73", "#e79f00", "#9ad0f3", "#0072B2", "#D55E00", "#CC79A7", "#F0E442")
 
 #################################################################
 # Plot proportion of redundant utterances by redundant property #

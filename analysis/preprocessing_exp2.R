@@ -1,3 +1,6 @@
+this.dir <- dirname(rstudioapi::getSourceEditorContext()$path)
+setwd(this.dir)
+
 library(tidyverse)
 library(here)
 
@@ -158,3 +161,33 @@ production$Item = production$clickedType
 production$TargetColor = production$clickedColor
 preproc_file = production[,c("gameid","context","NormedTypicality","UtteranceType","Color","ColorAndType","Type","ColorMentioned","ItemMentioned","Other","Item","TargetColor","Target","Dist1","Dist2","refExp","UttforBDA")]
 write.table(preproc_file,file=here("data","data_exp2.csv"),sep="\t",row.names=F,quote=F)
+
+
+##########################################################
+## Supplementary preprocessing: analyze MTurk meta-data ##
+##########################################################
+
+# Turker comments
+comments = read.table(file="../data/raw/production_exp2/mturk_data_exp2.csv",sep=",", header=T, quote="")
+unique(comments$comments)
+
+# Partner rating
+ggplot(comments, aes(ratePartner)) +
+  geom_histogram(stat='count')
+
+# Did they think their partner was a human?
+ggplot(comments, aes(thinksHuman)) +
+  geom_histogram(stat='count')
+prop.table(table(comments$thinksHuman))
+table(comments$thinksHuman)
+
+# Native language
+ggplot(comments, aes(nativeEnglish)) +
+  geom_histogram(stat='count')
+
+# Total length of experiment
+ggplot(comments, aes(totalLength)) +
+  geom_histogram()
+
+comments$lengthInMinutes = (comments$totalLength/1000)/60
+summary(comments$lengthInMinutes)

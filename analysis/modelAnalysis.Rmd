@@ -25,9 +25,15 @@ HPDlo<- function(s){
 }
 options("scipen"=10) 
 
+# set working directory to directory of script
+this.dir <- dirname(rstudioapi::getSourceEditorContext()$path)
+setwd(this.dir)
+
 source("./helper_scripts/model_helpers.R")
-# get color-blind palette
-cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+
+# Get color-blind friendly palette that also looks good in black and white
+# http://dr-k-lo.blogspot.com/2013/07/a-color-blind-friendly-palette-for-r.html
+cbPalette <- c("#000000", "#009E73", "#e79f00", "#9ad0f3", "#0072B2", "#D55E00", "#CC79A7", "#F0E442")
 ```
 
 # Analyze color-size results
@@ -44,7 +50,7 @@ params <- read_csv("../models/bdaOutput/colorSize_params.csv") %>%
 
 params %>% 
   group_by(parameter) %>%
-  summarize(mode = estimate_mode(value),
+  summarise(mode = estimate_mode(value),
             md_lo = round(HPDlo(value), 3),
             md_hi = round(HPDhi(value), 3))
 ```
@@ -160,7 +166,7 @@ empirical = emp %>%
          Size = Utterance == "size",
          Size_Color = Utterance == "size_color") %>%
   group_by(SufficientDimension,NumDistractors,Variation) %>%
-  summarize(ProbColor = mean(Color),ProbSize = mean(Size),ProbSize_Color = mean(Size_Color),CILowC=ci.low(Color),CIHighC=ci.high(Color),CILowS=ci.low(Size),CIHighS=ci.high(Size),CILowSC=ci.low(Size_Color),CIHighSC=ci.high(Size_Color)) %>%
+  summarise(ProbColor = mean(Color),ProbSize = mean(Size),ProbSize_Color = mean(Size_Color),CILowC=ci.low(Color),CIHighC=ci.high(Color),CILowS=ci.low(Size),CIHighS=ci.high(Size),CILowSC=ci.low(Size_Color),CIHighSC=ci.high(Size_Color)) %>%
   ungroup() %>%
   mutate(YMinSize=ProbSize-CILowS,YMaxSize=ProbSize+CIHighS,YMinColor=ProbColor-CILowC,YMaxColor=ProbColor+CIHighC,YMinSize_Color=ProbSize_Color-CILowSC,YMaxSize_Color=ProbSize_Color+CIHighSC)
 
@@ -222,13 +228,13 @@ Make Fig 8 plot analogous to Fig 6.
 ```{r} 
 ggplot(redundant, aes(x=Variation,y=Probability,color=Data,shape=NumDistractors)) +
   geom_errorbar(aes(ymin=YMin,ymax=YMax)) +
-  geom_point() +
-  scale_color_manual(values=cbPalette[6:7]) +
+  geom_point(size=3) +
+  scale_color_manual(values=c(cbPalette[3],cbPalette[5])) +
   xlab("Scene variation") +
   ylab("Probability of redundant modifier") +
   labs(shape="Number of\ndistractors") +
   facet_wrap(~RedundantDimension)
-ggsave("../writing/pics/exp1-empirical-predictives.pdf",height=2.5,width=6)
+ggsave("../writing/pics/exp1-empirical-predictives.pdf",height=3.9,width=9)
 ```
 
 Make Fig 9 a scatterplot of all data points fit in Exp 1.
@@ -261,7 +267,7 @@ params <- read_csv(paste("../models/bdaOutput/typicality_cost-",costs,"_sem-",se
   gather(parameter, value, -logLikelihood, -outputProb)
 params %>% 
   group_by(parameter) %>%
-  summarize(mode = estimate_mode(value),
+  summarise(mode = estimate_mode(value),
             md_lo = round(HPDlo(value), 3),
             md_hi = round(HPDhi(value), 3))
 ```
@@ -422,7 +428,7 @@ predictives = pred %>%
   # filter(Utterance == TargetColor | Utterance == TargetType | Utterance == Target) %>%
   select(condition,target_item,utterance,probability) %>%
   group_by(condition,target_item,utterance) %>%
-  summarize(ModelProb=mean(probability),CILow=ci.low(probability),CIHigh=ci.high(probability)) %>%
+  summarise(ModelProb=mean(probability),CILow=ci.low(probability),CIHigh=ci.high(probability)) %>%
   ungroup() %>%
   mutate(ModelYMin=ModelProb-CILow,ModelYMax=ModelProb+CIHigh) %>%
   select(-CILow,-CIHigh)
@@ -457,7 +463,8 @@ ggplot(predictives, aes(x=type_typicality,y=ModelProb,color=Utterance)) +
   geom_smooth(method="lm",size=2.25) +
   xlab("Typicality of object for type-only utterance") +
   ylab("MAP model predicted probability") +
-  scale_color_manual(values=c("#56B4E9", "#E69F00", "#9fdf9f", "#999999")) +
+  # scale_color_manual(values=c("#56B4E9", "#E69F00", "#9fdf9f", "#999999")) +
+  scale_color_manual(values = c(cbPalette[2],cbPalette[3],cbPalette[4],"gray30")) +
   facet_wrap(~condition) +
   # facet_wrap(~relevel(as.factor(Condition),"sub necessary")) +
     theme(axis.title=element_text(size=25,colour="#757575")) +

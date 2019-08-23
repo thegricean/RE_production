@@ -163,7 +163,7 @@ mean(posterior_samples(m.m.t.b, pars = "b_cratio_length_subbasic") < 0)
 
 ######### PAPER PLOTS
 
-# overall pattern, fig 18
+# overall pattern, fig 19
 agr = d %>%
   select(redCondition,target_sub,typ_sub,sub,basic,super) %>%
   gather(Utt,Mentioned,-redCondition,-target_sub,-typ_sub) %>%
@@ -212,53 +212,5 @@ ggplot(agr, aes(x=condition,y=Probability)) +
 # correlation between mean empirical length and ratio of sub to basic length
 cor(d$mean_length_sub,d$ratio_length_subbasic) # r=.84 between mean length and sub to basic ratio
 cor(d$mean_length_sub,d$ratio_length_subsuper) # r=.83 between mean length and sub to super ratio
-
-
-### CONTINUE UPDATING HERE
-
-##### Modeling plots (this code was originally in writing/rscripts/plots.R)
-
-##FIXME: these paths are not correct (files dont exist in new repo yet)
-
-# Exp 3 - nominal choice: qualitative pattern (blue plot) across all models
-a = read.table("../../../../models/5a_bda_nom_det_nocost/predictive-barplot-fulldataset-detfit-nocost-hmc.txt",sep="\t",header=T,quote="")
-b = read.table("../../../../models/5b_bda_nom_det/predictive-barplot-fulldataset-detfit-hmc.txt",sep="\t",header=T,quote="")
-c = read.table("../../../../models/5c_bda_nom_full_nocost/predictive-barplot-fulldataset-typicalities-nocost-hmc.txt",sep="\t",header=T,quote="")
-d = read.table("../../../../models/5d_bda_nom_full/predictive-barplot-fulldataset-typicalities-hmc.txt",sep="\t",header=T,quote="")
-emp = read.table("../../../../models/5d_bda_nom_full/predictive-barplot-empirical.txt",sep="\t",header=T,quote="")
-
-dd = rbind(a,b,c,d,emp)
-nrow(dd)
-
-dd$Utt = factor(x=dd$Utterance,levels=c("sub","basic","super"))
-ggplot(dd, aes(x=condition,y=Probability,fill=ModelType)) +
-  geom_bar(stat="identity",color="black") +
-  geom_errorbar(aes(ymin=YMin,ymax=YMax),width=.25) +
-  scale_fill_brewer(guide=F) +
-  ylab("Utterance probability") +
-  xlab("Condition") +
-  facet_grid(ModelType~Utt) +
-  theme(axis.text.x=element_text(angle=45,vjust=1,hjust=1),plot.margin=unit(c(0,0,0,0),"cm"))
-ggsave("../writing/pics/qualitativepattern-complete.pdf",height=8.5,width=6)
-
-# nominal choice: scatterplot across all models
-a = read.table("../../../../models/5a_bda_nom_det_nocost/predictive-scatterplot-fulldataset-detfit-nocost-hmc.txt",sep="\t",header=T,quote="")
-b = read.table("../../../../models/5b_bda_nom_det/predictive-scatterplot-fulldataset-detfit-hmc.txt",sep="\t",header=T,quote="")
-c = read.table("../../../../models/5c_bda_nom_full_nocost/predictive-scatterplot-fulldataset-typicalities-nocost-hmc.txt",sep="\t",header=T,quote="")
-d = read.table("../../../../models/5d_bda_nom_full/predictive-scatterplot-fulldataset-typicalities-hmc.txt",sep="\t",header=T,quote="")
-
-dd = rbind(a,b,c,d)
-dd$Condition = dd$condition
-
-ggplot(dd, aes(x=MAP,y=EmpProportion,shape=Condition,color=Utterance)) +
-  geom_abline(intercept=0,slope=1,color="gray60") +
-  geom_point() +
-  xlim(c(0,1)) +
-  ylim(c(0,1)) +
-  ylab("Empirical proportion") +
-  xlab("Model predicted probability") +
-  facet_wrap(~ModelType,nrow = 2)
-# ggsave("scatterplot-complete.pdf",height=3,width=11.5)
-ggsave("../writing/pics/scatterplot-complete.pdf",height=5.5,width=7.5)
 
 

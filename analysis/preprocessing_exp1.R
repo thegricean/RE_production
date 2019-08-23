@@ -1,3 +1,6 @@
+this.dir <- dirname(rstudioapi::getSourceEditorContext()$path)
+setwd(this.dir)
+
 # Automatic preprocessing of data from Exp. 1
 library(tidyverse)
 source("helper_scripts/helpers.R")
@@ -172,7 +175,7 @@ write.table(dd, file="../data/data_exp1.csv",sep="\t",quote=F,row.names=F)
 ##########################################################
 
 # Turker comments
-comments = read.table(file="../data/raw/exp1_exp3/mturk_exp1_exp3.csv",sep=",", header=T, quote="")
+comments = read.table(file="../data/raw/production_exp1_exp3/mturk_exp1_exp3.csv",sep=",", header=T, quote="")
 unique(comments$comments)
 
 # Partner rating
@@ -182,6 +185,8 @@ ggplot(comments, aes(ratePartner)) +
 # Did they think their partner was a human?
 ggplot(comments, aes(thinksHuman)) +
   geom_histogram(stat='count')
+prop.table(table(comments$thinksHuman))
+table(comments$thinksHuman)
 
 # Native language
 ggplot(comments, aes(nativeEnglish)) +
@@ -190,3 +195,6 @@ ggplot(comments, aes(nativeEnglish)) +
 # Total length of experiment
 ggplot(comments, aes(totalLength)) +
   geom_histogram()
+
+comments$lengthInMinutes = (comments$totalLength/1000)/60
+summary(comments$lengthInMinutes)

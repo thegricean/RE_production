@@ -11,6 +11,10 @@ source(here("analysis","helper_scripts","helpers.r"))
 
 production = read.table(file=here("data","data_exp2.csv"),sep="\t", header=T, quote="")
 
+# Get color-blind friendly palette that also looks good in black and white
+# http://dr-k-lo.blogspot.com/2013/07/a-color-blind-friendly-palette-for-r.html
+cbPalette <- c("#000000", "#009E73", "#e79f00", "#9ad0f3", "#0072B2", "#D55E00", "#CC79A7", "#F0E442")
+
 ############################
 # Mixed effects regression #
 ############################
@@ -80,7 +84,7 @@ ggplot(agr, aes(x=NormedTypicality,y=Probability,color=Utterance)) +
   xlab("Typicality of object for type-only utterance") +
   ylab("Empirical utterance proportion") +
   coord_cartesian(xlim=c(0.4,1),ylim=c(0, 1)) +
-  scale_color_manual(values=c("#56B4E9", "#E69F00", "#9fdf9f", "#999999")) +
+  scale_color_manual(values = c(cbPalette[2],cbPalette[3],cbPalette[4],"gray30")) +
   theme(axis.title=element_text(size=25,colour="#757575")) +
   theme(axis.text.x=element_text(size=20,colour="#757575")) +
   theme(axis.text.y=element_text(size=20,colour="#757575")) +
