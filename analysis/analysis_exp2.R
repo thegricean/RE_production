@@ -9,7 +9,7 @@ library(here)
 theme_set(theme_bw(18))
 source(here("analysis","helper_scripts","helpers.r"))
 
-production = read.table(file=here("data","data_exp2.csv"),sep="\t", header=T, quote="")
+df = read.table(file=here("data","data_exp2.csv"),sep="\t", header=T, quote="")
 
 # Get color-blind friendly palette that also looks good in black and white
 # http://dr-k-lo.blogspot.com/2013/07/a-color-blind-friendly-palette-for-r.html
@@ -23,6 +23,7 @@ cbPalette <- c("#000000", "#009E73", "#e79f00", "#9ad0f3", "#0072B2", "#D55E00",
 cost = read.csv(here("data","cost_exp2.csv"),header=TRUE)
 row.names(cost) = cost$target
 
+production = df
 production = droplevels(production[production$UttforBDA != "other",])
 
 # Encode informativity and color competitor presence as binary
@@ -58,7 +59,7 @@ anova(m.1,m.3) # interaction effect of both typicality-informativity and typical
 ###################################################
 
 # plot utterance choice proportions by typicality thick for poster/thesis
-agr = production %>%
+agr = df %>%
   select(Color,Type,ColorAndType,Other,NormedTypicality,context) %>%
   gather(Utterance,Mentioned,-context,-NormedTypicality) %>%
   group_by(Utterance,context,NormedTypicality) %>%
@@ -97,7 +98,7 @@ ggplot(agr, aes(x=NormedTypicality,y=Probability,color=Utterance)) +
   theme(strip.background=element_rect(colour="#939393",fill="white")) +
   theme(panel.background=element_rect(colour="#939393"))
 # banana cases were circled by hand and then this edited graph is used in the paper
-# ggsave(here("writing","pics","empiricalProportions_typ_nobanana.png"),width=11,height=9)
+# ggsave(here("writing","pics","empiricalProportions_typ_nobanana.png"),width=30,height=30)
 
 ################################################
 # Plot overview on typicality norming results #
