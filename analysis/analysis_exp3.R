@@ -163,7 +163,7 @@ mean(posterior_samples(m.m.t.b, pars = "b_cratio_length_subbasic") < 0)
 
 ######### PAPER PLOTS
 
-# overall pattern, fig 19
+# overall pattern
 agr = d %>%
   select(redCondition,target_sub,typ_sub,sub,basic,super) %>%
   gather(Utt,Mentioned,-redCondition,-target_sub,-typ_sub) %>%
@@ -185,7 +185,7 @@ ggplot(agr, aes(x=typ_sub,y=Probability,color=Utterance)) +
   xlab("Typicality of object for subordinate level utterance") +
   facet_wrap(~fct_relevel(redCondition,c("sub necessary","basic sufficient","super sufficient"))) +
   theme(legend.position="top")
-ggsave("../writing/pics/results-exp3.png",height=4.5,width=9.5)
+# see modelAnalysis.Rmd for code that generates this figure jointly with model predictions 
 
 # overall pattern, collapsed
 agr = d %>%

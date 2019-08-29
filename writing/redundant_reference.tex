@@ -1105,9 +1105,8 @@ Proportions of sub, basic, and super level utterances are shown in \figref{fig:e
 
 \begin{figure}
 \centering
-%\includegraphics[width=.7\textwidth]{pics/qualitativepattern-fulldataset-typicalities-hmc}
-\includegraphics[width=.9\textwidth]{pics/results-exp3.png}
-\caption{Utterance proportions for each target item across different informativeness conditions as a function of the object's subordinate level typicality. Example target items \emph{polo shirt} (basic: \emph{shirt}, super: \emph{clothes}),  \emph{SUV} (basic: \emph{car}, super: \emph{vehicle}), and \emph{parrot} (basic: \emph{bird}, super: \emph{animal}) that were characteristic of relatively low to relatively high sub typicality items are labeled explicitly.}
+\includegraphics[width=\textwidth]{pics/results-exp3.png}
+\caption{Top: utterance proportions for each target item across different informativeness conditions as a function of the object's subordinate level typicality. Example target items \emph{polo shirt} (basic: \emph{shirt}, super: \emph{clothes}),  \emph{SUV} (basic: \emph{car}, super: \emph{vehicle}), and \emph{parrot} (basic: \emph{bird}, super: \emph{animal}) that were characteristic of relatively low to relatively high sub typicality items are labeled explicitly. Bottom: MAP model predicted utterance probabilities.}
 \label{fig:exp3results}
 \end{figure}
 
@@ -1186,17 +1185,17 @@ Despite the greater number of parameters associated with adding the cost functio
 \label{fig:nomparamposteriors}
 \end{figure}
 
-Empirical utterance proportions are shown against MAP model  predictions in \figref{fig:nompredictives}. 
+MAP model  predictions are shown alongside empirical utterance proportions in \figref{fig:exp3results}. 
 The correlation between empirical utterance proportions and the model's MAP predictions at the level of targets, utterances, and conditions was $r = .86$. Further collapsing across targets yields a correlation of $r = .95$.
-While the model overpredicts subordinate	 level  and underpredicts basic level choices in the \emph{sub necessary} condition, it otherwise captures the patterns in the data very well. It also accounts for the strong preference against super level mentions. The reason is that the semantics for each utterance (eg., \emph{dalmatian}, \emph{dog}, \emph{animal}) is taken from the empirically elicited typicality values for each utterance-object pair. As can be seen in the left panel of \figref{fig:typicalityboxplots},  the target images used in this experiment were generally rated as less typical instances of the superordinate level term than of the basic or subordinate level term. This difference is enough to lead to a general bias against using the superordinate level term, especially when coupled with the fact that superordinate terms tend to be costlier than basic level terms.
+The model captures the qualitative patterns well, though it somewhat overpredicts subordinate level  and underpredicts basic level choices. It also accounts for the strong preference against super level mentions. The reason for this is that the semantics for each utterance (eg., \emph{dalmatian}, \emph{dog}, \emph{animal}) is taken from the empirically elicited typicality values for each utterance-object pair. As can be seen in the left panel of \figref{fig:typicalityboxplots},  the target images used in this experiment were generally rated as less typical instances of the superordinate level term than of the basic or subordinate level term. This difference is enough to lead to a general bias against using the superordinate level term, especially when coupled with the fact that superordinate terms tend to be costlier than basic level terms.
 
 
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth]{pics/exp3-empirical-predictives}
-\caption{Scatterplot of empirical utterance proportions against MAP model predictions across conditions for nominal choice dataset (Exp.~3).}
-\label{fig:nompredictives}
-\end{figure}
+%\begin{figure}
+%\centering
+%\includegraphics[width=\textwidth]{pics/exp3-empirical-predictives}
+%\caption{Scatterplot of empirical utterance proportions against MAP model predictions across conditions for nominal choice dataset (Exp.~3).}
+%\label{fig:nompredictives}
+%\end{figure}
 
 
 

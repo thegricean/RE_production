@@ -656,7 +656,7 @@ predictives = pred %>%
   select(-CILow,-CIHigh)
 ```
 
-Bind empirical and predictives and plot (like Fig 8 in paper).
+Bind empirical and predictives and create scatterplot.
 ```{r}
 d = left_join(empirical,predictives,by=c("Condition","Target","Utterance")) %>%
   mutate(Condition = relevel(as.factor(Condition), "sub necessary"))
@@ -686,8 +686,7 @@ ggsave("../writing/pics/exp3-empirical-predictives.pdf",height=2.5,width=7)
 ```
 
 
-
-Plot just model predictions. First add typicality values, then make same plot as Fig 19 but with model predictions instead of empirical
+Plot model predictions and empirical means as a function of typicality. First add typicality values, then make same plot as Fig 19 but with model predictions instead of empirical
 ```{r}
 typs = read.table("../data/typicality_exp3.csv",header=T,quote="",sep=",")
 ttyps = droplevels(subset(typs, itemtype == "target"))
@@ -696,13 +695,24 @@ d$typ_sub = ttyps[paste("sub",as.character(d$Target)),]$meanresponse
 d$typ_basic = ttyps[paste("basic",as.character(d$Target)),]$meanresponse
 d$typ_super = ttyps[paste("super",as.character(d$Target)),]$meanresponse
 
-ggplot(d, aes(x=typ_sub,y=ModelProb,color=relevel(as.factor(Utterance),"sub"))) +
+toplot = d %>%
+  select(Condition, Target, Utterance, typ_sub, Probability, ModelProb) %>%
+  gather(Data, Probability, Probability:ModelProb) %>%
+  mutate(Data = fct_recode(Data,empirical="Probability",model="ModelProb"))
+
+toplot$item = ""
+toplot[toplot$Target == "parrot" & toplot$Data == "empirical",]$item = "parrot"
+toplot[toplot$Target == "poloshirt" & toplot$Data == "empirical",]$item = "poloshirt"
+toplot[toplot$Target == "suv" & toplot$Data == "empirical",]$item = "suv"
+
+ggplot(toplot, aes(x=typ_sub,y=Probability,color=relevel(as.factor(Utterance),"sub"))) +
   geom_point() +
   geom_smooth(method="lm") +
-  # geom_text(aes(label=item),nudge_y=.04) +
-  ylab("Model predicted utterance probability") +
+  scale_color_manual(values=cbPalette[2:4]) +
+  geom_text(aes(label=item),nudge_y=.04) +
+  ylab("Utterance probability") +
   xlab("Typicality of object for subordinate level utterance") +
-  facet_wrap(~relevel(as.factor(Condition),"sub necessary")) +
+  facet_grid(relevel(Data,"empirical")~relevel(as.factor(Condition),"sub necessary")) +
   guides(color=guide_legend(title="Utterance"))
 ```
 
