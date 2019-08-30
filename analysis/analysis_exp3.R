@@ -4,6 +4,10 @@ library(lme4)
 library(MuMIn)
 library(brms)
 theme_set(theme_bw(18))
+
+# set working directory to directory of script
+this.dir <- dirname(rstudioapi::getSourceEditorContext()$path)
+setwd(this.dir)
 source("helper_scripts/helpers.R")
 source("helper_scripts/createLaTeXTable.R")
 
@@ -70,7 +74,17 @@ table(d$target_basic)
 table(d[d$super,]$target_basic)
 table(d[d$sub,]$target_basic)
 
+# view cases where basic level utterance was produced even though sub was necessary
+View(d[d$binaryCondition == "sub_necessary" & d$sub == FALSE,c("refExp","target_sub","alt1_sub","alt2_sub")])
+totalbasic = nrow(d[d$binaryCondition == "sub_necessary" & d$sub == FALSE,c("refExp","target_sub","alt1_sub","alt2_sub")])
 
+onlybasic = d %>%
+  filter(binaryCondition == "sub_necessary" & d$sub == FALSE) %>%
+  mutate(BasicMatch = str_extract(refExp, "^([Cc]ar|[Ss]hirt|[Tt]able|[Bb]ear|[Dd]og|[Bb]ird|[Ff]ish|[Cc]andy|[Ff]lower)$")) %>%
+  filter(!is.na(BasicMatch)) %>%
+  nrow()
+
+onlybasic/totalbasic # 21% of the 28% of basic level mentions in the sub necessary condition do not contain additional modifying material, ie 6%
 
 #################################################
 #################  ANALYSIS  ####################
