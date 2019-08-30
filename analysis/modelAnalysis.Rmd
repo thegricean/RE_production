@@ -709,11 +709,12 @@ ggplot(toplot, aes(x=typ_sub,y=Probability,color=relevel(as.factor(Utterance),"s
   geom_point() +
   geom_smooth(method="lm") +
   scale_color_manual(values=cbPalette[2:4]) +
-  geom_text(aes(label=item),nudge_y=.04) +
+  geom_text(aes(label=item),nudge_y=.08) +
   ylab("Utterance probability") +
   xlab("Typicality of object for subordinate level utterance") +
   facet_grid(relevel(Data,"empirical")~relevel(as.factor(Condition),"sub necessary")) +
   guides(color=guide_legend(title="Utterance"))
+ggsave("../writing/pics/results-exp3.png",height=4,width=7.5)
 ```
 
 ## Model comparison
