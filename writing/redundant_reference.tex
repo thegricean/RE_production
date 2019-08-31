@@ -1,4 +1,4 @@
-%\documentclass[man,floatsintext]{apa6}
+%\documentclass[man,floats]{intext]{apa6}
 \documentclass[11pt]{article}
 
 \usepackage{apacite}
@@ -25,7 +25,7 @@
 
 %\usepackage{endfloat}
 
-%\doublespacing
+\doublespacing
 %\onehalfspacing
 
 \fancypagestyle{firststyle}
@@ -35,15 +35,16 @@
 \fancyhead[R]{\thepage}
 \textheight = 400pt
 \fancyfoot[L]{Author note: The earliest precursor of this work (the core  idea of a continuous semantics RSA model and Exp.~1) was presented as a talk at the RefNet Round Table Event in 2016 and at AMLaP 2016. Exp.~2 and the corresponding model were presented as a submitted talk at the CUNY Conference on Sentence Processing in 2017 and as a poster at the Experimental Pragmatics (XPrag) Conference in 2017. An earlier version of  Exp.~3 and an earlier version of the corresponding model were published in the Proceedings of CogSci 38 as Graf, C., Degen, J., Hawkins, R. X. D., \& Goodman, N. D. (2016). Animal, dog, or dalmatian? Level of abstraction in nominal referring expressions. In A. Papafragou, D. Grodner, D. Mirman, \& J. Trueswell (Eds.), Proceedings of the 38th Annual Conference of the Cognitive Science Society (pp. 2261?2266). Austin, TX: Cognitive Science Society. All experiments and models have been presented by the first author in various invited talks at workshops and colloquia in Linguistics, Psychology, Philosophy, and Cognitive Science since 2016.\\
-%We are grateful to many audiences and individuals for discussions that have made this paper better, in particular Sarah Brown-Schmidt, Herb Clark, Michael Franke, Gerhard J\"ager, Florian Jaeger, Timo Roettger, Greg Scontras, Mike Tanenhaus, audiences at the RefNet Round Table Event 2015, CogSci 2016, AMLaP 2016, CUNY 2017, XPrag 2017, the IMBS Quantitative Approaches to Language Workshop 2018, colloquium talks given by the first author at the Bay Area Philosophy of Science Group, Berkeley Psychology, CMU Philosophy, Dartmouth Linguistics, McGill Linguistics, OSU Linguistics, Stanford Linguistics, T\"ubingen Linguistics, UC Davis Linguistics, and the UC Davis XXX group. All remaining errors are our own.\\
 Correspondence concerning this article should be addressed to Judith Degen, Department of Linguistics, Stanford University, 450 Serra Mall, Stanford, CA 94305. E-mail: jdegen@stanford.edu.}
 }
+
+% ACKNOWLEDGMENTS TO INSERT: We are grateful to many audiences and individuals for discussions that have made this paper better, in particular Sarah Brown-Schmidt, Herb Clark, Michael Franke, Gerhard J\"ager, Florian Jaeger, Timo Roettger, Greg Scontras, Mike Tanenhaus, audiences at the RefNet Round Table Event 2015, CogSci 2016, AMLaP 2016, CUNY 2017, XPrag 2017, the IMBS Quantitative Approaches to Language Workshop 2018, colloquium talks given by the first author at the Bay Area Philosophy of Science Group, Berkeley Psychology, CMU Philosophy, Dartmouth Linguistics, McGill Linguistics, OSU Linguistics, Stanford Linguistics, T\"ubingen Linguistics, UC Davis Linguistics, and the UC Davis XXX group. All remaining errors are our own.\\
 
 
 \fancypagestyle{mainstyle}
 {
   \fancyhf{}
-\fancyhead[L]{RATIONALLY REDUNDANT REFERRING EXPRESSIONS}
+\fancyhead[L]{USEFULLY REDUNDANT REFERRING EXPRESSIONS}
 \fancyhead[R]{\thepage}
 \textheight = 660pt
 }
@@ -88,7 +89,7 @@ Correspondence concerning this article should be addressed to Judith Degen, Depa
 
 \title{When redundancy is useful: A Bayesian approach to `overinformative' referring expressions}
 
-%\shorttitle{Rationally redundant referring expressions}
+%\shorttitle{Usefully redundant referring expressions}
 
 %\threeauthors{Judith Degen and Robert X.D.~Hawkins}{Caroline Graf}{Elisa Kreiss and Noah D.~Goodman}
 %\threeaffiliations{Stanford University}{XXX}{Stanford University}
@@ -116,8 +117,8 @@ Correspondence concerning this article should be addressed to Judith Degen, Depa
 
 \pagestyle{mainstyle}
 %
-%\abstract{Referring is one of the most basic and prevalent uses of language. How do speakers choose from the wealth of referring expressions at their disposal? Rational theories of language use have come under attack for decades for not being able to account for the seemingly irrational overinformativeness ubiquitous in referring expressions. Here we present a novel production model of referring expressions within the Rational Speech Act framework that treats speakers as agents that rationally trade off cost and informativeness of utterances. Crucially, we relax the assumption of deterministic meaning in favor of a graded semantics. This innovation allows us to capture a large number of seemingly disparate phenomena within one unified framework: the basic asymmetry in speakers' propensity to overmodify with color rather than size; the increase in overmodification in complex scenes; the increase in overmodification with atypical features; and the preference for basic level nominal reference. These findings cast a new light on the production of referring expressions: rather than being wastefully overinformative, reference is usefully redundant. }
-%
+%\abstract{Referring is one of the most basic and prevalent uses of language. How do speakers choose from the wealth of referring expressions at their disposal? Rational theories of language use have come under attack for decades for not being able to account for the seemingly irrational overinformativeness ubiquitous in referring expressions. Here we present a novel production model of referring expressions within the Rational Speech Act framework that treats speakers as agents that rationally trade off cost and informativeness of utterances. Crucially, we relax the assumption that informativeness is computed with respect to a deterministic Boolean semantics, in favor of a non-deterministic continuous semantics. This innovation allows us to capture a large number of seemingly disparate phenomena within one unified framework: the basic asymmetry in speakers' propensity to overmodify with color rather than size; the increase in overmodification in complex scenes; the increase in overmodification with atypical features; and the preference for basic level nominal reference. These findings cast a new light on the production of referring expressions: rather than being wastefully overinformative, reference is usefully redundant. }
+%%
 %\keywords{language production; reference; overinformativeness; experimental pragmatics; Bayesian modeling}
 
 \begin{abstract}
@@ -143,14 +144,14 @@ Referring is one of the most basic and prevalent uses of language. How do speake
 %}
 %\end{flushright}
 
-When redundancy is usefull: A Bayesian approach to `overinformative' referring expressions
+When redundancy is useful: A Bayesian approach to `overinformative' referring expressions
 
 %\setcounter{section}{0}
 
 \section[]{Overinformativeness in referring expressions}
 \label{sec:intro}
 
-Reference to objects is one of the most basic and prevalent uses of language. In order to refer, speakers must choose from among a wealth of referring expressions they have at their disposal. How does a speaker choose whether to refer to an object as \emph{the animal}, \emph{the dog}, \emph{the dalmatian}, or \emph{the big mostly white dalmatian}? The context within which the object occurs (other non-dogs, other dogs, other dalmatians) plays a large part in determining which features the speaker chooses to include in their utterance -- speakers aim to be sufficiently informative to establish unique reference to the intended object. However, speakers' utterances often exhibit what has been claimed to be \emph{overinformativeness}: referring expressions are often more specific than necessary for establishing unique reference, and they are more specific in systematic ways. For instance, speakers are likely to produce referring expressions like \emph{the small blue pin} instead of  \emph{the small pin} in contexts like \figref{fig:sizesufficient}, even though the color modifier is not strictly speaking required for identification \cite{gatt2011, Gatt2014, Arts2011, Koolen2011}. Similar use of redundant \emph{size} modifiers, in contrast, is rare. %\ndg{include basic example of over-informativeness here? eg point to fig 1, and include a bit more explanation either in caption or here. (a speaker often says "little blue pin" when "little pin" is sufficient.)} 
+Reference to objects is one of the most basic and prevalent uses of language. In order to refer, speakers must choose from among a wealth of referring expressions they have at their disposal. How does a speaker choose whether to refer to an object as \emph{the animal}, \emph{the dog}, \emph{the dalmatian}, or \emph{the big mostly white dalmatian}? The context within which the object occurs (other non-dogs, other dogs, other dalmatians) plays a large part in determining which features the speaker chooses to include in their utterance -- speakers aim to be sufficiently informative to establish unique reference to the intended object. However, speakers' utterances often exhibit what has been claimed to be \emph{overinformativeness}: referring expressions are often more specific than necessary for establishing unique reference, and they are more specific in systematic ways. For instance, speakers are likely to produce referring expressions like \emph{the small blue pin} instead of  \emph{the small pin} in contexts like \figref{fig:sizesufficient}, even though the color modifier is not strictly speaking required for identification \cite{gatt2011, Gatt2014, Arts2011, Koolen2011}. Similar use of redundant \emph{size} modifiers, in contrast, is rare. 
 Providing a unified theory for speakers' systematic patterns of overinformativeness has so far proven elusive.
 
 This paper is concerned with accounting for these systematic patterns in overinformative referring expressions. We restrict ourselves to definite descriptions of the form \emph{the (ADJ}?\emph{)}+ \emph{NOUN}, that is, noun phrases that minimally contain the definite determiner \emph{the} followed by a head noun, with any number of restrictive adjectives occurring between the determiner and the noun.\footnote{In contrast, we will not provide a treatment of pronominal referring expressions, indefinite descriptions, names, definite descriptions with post-nominal modification, or non-restrictive modifier uses, though we offer some speculative remarks on how the approach outlined here can be applied to these cases.} 
