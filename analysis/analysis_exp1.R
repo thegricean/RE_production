@@ -40,6 +40,38 @@ ggplot(agr, aes(x=SceneVariation,y=Probability,shape=Distractors,group=1)) +
   scale_shape_discrete(name = "Number of\ndistractors") +
   facet_wrap(~RedundantProperty) 
 
+# plot by-dyad variability in overmodification strategy
+agr_dyad = d %>%
+  select(redundant,RedundantProperty,gameid) %>%
+  gather(Utterance,Mentioned,-RedundantProperty,-gameid) %>%
+  group_by(Utterance,RedundantProperty,gameid) %>%
+  summarise(Probability=mean(Mentioned),ci.low=ci.low(Mentioned),ci.high=ci.high(Mentioned)) %>%
+  ungroup() %>%
+  mutate(YMin = Probability - ci.low, YMax = Probability + ci.high,dyad = fct_reorder(as.factor(gameid),Probability))
+         
+ggplot(agr_dyad, aes(x=dyad,y=Probability,color=RedundantProperty)) +
+  geom_point() +
+  geom_errorbar(aes(ymin=YMin,ymax=YMax)) +
+  xlab("Dyad") +
+  ylab("Probability of redundant modifier")
+
+# plot by-dyad variability in overmodification strategy by experiment half
+agr_dyad = d %>%
+  mutate(Half = ifelse(Trial < 37,"first","second")) %>%
+  select(redundant,RedundantProperty,gameid,Half) %>%
+  gather(Utterance,Mentioned,-RedundantProperty,-gameid,-Half) %>%
+  group_by(Utterance,RedundantProperty,gameid,Half) %>%
+  summarise(Probability=mean(Mentioned)) %>%
+  ungroup() %>%
+  select(gameid,Utterance,RedundantProperty,Half,Probability) %>%
+  spread(Half,Probability) %>%
+  mutate(Diff=second-first,dyad = fct_reorder(as.factor(gameid),Diff))
+
+ggplot(agr_dyad, aes(x=Diff,fill=RedundantProperty)) +
+  geom_histogram(binwidth=.1) +
+  xlab("second half minus first half overmodification proportion") +
+  facet_wrap(~RedundantProperty)
+
 ############################
 # Mixed effects regression #
 ############################
