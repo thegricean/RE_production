@@ -509,25 +509,20 @@ In general: increased scene variation is predicted to lead to a greater increase
 \end{figure}
 
 RSA with a continuous semantics thus captures the qualitative effects of color-size asymmetry and scene variation in production of redundant expressions, and it makes quantitative predictions for both. Testing these quantitative predictions, however, will require more data. 
-In Sections 3, 4, and 5 we quantitatively evaluate cs-RSA on new datasets capturing the phenomena described in the Introduction (\tableref{tab:effects}): modifier type and scene variation effects on modified referring expressions, typicality effects on color mention, and the choice of taxonomic level of reference in nominal choice.
+In the remainder of the paper, we quantitatively evaluate cs-RSA on new datasets capturing the phenomena described in the Introduction (\tableref{tab:effects}): modifier type and scene variation effects on modified referring expressions, typicality effects on color mention, and the choice of taxonomic level of reference in nominal choice.
 
-\section[]{Modified referring expressions: size and color modifiers under different scene variation conditions}
+\section[]{Experiment 1: size and color modifiers under different scene variation conditions}
 \label{sec:rsaevaluationbasicscene}
 
-Adequately assessing the explanatory value of RSA with continuous semantics requires evaluating how well it does at predicting the probability of various types of utterances occurring in large datasets of naturally produced referring expressions. We first report the results of a web-based interactive reference game in which we systematically manipulate scene variation (in a somewhat different way than \citeA{Koolen2013} did). 
-We then perform a Bayesian data analysis to both assess  how likely the model is to generate the observed data -- i.e., to obtain a measure of model quality -- and to explore the posterior distribution of parameter values -- i.e., to understand whether the assumed asymmetries in the adjectives' semantic values and/or cost discussed in the previous section are validated by the data.
-
-
-\subsection{Experiment 1: scene variation in modified referring expressions}
-\label{sec:exp1-scenevar}
-
-We showed in \sectionref{sec:modelkoolen} that cs-RSA correctly predicts qualitative effects of scene variation on redundant adjective use. In particular, we showed that color is more likely to be used redundantly when objects vary along more dimensions. 
+Adequately assessing the explanatory value of RSA with continuous semantics requires evaluating how well it does at predicting the probability of various types of utterances occurring in large datasets of naturally produced referring expressions. 
+While we showed in \sectionref{sec:modelkoolen} that cs-RSA \emph{qualitatively} predicts the pattern of overmodification under scene variation, we now test the model's \emph{quantitative} predictions more rigorously in an interactive web-based reference game paradigm.
 %However, we would like to a) go beyond a qualitative investigation of scene variation effects and also b) ask whether redundant size mention is also affected by scene variation. 
-To test the model predictions, we conducted an interactive web-based production study within a reference game setting. %\footnote{See \appref{app:replication}  for a validation of the general paradigm, in which we qualitatively replicate the findings of \citeA{gatt2011} with a different set of stimuli.} 
-Speakers and listeners were shown arrays of objects that varied in color and size. Speakers were asked to produce a referring expression to allow the listener to identify a target object. We manipulated the number of distractor objects in the grid, as well as the variation in color and size among distractor objects.
+%. We first report the results of a web-based interactive reference game in which we systematically manipulate scene variation. % in a somewhat different way than \citeA{Koolen2013} did). 
+We then perform a Bayesian data analysis to both assess how likely the model is to generate the observed data -- i.e., to obtain a measure of model quality -- and to explore the posterior distribution of parameter values -- i.e., to understand whether the asymmetries in adjectives' semantic values and/or costs explored in the previous section are validated by the data.
 
+%\footnote{See \appref{app:replication}  for a validation of the general paradigm, in which we qualitatively replicate the findings of \citeA{gatt2011} with a different set of stimuli.} 
 
-\subsubsection{Method}
+\subsection{Method}
 
 \paragraph{Participants}
 
@@ -535,9 +530,17 @@ We recruited 58 pairs of participants (116 participants total) over Amazon's Mec
 
 \paragraph{Procedure}
 
-Participants were paired up through a real-time multi-player interface \cite{Hawkins15_RealTimeWebExperiments}. For each pair, one participant was assigned the speaker role and one the listener role. They  initially received written instructions that informed participants that one of them would be the Speaker and the other the Listener. They were further told that they would see some number of objects on each round and that the speaker's task is to communicate one of those objects, marked by a thick border, to the listener. They were explicitly told that using locative modifiers (like \emph{left} or \emph{right}) would be useless because the order of objects on their partner's screen would be different than on their own screen. Before continuing to the experiment, participants were required to correctly answer a series of questions about the experimental procedure. These questions are listed in \appref{app:numdistractors}.
-
-On each trial participants saw an array of objects. The array contained the same objects for both speaker and listener, but the order of objects was randomized and was typically different for speaker and listener. In the speaker's display, one of the objects -- henceforth the \emph{target} -- was highlighted with a thick border. See \figref{fig:speakerlistenerperspective} for an example of the listener's and speaker's view on a particular trial.
+Participants were paired up through a real-time multi-player interface \cite{Hawkins15_RealTimeWebExperiments}. 
+One participant was assigned the speaker role and one the listener role. %They  initially received written instructions that informed participants that one of them would be the Speaker and the other the Listener. 
+Before continuing to the experiment, participants were required to correctly answer a series of questions about the experimental procedure (see \appref{app:numdistractors}). 
+On each trial, both participants saw the same array of objects in independently randomized locations.
+One of these objects was privately designated as the \emph{target} object to the speaker, and marked by a thick border (see \figref{fig:speakerlistenerperspective}).
+The speaker's task was to use an unrestricted chat box to send a message communicating the target to the listener, who subsequently clicked an object to make a response. 
+Both participants then received feedback about whether the intended referent was selected and advanced to the next trial.
+They were explicitly told that using locative modifiers (like \emph{left} or \emph{right}) would be useless because the order of objects on their partner's screen would be different than on their own screen.
+For natural interaction, we allowed both speakers and listeners to write freely in the chat window at any point, but listeners could only click on an object to advance to the next trial after the speaker sent an initial message. 
+%See  for an example of the listener's and speaker's view on a particular trial.
+At the end of the experiments, participants completed a questionnaire in which they indicated whether their native language was English, whether they thought their partner was human, and how much they liked their partner.
 
 \begin{figure}
 \begin{subfigure}{.5\textwidth}
@@ -554,25 +557,26 @@ On each trial participants saw an array of objects. The array contained the same
 \label{fig:speakerlistenerperspective}
 \end{figure}
 
-The speaker produced a referring expression to communicate the target to the listener by typing into an unrestricted chat window. After pressing Enter or clicking the `Send' button, the speaker's message was shown to the listener. The listener then clicked on the object they thought was the target, given the speaker's message.  Once the listener clicked on an object, a red border appeared around that object in both the listener and the speaker's display for 1 second before advancing to the next trial. That is, both participants received feedback about whether the intended referent was selected. This was done in order to allow participants to notice if their referential strategies weren't working, in which case they could self-correct or discuss what had gone wrong. Both speakers and listeners could write in the chat window, allowing listeners to request clarification if necessary. Listeners could only click on an object to advance to the next trial once the speaker sent an initial message. 
+%The speaker produced a referring expression to communicate the target to the listener by typing into an unrestricted chat window. After pressing Enter or clicking the `Send' button, the speaker's message was shown to the listener. The listener then clicked on the object they thought was the target, given the speaker's message.  
+%Once the listener clicked on an object, a red border appeared around that object in both the listener and the speaker's display for 1 second before advancing to the next trial. 
+% This was done in order to allow participants to notice if their referential strategies weren't working, in which case they could self-correct or discuss what had gone wrong. 
 
-At the end of the experiments, participants completed a questionnaire in which they indicated whether their native language was English, whether they thought their partner was human, and whether they liked their partner.
 
 
 \paragraph{Materials}
 
-Participants proceeded through 72 trials. Of these, half were critical trials of interest and half were filler trials. On critical trials, we varied the feature that was sufficient to mention for uniquely establishing reference, the total number of objects in the array, and  the number of objects that shared the insufficient feature with the target. 
+Participants proceeded through 72 trials. Of these, half were critical trials of interest and half were filler trials. On critical trials, we varied which feature was sufficient for uniquely establishing reference, the total number of objects in the array, and  the number of objects that shared the insufficient feature with the target. 
 
 Objects varied in color and size. On 18 trials, color was sufficient for establishing reference. On the other 18 trials, size was sufficient. \figref{fig:speakerlistenerperspective} shows an example of a size-sufficient trial. We further varied the amount of variation in the scene by varying the number of distractor objects in each array (2, 3, or  4) and the number of distractors that did share the redundant feature value with the target. That is, when size was sufficient, we varied the number of distractors that shared the same color as the target. This number had to be at least one, since otherwise the redundant property would have been sufficient for uniquely establishing reference, i.e.~mentioning it would not have been redundant. Each total number of distractors was crossed with each possible number of distractors that shared the redundant property, leading to the following nine conditions: \emph{2-1, 2-2, 3-1, 3-2, 3-3, 4-1, 4-2, 4-3,} and \emph{4-4}, where the first number indicates the total number and the second number the shared number of distractors. Each condition occurred twice with each sufficient dimension. Objects never differed in type within one array (e.g., all objects are pins in \figref{fig:speakerlistenerperspective}) but always differed in type across trials. Each object type could occur in two different sizes and two different colors. We used photo-realistic objects of intuitively fairly typical colors. The 36 different object types and the colors they could occur with are listed in \appref{app:itemtypes}. 
 
 
 Fillers were target trials from Exp.~2, a replication of \citeA{GrafEtAl2016}. Each filler item contained a three-object grid. None of the filler objects occurred on target trials. Objects stood in various taxonomic relations to each other and required neither size nor color mention for unique reference. See \sectionref{sec:nominal} for a description of these materials.
 
-\subsubsection{Data pre-processing and exclusion}
+\paragraph{Data pre-processing and exclusion}
 
 We collected data from 2177 critical trials. Because we did not restrict participants' utterances in any way, they produced many different kinds of referring expressions. Testing the model's predictions required, for each trial, classifying the produced utterance as an instance of a \emph{color}-only mention (e.g., \emph{blue pin}), a \emph{size}-only mention (e.g., \emph{big pin}), or a redundant \emph{color-and-size} mention (e.g., \emph{big blue pin}). To this end we applied a semi-automatic data pre-processing procedure in which a script first checked whether the speaker's utterance contained a color or size term. In a second step,  one of the authors (CG)  manually checked and, if necessary, corrected the automatic classification. If no classification was possible, the trial was excluded. After exclusions, 2076 cases entered the analysis.  See \appref{sec:preprocessing} for details on the pre-processing procedure.
 
-\subsubsection{Results}
+\subsection{Results}
 \label{sec:modelempiricalresults}
 
 Proportions of redundant \emph{color-and-size} utterances are shown in \figref{fig:exp1results} alongside model predictions (to be explained further in \sectionref{sec:modifiermodeleval}). There are three main questions of interest: first, do we replicate the color/size asymmetry in probability of redundant adjective use? Second, do we replicate the previously established effect of increased redundant color use with increasing scene variation? Third, is there an effect of scene variation on redundant size use and if so, is it smaller compared to that on color use, as is predicted under asymmetric semantic values for color and size adjectives?
@@ -635,11 +639,11 @@ The effect of scene variation on propensity to overmodify has typically been exp
 Finally, there have been various attempts to capture the color-size asymmetry in computational natural language generation models. The earliest contenders for models of definite referring expressions like the Full Brevity algorithm \cite{Dale1989} or the Greedy algorithm \cite{Dale1989} focused only on discriminatory value -- that is, an utterance's informativeness -- in generating referring expressions. This is equivalent to the very simple interpretation of Grice's Quantity maxim, and consequently these models demonstrated the same inability to capture the color-size asymmetry: they only produced the minimally specified expressions. Subsequently, the Incremental algorithm \cite{dale1995} incorporated a preference order on features, with color ranked higher than size. The order is traversed and each encountered feature included in the expression if it serves to exclude at least one further distractor. This results in the production of overinformative color but not size adjectives. However, the resulting asymmetry is much greater than that evident in human speakers, and is deterministic rather than exhibiting the probabilistic production patterns that human speakers exhibit. 
 
 More recently, the PRO model \cite{VanGompel2019} has sought to integrate the observation that speakers seem to have a preference for including color terms with the observation that a preference does not imply the deterministic inclusion of said color term. In PRO, the uniquely distinguishing property (if there is one) is  first selected deterministically. In additional steps, additional properties are added probabilistically, depending on both a salience parameter associated with the additional property and a parameter capturing speakers' eagerness to overmodify. If both properties are uniquely distinguishing, a property is selected probabilistically depending on its associated salience parameter. The second step proceeds as before. This model successfully captures speakers' overmodification patterns in contexts with one target and two distractors, in the choice of two properties (color, size) and three properties (color, size, border presence). 
-While the PRO model -- the most state-of-the-art computational model of human production of modified referring expressions -- can capture the color-size asymmetry discussed above, it does not straightforwardly  account for the more subtle systematicity with which the preference to overmodify with color changes based on scene variation or object typicality, which we turn to next. 
+While the PRO model -- the most state-of-the-art computational model of human production of modified referring expressions -- can capture the basic color-size asymmetry, it does not straightforwardly  account for the more subtle systematicity with which the preference to overmodify with color changes based on scene variation or object typicality, which we turn to next. 
 
 %\jd{will have to discuss here already? not sure how to do that with all the typicality stuff not yet introduced, and i'm actually kinda happy with how the section 6.4 discussion on this issue turned out}
 
-\section[]{Experiment 2: color typicality effects}
+\section[]{Experiment 2: color typicality in modified referring expressions}
 \label{sec:colortypicality}
 
 Our modeling results in Experiment 1 raise interesting questions regarding the status of the inferred semantic values: do color modifiers have inherently higher semantic values than size modifiers? Is the difference constant? What if the color modifier is a less well known one like \emph{mauve}? The way we have formulated the model thus far, there would indeed be no difference in semantic value between \emph{red} and \emph{mauve}. Moreover, the model is not equipped to handle potential object-level idiosyncracies such as the typicality effects discussed in \sectionref{sec:colortypicalityintro}: speakers are more likely to redundantly produce modifiers that denote atypical rather than typical object features, i.e., they are more likely to refer to a blue banana as a \emph{blue banana} rather than as a \emph{banana}, and they are more likely to refer to a yellow banana as a \emph{banana} than as a \emph{yellow banana} \cite{sedivy2003a, Westerbeek2015}. 
@@ -703,7 +707,7 @@ An additional, more theoretically fraught, simplification concerns where typical
 %We can now ask whether taking into account this more fine-grained notion of a continuous semantics affects the probability of redundantly mentioning color. 
 The stimuli for Exp.~1 were specifically designed to be realistic objects with low color-diagnosticity, so they did not include objects with low typicality values or large degrees of variation in typicality. This makes the dataset from Exp.~1 not well-suited for investigating typicality effects.\footnote{We did elicit typicality norms for the items in Exp.~1 and replicated the previously documented typicality effects on the four items that did exhibit variation in typicality. See \appref{sec:exp1typicality} for details.} We therefore conducted a separate production experiment in the same paradigm but with two broad changes: first, objects' color varied in typicality; and second, we did not manipulate object size, focusing only on color mention. This allows us to ask three questions: first, do we replicate the typicality effects reported in the literature -- that is, are less color-typical objects more likely to lead to redundant color use than more color-typical objects? Second, does cs-RSA with empirically elicited typicality values as proxy for a continuous semantics capture speakers' behavior? Third, does the semantic value depend only on typicality, or is there still a role for modifier type noise of the kind we investigated in the previous section? In addition, we can investigate the extent to which utterance cost, which we found not to play a role in the previous section, affects the choice of referring expression.
 
-\subsubsection{Method}
+\subsection{Method}
 
 \paragraph{Participants}
 We recruited 61 pairs of participants (122 participants total) over Amazon's Mechanical Turk who were each paid \$1.70 for their participation. 
@@ -711,16 +715,16 @@ We recruited 61 pairs of participants (122 participants total) over Amazon's Mec
 
 \paragraph{Procedure}
 
-The procedure was identical to that of Exp.~1. See \figref{fig:mturk} for an example speaker and listener perspective.
+The procedure of the reference game was identical to that of Exp.~1. %See \figref{fig:mturk} for an example speaker and listener perspective.
 
 
-\begin{figure}[bt!]
-	\centering
-	\includegraphics[width=1\textwidth]{pics/design_0}
-	\caption{Example displays from the speaker's (left) and listener's (right) perspective in an informative-cc (i.e., presence of another object of the same type and one with the same color) condition.
-	}
-	\label{fig:mturk}
-\end{figure}
+%\begin{figure}[bt!]
+%	\centering
+%	\includegraphics[width=1\textwidth]{pics/design_0}
+%	\caption{Example displays from the speaker's (left) and listener's (right) perspective in an informative-cc (i.e., presence of another object of the same type and one with the same color) condition.
+%	}
+%	\label{fig:mturk}
+%\end{figure}
 
 \paragraph{Materials}
 
@@ -767,12 +771,12 @@ We refer to the different context conditions  as ``informative'', ``informative-
 Each participant saw 42 different contexts. Each of the 21 items (color-type combinations) was the target exactly twice, but the context in which they occurred was drawn randomly from the four possible conditions mentioned above. In total, there were 84 different possible configurations (seven target food items, each of them in three colors, where each could occur in four contexts). Trial order was randomized.
 
 
-\subsubsection{Data pre-processing and exclusion}
+\paragraph{Data pre-processing and exclusion}
 
 We collected data from 1974 trials. The utterance produced on each trial was classified as belonging to one of the following categories: \textit{type-only} (e.g., \emph{banana}), \textit{color-and-type} (e.g., \emph{yellow banana}), and \textit{color-only} (e.g., \emph{yellow}). Referring expressions that could not be classified were excluded. See \appref{sec:preprocessing} for further details on exclusion criteria and the data pre-processing procedure. Overall, 1827 utterances entered the analysis.
 
 
-\subsubsection{Typicality norming}
+\subsection{Typicality norming}
 \label{sec:typicalitynormingcolor}
 
 In order to test for typicality effects on the production data and to evaluate cs-RSA's performance, we collected empirical typicality values for each utterance/object pair in three separate studies. The first study collected typicalities for \emph{color-and-type}/object pairs (e.g., \emph{yellow banana} as applied to a yellow banana, a blue banana, an orange pear, etc., see \figref{fig:colorobj}). The second study collected typicalities for \emph{type-only}/object pairs (e.g., \emph{banana} as applied to a yellow banana, a blue banana, an orange pear, etc., \figref{fig:obj}). The third study collected typicalities for \emph{color}/color pairs (e.g., \emph{yellow} as applied to a color patch of the average yellow from the yellow banana stimulus or to a color patch of the average orange from the orange pear stimulus, and so on, for all other colors, \figref{fig:colorpatch}). 
@@ -847,7 +851,7 @@ Mean typicality values for utterance-object pairs obtained in the norming studie
 \end{figure}
 
 
-\subsubsection{Results and discussion}
+\subsection{Results and discussion}
 \label{sec:exp2resultsdisc}
 
 Proportions of type-only (\emph{banana}), color-and-type (\emph{yellow banana}), color-only (\emph{yellow}), and other (\emph{funky carrot}) utterances are shown in \figref{fig:exp2empirical} as a function of the described item's mean type-only (\emph{banana}) typicality. Visually inspecting just the explicitly marked \emph{yellow banana}, \emph{brown banana}, and \emph{blue banana} cases suggests a large typicality effect in the overinformative conditions as well as a smaller typicality effect in the informative conditions, such that color is less likely to be produced with increasing typicality of the object. 
@@ -872,14 +876,11 @@ Proportions of type-only (\emph{banana}), color-and-type (\emph{yellow banana}),
 \label{fig:exp2results}
 \end{figure}
 
+The following questions are of interest. First, do we replicate the previously documented typicality effect on redundant color mention (as suggested by the visual inspection of the banana item)? Second, does typicality affect color mention even when color is informative (i.e., technically necessary for establishing unique reference)? Third, are speakers sensitive to the presence of color competitors in their use of color or are typicality effects invariant to the distractor items?
 
+To address these questions we conducted a mixed effects logistic regression predicting color use from fixed effects of typicality, informativeness, and color competitor presence. We used the typicality norms obtained in the \emph{type}/object typicality elicitation study reported above (see \figref{fig:obj}) as the continuous typicality predictor. The informativeness condition was coded as a binary variable (color informative vs.~color overinformative trial) as was color competitor presence (absent vs.~present). All predictors were centered before entering the analysis. The model included by-speaker and by-item random intercepts, which was the most sophisticated random effects structure that allowed the model to converge.
 
-
-The following questions are of interest. First, do we replicate the previously documented typicality effect on redundant color mention (as suggested by the visual inspection of the banana item)? Second, does typicality affect color mention even when color is informative (i.e., technically necessary for establishing unique reference)? Third, are speakers sensitive to the presence of color competitors in their use of color or are typicality effects immune to the nature of the distractor items?
-
-To address these questions we conducted a mixed effects logistic regression predicting color use from fixed effects of typicality, informativeness, and color competitor presence. We used the typicality norms obtained in the \emph{type}/object typicality elicitation study reported above (see \figref{fig:obj}) as the continuous typicality predictor. The informativeness condition was coded as a binary variable (color informative vs.~color overinformative trial) as was color competitor presence (absent vs.~present). All predictors were centered before entering the analysis. The model included by-speaker and by-item random intercepts, which was the maximal random effects structure that allowed the model to converge.
-
-There was a main effect of typicality, such that the more typical an object was for the type-only utterance, the lower the log odds of color mention ($\beta$ = -4.17, $SE$ = 0.45, $p <$ .0001), replicating previously documented typicality effects. Stepwise model comparison revealed that including interaction terms was not justified by the data, suggesting that speakers produce more typical colors less often even when the color is in principle necessary for establishing reference (i.e., in the informative conditions). This is notable: speakers sometimes call a yellow banana simply a \emph{banana} even when other bananas are present, presumably because they can rely on listeners drawing the inference that they must have meant the most typical banana. In contrast, blue bananas' color is always mentioned in the informative conditions.
+We found a main effect of typicality, such that the more typical an object was for the type-only utterance, the lower the log odds of color mention ($\beta$ = -4.17, $SE$ = 0.45, $p <$ .0001), replicating previously documented typicality effects. Stepwise model comparison revealed that including interaction terms was not justified by the data, suggesting that speakers produce more typical colors less often even when the color is in principle necessary for establishing reference (i.e., in the informative conditions). This is notable: speakers sometimes call a yellow banana simply a \emph{banana} even when other bananas are present, presumably because they can rely on listeners drawing the inference that they must have meant the most typical banana. In contrast, blue bananas' color is always mentioned in the informative conditions.
 
 There was also a main effect of informativeness, such that color mention was less likely when it was overinformative than when it was informative ($\beta$ = -5.56, $SE$ = 0.33, $p <$ .0001). Finally, there was a main effect of color competitor presence, such that color mention was more likely when a color competitor was absent  ($\beta$ = 0.71, $SE$ = 0.16, $p <$ .0001). This suggests that speakers are indeed sensitive to the contextual utility of color -- color typicality alone does not capture the full set of facts about color mention, as we already saw in \sectionref{sec:rsaevaluationbasicscene}.
 
@@ -974,8 +975,7 @@ There is one major, and interesting, divergence from the empirical data in condi
 
 \subsection{Discussion}
 
-In this section we demonstrated that cs-RSA predicts color typicality effects in the production of referring expressions. The model employed here did not differ in its architecture from that employed in \sectionref{sec:rsaevaluationbasicscene}, but only in that a) semantic values were assumed to operate at the individual utterance/object level in addition to at the utterance type/object level; b) semantic values for individual utterances were empirically elicited via typicality norming studies; and c) an utterance's cost was allowed to be a function of its mean empirical length and its corpus frequency instead of having a constant utterance type level value, though utterance cost ultimately was found not to play a role in predicting utterance choice.\footnote{See \tableref{tab:modeldiffs} for a more extensive overview of the ways in which the models reported across sections differed.} 
-
+In Experiment 2, we demonstrated that cs-RSA predicts color typicality effects in the production of referring expressions with only minimal extensions to support finer-grained prediction of item-by-item data (see \tableref{tab:modeldiffs} in the General Discussion for a more extensive comparison of the model details across sections). %The model employed here did not differ in its architecture from that employed in \sectionref{sec:rsaevaluationbasicscene}: the only a) semantic values were assumed to operate at the individual utterance/object level in addition to at the utterance type/object level; b) semantic values for individual utterances were empirically elicited via typicality norming studies; and c) an utterance's cost was allowed to be a function of its mean empirical length and its corpus frequency instead of having a constant utterance type level value, though utterance cost ultimately was found not to play a role in predicting utterance choice.
 This suggests that the dynamics at work in the choice of color vs.~size and in the choice of color as a function of the object's color typicality are very similar: speakers choose utterances by considering the fine-grained differences in information about the intended referent communicated by the ultimately chosen utterance compared to its competitor utterances. For noisier utterances (e.g., \emph{banana} as applied to a blue banana), including the `overinformative' color modifier is useful because it provides information. For less noisy utterances (e.g., \emph{banana} as applied to a yellow banana), including the color modifier is useless because the unmodified utterance is already highly informative with respect to the speaker's intention. These dynamics can sometimes even result in the color modifier being left out altogether, even when there is another---very atypical---object of the same type present, simply because the literal listener is expected to prefer the typical referent strongly enough.
 
 Model comparison demonstrated the need for assuming a semantics that interpolates between a noisy truth-conditional semantics as employed in Exp.~1 and empirically elicited typicality values. 
@@ -983,10 +983,9 @@ This may reflect semantic knowledge that goes beyond graded category membership,
 %\ndg{say something here about why the model couldn't fit the higher color-only production in the overinformative (no cc) condition? may be connected to semantic model??}\jd{ndg, is what you're referring to the issue that is discussed at the end of subsection 4.2?}\ndg{yes, but there we only say why model doesn't fit. it would be good to speculate (briefly) about where the problem may lie and hence where solutions may lie.}
 %This suggests that speakers, in choosing utterances, take into account both an utterance's literal semantics and its noisiness, as well as the graded category membership of the objects under consideration. 
 Perhaps surprisingly, we replicated the result from Exp.~1 that utterance cost does not add any predictive power, even when quantified via a more sophisticated cost function that takes into account an utterance's length and frequency.
-
 In the next section, we move beyond the choice of modifier and ask whether cs-RSA provides a good account of  referring expression production more generally.
 
-\section[]{Unmodified referring expressions: nominal taxonomic level}
+\section[]{Experiment 3: taxonomic level in unmodified referring expressions}
 \label{sec:nominal}
 
 In this section we investigate whether cs-RSA accounts for referring expression production beyond the choice of modifier. In particular, we focus on speakers' choice of taxonomic level of reference in nominal referring expressions. A particular object can be referred to at its subordinate (\emph{dalmatian}), basic (\emph{dog}), or superordinate (\emph{animal}) level, among other choices.
@@ -995,11 +994,7 @@ Still, we hypothesized that similar factors may contribute: an expression's cont
 
 In order to evaluate cs-RSA for nominal choice, we proceeded as in \sectionref{sec:colortypicality}: we collected production data within the same reference game setting, but varied the contextual informativeness of utterances by varying whether distractors shared the same basic or superordinate category with the target (see \figref{fig:dogcontexts}). We also elicited typicality ratings for object-utterance combinations, which entered the model as the semantic values via the lexicon. We then conducted Bayesian data analysis, as in previous sections, for model comparison.
 
-
-\subsection{Experiment 3: taxonomic level of reference in nominal referring expressions}
-\label{sec:exp3}
-
-\subsubsection{Method}
+\subsection{Method}
 
 \paragraph{Participants}
 
@@ -1010,7 +1005,6 @@ We recruited 58 pairs of participants (116 participants total, the same particip
 The procedure was identical to that of Exp.~1.\footnote{A separate earlier data set was reported at the annual meeting of the Cognitive Science Society \cite{GrafEtAl2016}, and serves as a close replication of the reported study.} Participants proceeded through 72 trials. Of these, half were critical trials of interest and half were filler trials (the critical trials from Exp.~1). On critical trials, we varied the level of reference that was sufficient to mention for uniquely establishing reference.
 
 Stimuli were selected from nine distinct domains, each corresponding to distinct basic level categories such as \emph{dog}.  For each domain, we selected four subcategories to form our target set (e.g. \emph{dalmatian}, \emph{pug}, \emph{German Shepherd} and \emph{husky}). See \tableref{tab:reflevelstimuli} in \appref{app:taxonomicstimuli} for a full list of domains and their associated target items. Each domain also contained an additional item which belonged to the same basic level category as the target (e.g., \emph{greyhound}) and items which belonged to the same supercategory but not the same basic level (e.g., \emph{elephant} or \emph{squirrel}). The latter items were used as distractors.
-
 
 Each trial consisted of a display of three images, one of which was designated as the target object. Each pair of participants saw each target exactly once, for a total of 36 trials. These target items were randomly assigned distractor items which were selected from three different context conditions, corresponding to different communicative pressures (see \figref{fig:dogcontexts}). The \emph{subordinate necessary} contexts contained one distractor of the same basic category and one distractor of the same superordinate category (e.g., target: \emph{dalmatian}, distractors: \emph{greyhound} (also a dog) and \emph{squirrel} (also an animal)). The \emph{basic sufficient} contexts contained either two distractors of the same superordinate category but different basic category as the target (e.g., target: \emph{husky}, distractors: \emph{hamster} and \emph{elephant}) or one distractor of the same superordinate category and one unrelated item (e.g., target: \emph{pug}, distractors: \emph{cow} and \emph{table}). The \emph{superordinate sufficient} contexts contained two unrelated items (e.g., target: \emph{German Shepherd}, distractors: \emph{shirt} and \emph{cookie}). 
 
@@ -1048,17 +1042,16 @@ Each trial consisted of a display of three images, one of which was designated a
 This context manipulation served as a manipulation of utterance informativeness: any target could be referred to at the subordinate (\emph{dalmatian}), basic (\emph{dog}) or superordinate (\emph{animal}) level. However, the level of reference necessary for uniquely referring differed across contexts.
 
 
-\subsubsection{Typicality norming}
-\label{sec:typicalitynormingnominal}
-
-In order to test for typicality effects on the production data and to evaluate cs-RSA's performance, we collected empirical typicality values for each utterance/object pair. See \appref{app:typicalitynorms2} for details.
-
-\subsubsection{Data pre-processing and exclusion}
+\paragraph{Data pre-processing and exclusion}
 
 We collected data from 2193 critical trials. Each referring expression was classified as containing the  target's correct \emph{sub}(ordinate, e.g., \emph{dalmatian}), \emph{basic} (e.g., \emph{dog}), or \emph{super}(ordinate, e.g., \emph{animal}) level term, or excluded if classification was not possible. See \appref{sec:preprocessing} for details on exclusion criteria and the pre-processing procedure.  After exclusions and pre-processing, 1872 cases entered the analysis.
 
+\paragraph{Typicality norming}
+\label{sec:typicalitynormingnominal}
 
-\subsubsection{Results and discussion}
+In order to test for typicality effects on the production data and to evaluate cs-RSA's performance, we again collected empirical typicality values for each utterance/object pair. See \appref{app:typicalitynorms2} for details.
+
+\subsection{Results and discussion}
 
 
 Proportions of sub, basic, and super level utterances are shown in \figref{fig:exp3results}. Overall, super level mentions are highly dispreferred ($< 2\%$), so we focus in this section only on predictors of sub over basic level mentions. The clearest pattern of note is that sub level mentions are only preferred in the most constrained context that necessitates the sub level mention for unique reference (e.g., target: dalmatian, distractor: greyhound; see \figref{fig:item12}). Nevertheless, even in these contexts there is a non-negligible proportion of basic level mentions (28\%). This includes cases of using just the basic level term (6\%, e.g., \emph{dog} for the German Shepherd when one of the distractors was a greyhound, an atypical dog, akin to the unmodified cases in the informative conditions discussed in \sectionref{sec:exp2resultsdisc}) as well as basic level terms with additional modifying material (22\%). In the remaining contexts, where the sub and basic level are equally informative, there is a clear preference for the basic level. Finally, mitigating this context effect, sub level mentions increased with increasing typicality of the object as an instance of the sub level utterance.
@@ -1070,11 +1063,11 @@ Proportions of sub, basic, and super level utterances are shown in \figref{fig:e
 \label{fig:exp3results}
 \end{figure}
 
-What explains these preferences? In order to test for effects of informativeness, length, frequency, and typicality on nominal choice we conducted a mixed effects logistic regression predicting sub over basic level mention from centered predictors for the factors of interest. Because the maximal model with by-speaker and by-item slopes for all fixed effects did not converge, we simplified the random effects structure in a principled way, including only by-speaker and by-item random intercepts.
+What explains these preferences? In order to test for effects of informativeness, length, frequency, and typicality on nominal choice we conducted a mixed effects logistic regression predicting sub over basic level mention from centered predictors for the factors of interest. Because the maximal model with by-speaker and by-item slopes for all fixed effects did not converge, we simplified the random effects structure, including only by-speaker and by-item random intercepts.
 
 \emph{Frequency} was coded as the difference between the sub and the basic level's log frequency, as extracted from the Google Books Ngram English corpus ranging from 1960 to 2008. Speakers prefer more frequent words over less frequent ones \cite{oldfield1965response}.
 
-\emph{Length} was coded as the ratio of the subordinate to the basic level's length in characters. Even among one-word utterances, speakers prefer shorter ones over longer ones \cite{degen2013cost, rohde2012}. We used the mean empirical lengths in characters of the utterances participants produced. For example, the minivan, when referred to at the subcategory level, was sometimes called ``minivan'' and sometimes ``van'' leading to a mean empirical length of 5.71. This is the value that was used, rather than 7, the length of ``minivan''. That is, a higher frequency difference indicates a \emph{lower} cost for the sub level term compared to the basic level, while a higher length ratio reflects a \emph{higher} cost for the sub level term compared to the basic level.\footnote{We replicate the well-documented negative correlation between length and log frequency ($r = -.49$ in our dataset).} 
+\emph{Length} was coded as the ratio of the subordinate to the basic level's length in characters. Even among one-word utterances, speakers prefer shorter ones over longer ones \cite{degen2013cost, rohde2012}. We used the mean number of characters in the utterances participants produced. For example, the minivan, when referred to at the subcategory level, was sometimes called ``minivan'' and sometimes ``van'' leading to a mean empirical length of 5.71. This is the value that was used, rather than 7, the length of ``minivan''. %A higher frequency difference indicates a \emph{lower} cost for the sub level term compared to the basic level, while a higher length ratio reflects a \emph{higher} cost for the sub level term compared to the basic level.\footnote{We replicate the well-documented negative correlation between length and log frequency ($r = -.49$ in our dataset).} 
 
 \emph{Typicality} was coded as the ratio of the target's sub to basic level label typicality.\footnote{Typicalities were elicited in a separate norming study that was identical in procedure to that of Exp.~1a. See \appref{app:typicalitynorms2} for details about the study.} That is, the higher the ratio, the more typical the object was for the sub level label compared to the basic level; or in other words, a higher ratio indicates that the object was relatively atypical for the basic label compared to the sub label. For instance, the panda was relatively atypical for its basic level ``bear'' (mean rating 0.75) compared to the sub level term ``panda bear'' (mean rating 0.98), which resulted in a relatively \emph{high} typicality ratio. We predicted that subordinate terms may be preferred when an object is a particularly good instance of that term or a particularly bad instance of the basic level term, compared to the other objects in the context. 
 
@@ -1130,7 +1123,6 @@ For the previous dataset, we tested which of three different semantics was most 
 %\end{equation} 
 
 We employed the same procedure as in the previous section to compute the Bayes Factor for the comparison between the two cost models, and to compute the posteriors over parameters. Priors were again  $\beta_i  \sim \mathcal{U}(0,20)$,  $\beta_{F} \sim \mathcal{U}(0,5)$, $\beta_{L} \sim \mathcal{U}(0,5)$, $\beta_t  \sim \mathcal{U}(0,5)$.
-
 Despite the greater number of parameters associated with adding the cost function, the  model that includes non-zero costs was preferred compared to its no-cost counterpart ($BF = 2.8 \times 10^{77}$). Posteriors over parameters are shown in \figref{fig:nomparamposteriors}. It is worth noting that the weight on frequency is close to zero. That is, in line with the results from the mixed effects regression, it is an utterance's length, but not its frequency, that affects the probabilitiy with which it is produced in this paradigm.\footnote{As discussed in previous sections, the lack of importance of a word's frequency may well be attributable to the written modality within which participants generated referring expressions.} 
 %In the written modality, time pressure on lexical retrieval is lower than in spoken language, so a word's retrievability (which its frequency is an indicator of) is less likely to affect production choices than in the spoken modality; vice versa for an utterance's length -- each additional character incurs a typing cost in the written modality.} 
 %The posterior on the typicality weight (values $< 1$) also suggests that, in contrast to Exp.~2, the typicality values elicited empirically are somewhat more extreme than the semantic values that are appropriate for computing informativity in the context of nominal choice.
@@ -1212,13 +1204,13 @@ Because Exp.~1 collapsed over the particular levels of size and color, it was pr
 In Exp.~2 and Exp.~3, however, the space of possible utterances was large enough that this exhaustive approach became impractical. 
 We noticed that the probability of using some utterances (e.g. `table' to refer to a Dalmatian)  was low enough that we could prune the utterance space to only those that could plausibly apply to the objects in context without substantially altering the model's behavior.
 Future work must address how predictions may change as more complex referring expressions outside the scope of this paper enter the set of alternatives (e.g. the option of combining adjectives with nominal expressions, as in \emph{the cute, spotted dog}).
-
-
 In the following we discuss a number of intriguing questions that this work raises and avenues for future research it suggests.
 
 \subsection{Comparison with PRO}
 
-While a detailed comparison of cs-RSA with PRO \cite{VanGompel2019}, the hitherto most state-of-the-art computational model of human production of modified referring expressions, is outside the scope of this paper, we include some comparative remarks here. PRO has the advantage of being computationally more efficient than cs-RSA, partly because it aims to be an algorithmic-level model, which may be of importance for applications. PRO may further have the advantage of having fewer parameters, though this is a bit harder to evaluate in general: while PRO as applied to the choice of color and size in principle involves 2 parameters, $s$ (size preference) and $e$ (overspecification eagerness), in the 2019 paper the maximum likelihood parameter values are estimated on each of the experimental conditions separately, effectively resulting in 6 parameters. In the extension to 3 properties, this results in 14 parameters, and this number increases further as more properties and conditions are added. If the parameter values had been estimated on all conditions jointly, which is what we did in the evaluation of cs-RSA instead of separately, then indeed PRO would have fewer effective parameters than cs-RSA, though it iss unclear how this would affect the data fit. One advantage of the cs-RSA approach is greater generality. For instance, it is not immediately clear how PRO should be extended to contexts that vary in the number and nature of distractors, where empirical overmodification proportions  change, but the PRO predictions would not. We see this as one of the great strengths of cs-RSA: scene variation effects fall out of the model directly. Finally, we have proposed here a way to account for typicality effects. PRO may be able to accommodate typicality effects if its preference parameters can be made to be sensitive to typicality. In general, a systematic comparison and possible combination of these models is an important next step.
+While a detailed comparison of cs-RSA with PRO \cite{VanGompel2019}, the hitherto most state-of-the-art computational model of human production of modified referring expressions, is outside the scope of this paper, we include some comparative remarks here. PRO has the advantage of being computationally more efficient than cs-RSA, partly because it aims to be an algorithmic-level model, which may be of importance for applications. PRO may further have the advantage of having fewer parameters, though this is a bit harder to evaluate in general: while PRO as applied to the choice of color and size in principle involves 2 parameters, $s$ (size preference) and $e$ (overspecification eagerness), in the 2019 paper the maximum likelihood parameter values are estimated on each of the experimental conditions separately, effectively resulting in 6 parameters. In the extension to 3 properties, this results in 14 parameters, and this number increases further as more properties and conditions are added. If the parameter values had been estimated on all conditions jointly, which is what we did in the evaluation of cs-RSA instead of separately, then indeed PRO would have fewer effective parameters than cs-RSA, though it is unclear how this would affect the data fit. 
+
+One advantage of the cs-RSA approach is greater generality. For instance, it is not immediately clear how PRO should be extended to contexts that vary in the number and nature of distractors, where empirical overmodification proportions  change, but the PRO predictions would not. We see this as one of the great strengths of cs-RSA: scene variation effects fall out of the model directly. Finally, we have proposed here a way to account for typicality effects. PRO may be able to accommodate typicality effects if its preference parameters can be made to be sensitive to typicality. In general, a systematic comparison and possible combination of these models is an important next step.
 
 \subsection{`Overinformativeness'}
 
