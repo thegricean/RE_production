@@ -363,11 +363,11 @@ One of these is trivial: $U$ only contains one-word utterances. We can ameliorat
 \label{eq:prodcomp}
 \mathcal{L}(u_{\text{complex}},o) = \mathcal{L}(u_{\text{size}},o) \times \mathcal{L}(u_{\text{color}},o).
 \end{equation} 
-The resulting renormalized literal listener distributions for our example size-sufficient context in \figref{fig:sizesufficient} are shown in the middle columns in \tableref{tab:detliteral}.\footnote{`Normalization' refers to the process of turning a set of numbers into a probability distribution by dividing each number by the sum of all the numbers in the set, such that they add up to 1.}
+The resulting renormalized literal listener distributions for our example size-sufficient context in \figref{fig:sizesufficient} are shown in the left columns in \tableref{tab:detliteral},\footnote{`Normalization' refers to the process of turning a set of numbers into a probability distribution by dividing each number by the sum of all the numbers in the set, such that they add up to 1.} and the concomitant pragmatic speaker distributions are shown in the left columns in \tableref{tab:speaker}.\footnote{An interactive toy version of this model is provided at \url{http://forestdb.org/models/overinf.html}.}
 
 \begin{table}
 %\centering
-\caption{Row-wise literal listener distributions $P_{L_0}(o | u)$ for each utterance $u$ in the size-sufficient context depicted in \figref{fig:sizesufficient}, allowing only simple one-word utterances (left) or one- and two-word utterances (middle, right) under a deterministic Boolean semantics (left, middle) or under a continuous semantics (right) with  $x_{\text{size}} = .8$, $x_{\text{color}} = .99$. Bolded numbers indicate crucial comparisons between literal listener probabilities in correctly selecting the intended referent $o_{\text{small\_blue}}$ in response to observing the sufficient \emph{small} and the redundant \emph{small blue} utterances.\jd{fix the issue with the noisier numbers under the model that's currently on forest.db}}
+\caption{Row-wise literal listener distributions $P_{L_0}(o | u)$ for each utterance $u$ in the size-sufficient context depicted in \figref{fig:sizesufficient}, under a deterministic Boolean semantics (left) or under a continuous semantics (right) with  $x_{\text{size}} = .8$, $x_{\text{color}} = .99$. Bolded numbers indicate crucial comparisons between literal listener probabilities in correctly selecting the intended referent $o_{\text{small\_blue}}$ in response to observing the sufficient \emph{small} and the redundant \emph{small blue} utterances.}
 %\begin{tabular}{l r r r}
 %\toprule
 %& $o_{\textrm{big\_blue}}$ & $o_{\textrm{big\_red}}$ & $o_{\textrm{small\_blue}}$ \\
@@ -378,29 +378,70 @@ The resulting renormalized literal listener distributions for our example size-s
 %\emph{red} & 0 & 1 & 0\\
 %\bottomrule
 %\end{tabular}
-\small
-\begin{tabular}{l r r r r r r r r r}
+%\small
+%\begin{tabular}{l r r r r r r r r r}
+%\toprule
+%& \multicolumn{3}{c}{Boolean (simple)} & \multicolumn{3}{c}{Boolean (complex)} & \multicolumn{3}{c}{continuous}\\
+%& $o_{\textrm{big\_blue}}$ & $o_{\textrm{big\_red}}$ & $o_{\textrm{small\_blue}}$ & $o_{\textrm{big\_blue}}$ & $o_{\textrm{big\_red}}$ & $o_{\textrm{small\_blue}}$
+%& $o_{\textrm{big\_blue}}$ & $o_{\textrm{big\_red}}$ & $o_{\textrm{small\_blue}}$ \\
+%\midrule
+%\emph{big} & .5 & .5 & 0 & .5 & .5 & 0 & .44 & .44 & .11 \\
+%\emph{small} & 0 & 0 & 1 & 0 & 0 & \textbf{1} & .17 & .17 & \textbf{.67} \\
+%\emph{blue} & .5 & 0 & .5 & .5 & 0 & .5 & .50 & .01 & .50 \\
+%\emph{red} & 0 & 1 & 0 & 0 & 1 & 0 & .01 & .99 & .01 \\
+%\emph{big blue} & NA & NA & NA & 1 & 0 & 0 & .79 & .01 & .20 \\
+%\emph{big red} & NA & NA & NA & 0 & 1 & 0 & .01 & .99 & .00 \\
+%\emph{small blue} & NA & NA & NA & 0 & 0 & \textbf{1} & .20 & .00 & \textbf{.80} \\
+%\bottomrule
+%\end{tabular}
+\begin{tabular}{l r r r r r r}
 \toprule
-& \multicolumn{3}{c}{Boolean (simple)} & \multicolumn{3}{c}{Boolean (complex)} & \multicolumn{3}{c}{continuous}\\
-& $o_{\textrm{big\_blue}}$ & $o_{\textrm{big\_red}}$ & $o_{\textrm{small\_blue}}$ & $o_{\textrm{big\_blue}}$ & $o_{\textrm{big\_red}}$ & $o_{\textrm{small\_blue}}$
+& \multicolumn{3}{c}{Boolean} & \multicolumn{3}{c}{continuous}\\ 
+& $o_{\textrm{big\_blue}}$ & $o_{\textrm{big\_red}}$ & $o_{\textrm{small\_blue}}$
 & $o_{\textrm{big\_blue}}$ & $o_{\textrm{big\_red}}$ & $o_{\textrm{small\_blue}}$ \\
 \midrule
-\emph{big} & .5 & .5 & 0 & .5 & .5 & 0 & .44 & .44 & .11 \\
-\emph{small} & 0 & 0 & 1 & 0 & 0 & \textbf{1} & .17 & .17 & \textbf{.67} \\
-\emph{blue} & .5 & 0 & .5 & .5 & 0 & .5 & .50 & .01 & .50 \\
-\emph{red} & 0 & 1 & 0 & 0 & 1 & 0 & .01 & .99 & .01 \\
-\emph{big blue} & NA & NA & NA & 1 & 0 & 0 & .79 & .01 & .20 \\
-\emph{big red} & NA & NA & NA & 0 & 1 & 0 & .01 & .99 & .00 \\
-\emph{small blue} & NA & NA & NA & 0 & 0 & \textbf{1} & .20 & .00 & \textbf{.80} \\
+\emph{big} & .5 & .5 & 0 & .39 & .39 & .22 \\
+\emph{small} & 0 & 0 & \textbf{1} & .26 & .26 & \textbf{.48} \\
+\emph{blue} & .5 & 0 & .5 & .42 & .16 & .42 \\
+\emph{red} & 0 & 1 & 0 & .21 & .57 & .21 \\
+\emph{big blue}  & 1 & 0 & 0 & .50 & .23 & .27 \\
+\emph{big red}  & 0 & 1 & 0 & .24 & .52 & .24 \\
+\emph{small blue} & 0 & 0 & \textbf{1} & .27 & .23 & \textbf{.50} \\
 \bottomrule
 \end{tabular}
 \label{tab:detliteral}
 \end{table}
 
-Unfortunately, simply including complex utterances in the set of alternatives does not solve the problem. We turn again to the case where the speaker wants to communicate the small blue object. There are now two  utterances, \emph{small} and \emph{small blue}, for referring to this object. 
-Because they are equally informative, the only way for the more complex utterance to be chosen with greater probability than the simple utterance is if it was the \emph{cheaper} one. While this would achieve the desired mathematical effect, the cognitive plausibility of complex utterances being cheaper than simple utterances is highly dubious\footnote{See also the discussion of cost functions in \citeA{Krahmer2003}, who explicitly introduce this monotonicity constraint as a constraint on the search space of possible referring expressions within a graph-based framework.}. 
-%Even if it wasn't dubious, as  mentioned previously proportions of overinformative referring expressions are variable across experiments. The only way to achieve that variability under the basic model is to assume that the costs of utterances vary from task to task. This also seems to us an implausible assumption. 
-Thus we must look elsewhere to account for overinformativeness. We propose that the place to look is the computation of informativeness itself. 
+\begin{table}
+%\centering
+\caption{Column-wise pragmatic speaker distributions $P_{S_1}(u | o)$ for each object $o$ in the size-sufficient context depicted in \figref{fig:sizesufficient}, under a deterministic Boolean semantics (left) or under a continuous semantics (middle, right) with  $x_{\text{size}} = .8$, $x_{\text{color}} = .99$, with $\beta_i$ set to 1 (middle) or 30 (right). Bolded numbers indicate the relevant speaker probabilities for the minimal (\emph{small}) and redundant (\emph{small blue}) utterances when intending to communicate referent $o_{\text{small\_blue}}$.}
+\small
+\begin{tabular}{l r r r r r r r r r}
+\toprule
+& \multicolumn{3}{c}{Boolean} & \multicolumn{3}{c}{continuous ($beta_i = 1$)} & \multicolumn{3}{c}{continuous ($\beta_i = 30$)}\\ 
+& $o_{\textrm{big\_blue}}$ & $o_{\textrm{big\_red}}$ & $o_{\textrm{small\_blue}}$
+& $o_{\textrm{big\_blue}}$ & $o_{\textrm{big\_red}}$ & $o_{\textrm{small\_blue}}$
+& $o_{\textrm{big\_blue}}$ & $o_{\textrm{big\_red}}$ & $o_{\textrm{small\_blue}}$ \\
+\midrule
+\emph{big} & .25 & .2 & 0 & .17 & .17 & .09 & 0 & 0 & 0 \\
+\emph{small} & 0 & 0 & \textbf{.4} & .11  & .11 & \textbf{.20} & 0 & 0 & \textbf{.21} \\
+\emph{blue} & .25 & 0 & .2 & .18 & .07 & .18 & .01 & 0 & 0 \\
+\emph{red} & 0 & .4 & 0 & .09 & .24 & .09 & 0 & .93 & 0 \\
+\emph{big blue}  & .5 & 0 & 0 & .22 & .10 & .12 & .99 & 0 & 0 \\
+\emph{big red}  & 0 & .4 & 0 & .10 & .22 & .10 & 0 & .07 & 0 \\
+\emph{small blue} & 0 & 0 & \textbf{.4} & .12 & .10 & \textbf{.21} & 0 & 0 & \textbf{.79} \\
+\bottomrule
+\end{tabular}
+\label{tab:speaker}
+\end{table}
+
+Unfortunately, simply including complex utterances in the set of alternatives does not solve the problem. We turn again to the case where the speaker wants to communicate the small blue object. There are now two useful utterances, \emph{small} and \emph{small blue}, for referring to this object. 
+Because they are equally informative (see bolded numbers in  \tableref{tab:detliteral}, column 3), the pragmatic speaker is equally likely to produce them (see bolded numbers in \tableref{tab:speaker}, column 3). The only way for the more complex utterance to be chosen with greater probability than the simple utterance is if it was the \emph{cheaper} one. While this would achieve the desired mathematical effect, the cognitive plausibility of complex utterances being cheaper than simple utterances is highly dubious\footnote{See also the discussion of cost functions in \citeA{Krahmer2003}, who explicitly introduce this monotonicity constraint as a constraint on the search space of possible referring expressions within a graph-based framework.}. 
+Thus we must look elsewhere to break the symmetry and account for overinformativeness. We propose that the place to look is the computation of informativeness itself. 
+
+
+
+
 
 \subsection{RSA with continuous semantics}
 \label{sec:modifiedmodel}
@@ -428,9 +469,9 @@ Together with the product composition rule, Eq.~\ref{eq:prodcomp}, this fully sp
 
 Now consider the RSA literal listener, Eq.~\ref{eq:listener}, who uses these relaxed semantic values.
 Given an utterance, the listener simply normalizes over potential referents. 
-As an example, the resulting renormalized literal listener distributions for the size-sufficient example context in \figref{fig:sizesufficient} are shown for values  $x_{\text{size}} = .8$ and $x_{\text{color}} = .99$ on the right in \tableref{tab:detliteral}.\footnote{These values were chosen for the demonstration because they are the ones that result in the best approximation of the proportion of redundant referring expressions reported in \citeA{VanGompel2019}: 80\% in size-sufficient contexts; 8\% in color-sufficient contexts.} Recall that in this context, the speaker intends for the listener to select the small blue pin. To see which would be the best utterance to produce for this purpose, we compare the literal listener probabilities in the $o_{\text{small\_blue}}$ column. The two best utterances under both the Boolean and the continuous semantics are bolded in the table: under the Boolean semantics, the two best utterances are \emph{small} and \emph{small blue}, with no difference in listener probability. In contrast, under the continuous semantics \emph{small} has a smaller literal listener probability (.67) of retrieving the intended referent than the redundant \emph{small blue} (.80). Consequently, the pragmatic speaker will be more likely to produce \emph{small blue} than \emph{small}, though the precise probabilities depend on the cost and informativeness parameters $\beta_c$ and $\beta_i$. 
+As an example, the resulting renormalized literal listener distributions for the size-sufficient example context in \figref{fig:sizesufficient} are shown for values  $x_{\text{size}} = .8$ and $x_{\text{color}} = .99$ on the right in \tableref{tab:detliteral}.\footnote{These values were chosen for the demonstration because they are the ones that result in the best approximation of the proportion of redundant referring expressions reported in \citeA{VanGompel2019}: 79\% in size-sufficient contexts; 7\% in color-sufficient contexts.} Recall that in this context, the speaker intends for the listener to select the small blue pin. To see which would be the best utterance to produce for this purpose, we compare the literal listener probabilities in the $o_{\text{small\_blue}}$ column. The two best utterances under both the Boolean and the continuous semantics are bolded in the table: under the Boolean semantics, the two best utterances are \emph{small} and \emph{small blue}, with no difference in listener probability. In contrast, under the continuous semantics \emph{small} has a smaller literal listener probability (.48) of retrieving the intended referent than the redundant \emph{small blue} (.50). While this difference may appear small, it is enough to break the symmetry in utterance informativeness. Consequently, the pragmatic speaker will be more likely to produce \emph{small blue} than \emph{small}, though the precise probabilities depend on the cost and informativeness parameters $\beta_c$ and $\beta_i$. \tableref{tab:speaker} shows the resulting pragmatic speaker probabilities under a low and a high $\beta_i$ with no utterance cost. 
 
-Crucially, the reverse is not the case when color is the distinguishing dimension. Imagine the speaker in the same context wanted to communicate the big red pin. The two best utterances for this purpose are \emph{red} (.99) and \emph{big red} (.99). In contrast to the results for the small blue pin, these utterances do not differ in their capacity to direct the literal listener to the intended referent. The reason for this is that we defined color to be almost noiseless, with the result that the literal listener distributions in response to utterances containing color terms are more similar to those obtained via a Boolean semantics than the distributions obtained in response to utterances containing size terms. The reader is encouraged to verify this by comparing the row-wise distributions under the  Boolean and continuous semantics in \tableref{tab:detliteral}.
+Crucially, the reverse is not the case when color is the distinguishing dimension. Consider the speaker in the same context wanting to communicate the big red pin. The two best utterances for this purpose are \emph{red} (.57) and \emph{big red} (.52). In contrast to the results for the small blue pin, the redundant  utterance does not increase the literal listener probability of inferring the intended referent. The reason for this is that we defined color to be almost noiseless, with the result that the literal listener distributions in response to utterances containing color terms are more similar to those obtained via a Boolean semantics than the distributions obtained in response to utterances containing size terms. The reader is encouraged to verify this by comparing the row-wise distributions under the  Boolean and continuous semantics in \tableref{tab:detliteral}.
 
 To better understand the consequences of continuous meanings in contexts like that depicted in \figref{fig:sizesufficient}, we visualize the results of varying  $x_{\text{size}}$ and $x_{\text{color}}$ in \figref{fig:basicasymmetry}. 
 The deterministic Boolean semantics of utterances is approximated where the  semantic values of both size and color utterances are close to 1 (.999, top right-most point in graph).  In this case, the simple sufficient (\emph{small pin}) and complex redundant utterance (\emph{small blue pin}) are equally likely because they are both equally informative and utterances are assumed to have 0 cost. All other utterances are highly unlikely. The interesting question is under which circumstances, if any,  the standard color-size asymmetry emerges. This asymmetry is found in the warmer region of the `small blue' facet, characterized by values of $x_{\text{size}}$ that are lower than $x_{\text{color}}$, with high values for $x_{\text{color}}$. That is, redundant utterances are more likely than sufficient utterances when the redundant dimension (in this case color) is less noisy than the sufficient dimension (in this case size) and overall is close to noiseless. 
@@ -441,7 +482,7 @@ Thus, when size adjectives are noisier than color adjectives, the model produces
 %\includegraphics[width=\textwidth]{pics/modelexploration-fidelityeffect-unlogged-wide}
 \includegraphics[width=.8\textwidth]{pics/modelexploration-fidelityeffect-paper}
 
-\caption{Probability of producing sufficient \emph{small pin}, insufficient \emph{blue pin}, and redundant \emph{small blue pin} in contexts as depicted in \figref{fig:sizesufficient}, as a function of semantic value of color and size utterances (for $\beta_i = 30$ and $ \beta_c = 0$). For a visualization of model behavior under varying $\alpha$, see \appref{app:modelexploration}.}
+\caption{Probability of producing sufficient \emph{small pin}, insufficient \emph{blue pin}, and redundant \emph{small blue pin} in contexts as depicted in \figref{fig:sizesufficient}, as a function of semantic value of color and size utterances (for $\beta_i = 30$ and $ \beta_c = 0$). For a visualization of model behavior under varying $\beta_i$, see \appref{app:modelexploration}.}
 \label{fig:basicasymmetry}
 \end{figure}
 
