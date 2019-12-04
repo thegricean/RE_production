@@ -944,17 +944,20 @@ While the architecture of the model remained the same as that of the model prese
 
 \subsubsection{Lexicon}
 
-Whereas for the purpose of evaluating the model in \sectionref{sec:rsaevaluationbasicscene}  we only considered the utterance alternatives \emph{color}, \emph{size}, and \emph{color-size}, collapsing over the precise attributes, here we included in the lexicon each possible color adjective, type noun, and combination of the two. This substantially increased the size of the lexicon to 37 unique utterances. For each combination of utterance $u$ and object $o$ that occurred in the experiment, we included a separate semantic value $x_{u,o}$, elicited in the norming experiments described in \sectionref{sec:typicalitynormingcolor} (rather than inferred as done for Exp.~1, to avoid overfitting).
+Previously, we considered only three utterance alternatives: \emph{color}, \emph{size}, and \emph{color-size}, collapsing over the precise values these took on.
+Here, we no longer collapse over these values, including in the lexicon each possible color adjective, type noun, and combination of the two. 
+This substantially increased the size of the lexicon to 37 unique utterances. For each combination of utterance $u$ and object $o$ that occurred in the experiment, we included a separate semantic value $x_{u,o}$, elicited in the norming experiments described in \sectionref{sec:typicalitynormingcolor} (rather than inferred as done for Exp.~1, to avoid overfitting).
 %\footnote{Ideally, one would like to derive the semantic values for the modified utterances from the semantic values of the individual lexical items.  Unfortunately, the compositionality of continuous values is a recognized problem \cite{kamp1995} and not one we aim to solve here. For our purposes it was therefore sufficient that we had access to the semantic values of the modified utterances elicited experimentally.} 
 For any given context, we assumed the utterance alternatives that correspond to the individually present features and their combinations. For example, for the context in \figref{fig:condOverinfcc}, the set of utterance alternatives was \emph{yellow, green, pear, banana, avocado, yellow pear, yellow banana}, and \emph{green avocado}. 
 
 \subsubsection{Semantics}
 
 We compared two choices of semantics for the model.
-In the \emph{empirical semantics} version, the empirically elicited typicality values were directly used as semantic values.
-In the more complex \emph{fixed plus empirical semantics} version, we introduce an additional parameter interpolating between the empirical typicality values and inferred values for each utterance type as  employed in \sectionref{sec:rsaevaluationbasicscene} (e.g. one value for color terms and another for type terms, which are multiplied when the terms are composed in an utterance).
-Note that this allows us to perform a nested model comparison, since the first model is a special case of the second.
-%by comparing the \emph{empirical semantics} model to a  model that combined empirical typicality values and fixed expression type level noise terms in the following way:
+In the full \emph{fixed plus empirical semantics} version, we introduced a parameter $\beta_{fixed}$ interpolating between the empirically elicited typicality values ($\beta_{fixed}=0$) and the inferred type-level values as employed in \sectionref{sec:rsaevaluationbasicscene} ($\beta_{fixed}=1$).
+The type-level values again consisted of one value for color terms and another for type terms, which are multiplied when the terms are composed in an utterance. 
+In a lesioned \emph{empirical semantics} version, we set $\beta_{fixed}=0$ and only used the empirical values.
+Conversly, in a lesioned \emph{fixed semantics} version, we set $\beta_{fixed}=1$ and only used the inferred type-level values. 
+This allowed us to perform a nested model comparison, since the latter models are special cases of the first.
 
 \subsubsection{Cost function}
 
