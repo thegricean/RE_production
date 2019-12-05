@@ -952,7 +952,7 @@ For any given context, we assumed the utterance alternatives that correspond to 
 
 \subsubsection{Semantics}
 
-We compared two choices of semantics for the model.
+We compared several choices of semantics for the model.
 In the full \emph{fixed plus empirical semantics} version, we introduced a parameter $\beta_{fixed}$ interpolating between the empirically elicited typicality values ($\beta_{fixed}=0$) and the inferred type-level values as employed in \sectionref{sec:rsaevaluationbasicscene} ($\beta_{fixed}=1$).
 The type-level values again consisted of one value for color terms and another for type terms, which are multiplied when the terms are composed in an utterance. 
 In a lesioned \emph{empirical semantics} version, we set $\beta_{fixed}=0$ and only used the empirical values.
@@ -979,20 +979,20 @@ Because it was intractable to analytically compute these integrals for our recur
 To ensure high-quality estimates, we took the mean over 100 independent samples for each model, with each chain running for 30,000 steps.
 The marginal log likelihoods for each model are shown in \tableref{tab:exp2-modelcomparison}. 
 The best performing model used \emph{fixed plus empirical} semantics and did not include a cost term. 
-Despite the greater number of parameters associated with adding the fixed semantics to the empirical semantics, the \emph{fixed plus empirical} semantics models were preferred across the board compared to their empirical-only counterparts ($BF = 3.7 \times 10^{48}$ for fixed costs, $BF = 2.1 \times 10^{60}$ for empirical costs, and $BF = 1.4 \times 10^{71}$ for no cost). 
+Despite the greater number of parameters associated with adding the fixed semantics to the empirical semantics, the \emph{fixed plus empirical} semantics models were preferred across the board compared to their empirical-only ($BF = 3.7 \times 10^{48}$ for fixed costs, $BF = 2.1 \times 10^{60}$ for empirical costs, and $BF = 1.4 \times 10^{71}$ for no cost) and fixed-only counterparts ($BF=6.5 \times 10^{14}$ for fixed costs, $BF= 1.0 \times 10^{19}$ for empirical costs, and $BF = 1.06 \times 10^{15}$ for no cost).
 In comparison, additional cost-related parameters were not justified, with $BF = 5.7 \times 10^{21}$ for no cost compared to fixed cost and $BF = 2.1 \times 10^{27}$ for compared to empirical cost.
 
 \begin{table}
 \caption{Marginal log likelihood for each model. Best model is in bold. Parentheses indicate number of free parameters.}
 \centering
-\begin{tabular}{l l c c }
+\begin{tabular}{l l c c l }
 \toprule
-& & \multicolumn{2}{c}{Semantics}\\
-& & \emph{empirical} & \emph{fixed plus empirical}\\
+& & \multicolumn{3}{c}{Semantics}\\
+& & \emph{empirical} & \emph{fixed} & \emph{fixed plus empirical}\\
 \midrule
-\multirow{3}{*}{Cost} & \emph{empirical} & -1474.6 (4) & -1354.4 (7) \\
- & \emph{fixed} & -1434.8 (4) & -1321.9 (7) \\
- & \emph{none} & -1372.9 (2) & \textbf{-1209.8 (5)} \\ 
+\multirow{3}{*}{Cost} & \emph{empirical} & -1390.3 (4) & -1295.1 (6) & -1251.4 (7) \\
+                                        & \emph{fixed} & -1350.3 (4) &  -1272.6 (6) & -1238.5 (7) \\
+                                         & \emph{none} & -1352.2 (2) &  -1223.0 (4) & \textbf{-1188.4 (5)} \\ 
 \bottomrule
 \end{tabular}
 \label{tab:exp2-modelcomparison}
