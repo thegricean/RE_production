@@ -513,7 +513,8 @@ AIS.samples <- read_csv('../models/BFOutput/BF_typicality.txt') %>%
 # fixedplusempirical vs. empirical
 AIS.samples %>% spread(semantics, m) %>%
   mutate(BF1 = exp(fixedplusempirical - empirical),
- mutate(BF2 = exp(fixedplusempirical - fixed)))
+         BF2 = format( exp(fixedplusempirical - fixed),
+                       scientific = TRUE, digits = 3))
 
 # no cost vs. cost
 AIS.samples %>% filter(semantics == 'fixedplusempirical') %>% 
