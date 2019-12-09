@@ -279,58 +279,38 @@ paramnames = c("infWeight","fixedVsEmpirical","colorTyp","typeTyp","typWeight")
 params.samples = params %>%
   filter(parameter %in% paramnames) %>%
   droplevels() %>%
-  mutate(parameter = fct_relevel(parameter,"colorTyp","typeTyp","fixedVsEmpirical","typWeight"))
+  mutate(parameter = fct_relevel(parameter,"fixedVsEmpirical","infWeight","typWeight","colorTyp","typeTyp"))
 
-paramlabeller = labeller(parameter = c(
-  colorTyp = "x_color",
-  typeTyp = "x_type",
-  fixedVsEmpirical = "beta_fixed",
-  typWeight = "beta_typ",
-  infWeight = "beta_i"))
+params.samples$parameter2 = factor(params.samples$parameter,
+                                   labels = c("beta[fixed]", "beta[i]","beta[t]","x[color]","x[type]"))
+                                  
+# 
+# paramlabeller = labeller(parameter = c(
+#   colorTyp = "x[color]",
+#   typeTyp = "x[type]",
+#   fixedVsEmpirical = "beta[fixed]",
+#   typWeight = "beta[t]",
+#   infWeight = "beta[i]"))
 
 typParamPosteriors = ggplot(params.samples, aes(x=value))+
+    geom_histogram(aes(y=..density..),
+               data =subset(params.samples, parameter == "fixedVsEmpirical" ),
+               binwidth = .01, colour="black", fill="white") +
+    geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter == "fixedVsEmpirical"),
+                 adjust = 1, alpha=.2, fill="#FF6666")+    
     geom_histogram(aes(y=..density..),
                    data=subset(params.samples, parameter == "infWeight"),
                    binwidth = .1, colour="black", fill="white") +
     geom_density(aes(y=..density..),
                    data=subset(params.samples, parameter == "infWeight"),
                    adjust = 1, alpha=.2, fill="#FF6666")+
-
-    # geom_histogram(aes(y=..density..),
-    #             data =subset(params.samples, parameter == "lengthCostWeight" ),
-    #             binwidth = .01, colour="black", fill="white") +
-    # geom_density(aes(y=..density..),
-    #               data=subset(params.samples, parameter == "lengthCostWeight"),
-    #               adjust = 1, alpha=.2, fill="#FF6666")+
-    # 
-    # geom_histogram(aes(y=..density..),
-    #             data=subset(params.samples, parameter == "freqCostWeight"),
-    #             binwidth = .01, colour="black", fill="white") +
-    # geom_density(aes(y=..density..),
-    #             data=subset(params.samples, parameter == "freqCostWeight"),
-    #             adjust = 1, alpha=.2, fill="#FF6666")+
-
     geom_histogram(aes(y=..density..),
                  data =subset(params.samples, parameter == "typWeight" ),
                  binwidth = .01, colour="black", fill="white") +
     geom_density(aes(y=..density..),
                data=subset(params.samples, parameter == "typWeight"),
                adjust = 1, alpha=.2, fill="#FF6666")+
-
-    # geom_histogram(aes(y=..density..),
-    #                data=subset(params.samples, parameter == "colorCost"),
-    #                binwidth = .01, colour="black", fill="white") +
-    # geom_density(aes(y=..density..),
-    #          data=subset(params.samples, parameter == "colorCost"),
-    #          adjust = 1, alpha=.2, fill="#FF6666")+
-    # 
-    # geom_histogram(aes(y=..density..),
-    #              data =subset(params.samples, parameter == "typeCost" ),
-    #              binwidth = .01, colour="black", fill="white") +
-    # geom_density(aes(y=..density..),
-    #              data=subset(params.samples, parameter == "typeCost"),
-    #              adjust = 1, alpha=.2, fill="#FF6666")+  
-  
     geom_histogram(aes(y=..density..),
                  data =subset(params.samples, parameter == "colorTyp" ),
                  binwidth = .005, colour="black", fill="white") +
@@ -345,15 +325,8 @@ typParamPosteriors = ggplot(params.samples, aes(x=value))+
                  data=subset(params.samples, parameter == "typeTyp"),
                  adjust = 1, alpha=.2, fill="#FF6666")+  
 
-    geom_histogram(aes(y=..density..),
-               data =subset(params.samples, parameter == "fixedVsEmpirical" ),
-               binwidth = .01, colour="black", fill="white") +
-    geom_density(aes(y=..density..),
-                 data=subset(params.samples, parameter == "fixedVsEmpirical"),
-                 adjust = 1, alpha=.2, fill="#FF6666")+  
-
     # ggtitle("Param Posteriors (10,000 samples; lag = 10; burnin=10000)") +
-    facet_wrap( ~ parameter, labeller = paramlabeller, scales = 'free',nrow=1) +
+    facet_wrap( ~ parameter2, labeller = label_parsed, scales = 'free',nrow=1) +
     theme_bw() +
   ylab("Density") 
 typParamPosteriors
@@ -543,53 +516,59 @@ params %>%
 ```{r}
 params.samples <- getSamples(params)
 params.samples$parameter2 = factor(params.samples$parameter,
-                                   labels = c("beta_i","beta_F","beta_L","beta_typ", "semanticInterp"),
-                                   levels = c("infWeight","freqCostWeight","lengthCostWeight","typWeight", "empiricalVsTruthConditional")) 
+                                   labels = c("beta[fixed]","beta[i]","beta[t]","beta[F]","beta[L]"),
+                                   levels = c("empiricalVsTruthConditional","infWeight","typWeight","freqCostWeight","lengthCostWeight")) 
 
 params.samples %<>%
-  filter(parameter != "empiricalVsTruthConditional") %>%
+  # filter(parameter != "empiricalVsTruthConditional") %>%
   droplevels()
   
 nomParamPosteriors = ggplot(params.samples, aes(x=value, alpha = .2))+
     geom_histogram(aes(y=..density..),
-                   data=subset(params.samples, parameter2 == "beta_i"),
+                   data=subset(params.samples, parameter2 == "beta[fixed]"),
+                   binwidth = .001, colour="black", fill="white") +
+      geom_histogram(aes(y=..density..),
+                   data=subset(params.samples, parameter2 == "beta[i]"),
                    binwidth = .1, colour="black", fill="white") +
     geom_histogram(aes(y=..density..),
-                 data =subset(params.samples, parameter2 == "beta_L" ),
+                 data =subset(params.samples, parameter2 == "beta[t]" ),
+                 binwidth = .01, colour="black", fill="white") +  
+    geom_histogram(aes(y=..density..),
+                 data =subset(params.samples, parameter2 == "beta[L]" ),
                  binwidth = .05, colour="black", fill="white") +
       geom_histogram(aes(y=..density..),
-                   data=subset(params.samples, parameter2 == "beta_F"),
+                   data=subset(params.samples, parameter2 == "beta[F]"),
                    binwidth = .01, colour="black", fill="white") +
-    geom_histogram(aes(y=..density..),
-                 data =subset(params.samples, parameter2 == "beta_typ" ),
-                 binwidth = .01, colour="black", fill="white") +
     #geom_histogram(aes(y=..density..),
      #            data =subset(params.samples, parameter2 == "semanticInterp" ),
       #           binwidth = .1, colour="black", fill="white") +
 
     geom_density(aes(y=..density..),
-                 data=subset(params.samples, parameter2 == "beta_i"),
-                 adjust = 1, alpha=.2, fill="#FF6666") +
-    geom_density(aes(y=..density..),
-                 data=subset(params.samples, parameter2 == "beta_L"),
+                 data=subset(params.samples, parameter2 == "beta[fixed]"),
                  adjust = 1, alpha=.2, fill="#FF6666") +
       geom_density(aes(y=..density..),
-                 data=subset(params.samples, parameter2 == "beta_F"),
+                 data=subset(params.samples, parameter2 == "beta[i]"),
                  adjust = 1, alpha=.2, fill="#FF6666") +
     geom_density(aes(y=..density..),
-                 data=subset(params.samples, parameter2 == "beta_typ"),
+                 data=subset(params.samples, parameter2 == "beta[t]"),
+                 adjust = 1, alpha=.2, fill="#FF6666") +  
+    geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter2 == "beta[L]"),
+                 adjust = 1, alpha=.2, fill="#FF6666") +
+      geom_density(aes(y=..density..),
+                 data=subset(params.samples, parameter2 == "beta[F]"),
                  adjust = 1, alpha=.2, fill="#FF6666") +
    #   geom_density(aes(y=..density..),
     #             data=subset(params.samples, parameter2 == "semanticInterp"),
      #            adjust = 1, alpha=.2, fill="#FF6666") +
 
     # ggtitle("Param Posteriors (2000 samples; lag = 10; burnin=10000)") +
-    facet_wrap( ~ parameter2, scales = 'free',nrow=1) +
+    facet_wrap( ~ parameter2, scales = 'free',nrow=1,labeller = label_parsed) +
     theme_bw() +
   theme(legend.position="none") +
     ylab("Density") 
 nomParamPosteriors
-ggsave(file="../writing/pics/exp3-paramposteriors.pdf",width=8,height=2)
+ggsave(file="../writing/pics/exp3-paramposteriors.pdf",width=9,height=2)
 ```
 
 

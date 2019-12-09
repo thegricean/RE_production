@@ -618,7 +618,7 @@ Fillers were target trials from Exp.~2, a replication of \citeA{GrafEtAl2016}. E
 
 We collected data from 2177 critical trials. Because we did not restrict participants' utterances in any way, they produced many different kinds of referring expressions. Testing the model's predictions required, for each trial, classifying the produced utterance as an instance of a \emph{color}-only mention (e.g., \emph{blue pin}), a \emph{size}-only mention (e.g., \emph{big pin}), or a redundant \emph{color-and-size} mention (e.g., \emph{big blue pin}). To this end we applied a semi-automatic data pre-processing procedure in which a script first checked whether the speaker's utterance contained a color or size term. In a second step,  one of the authors (CG)  manually checked and, if necessary, corrected the automatic classification. If no classification was possible, the trial was excluded. After exclusions, 2076 cases entered the analysis.  See \appref{sec:preprocessing} for details on the pre-processing procedure.
 
-\subsection{Results}
+\subsection{Behavioral results}
 \label{sec:modelempiricalresults}
 
 Proportions of redundant \emph{color-and-size} utterances are shown in \figref{fig:exp1results} alongside model predictions (to be explained further in \sectionref{sec:modifiermodeleval}). There are three main questions of interest: first, do we replicate the color/size asymmetry in probability of redundant adjective use? Second, do we replicate the previously established effect of increased redundant color use with increasing scene variation? Third, is there an effect of scene variation on redundant size use and if so, is it smaller compared to that on color use, as is predicted under asymmetric semantic values for color and size adjectives?
@@ -893,7 +893,7 @@ Mean typicality values for utterance-object pairs obtained in the norming studie
 \end{figure}
 
 
-\subsection{Results and discussion}
+\subsection{Behavioral results}
 \label{sec:exp2resultsdisc}
 
 Proportions of type-only (\emph{banana}), color-and-type (\emph{yellow banana}), color-only (\emph{yellow}), and other (\emph{funky carrot}) utterances are shown in \figref{fig:exp2empirical} as a function of the described item's mean type-only (\emph{banana}) typicality. Visually inspecting just the explicitly marked \emph{yellow banana}, \emph{brown banana}, and \emph{blue banana} cases suggests a large typicality effect in the overinformative conditions as well as a smaller typicality effect in the informative conditions, such that color is less likely to be produced with increasing typicality of the object. 
@@ -953,10 +953,10 @@ For any given context, we assumed the utterance alternatives that correspond to 
 \subsubsection{Semantics}
 
 We compared several choices of semantics for the model.
-In the full \emph{fixed plus empirical semantics} version, we introduced a parameter $\beta_{fixed}$ interpolating between the empirically elicited typicality values ($\beta_{fixed}=0$) and the inferred type-level values as employed in \sectionref{sec:rsaevaluationbasicscene} ($\beta_{fixed}=1$).
+In the full \emph{fixed plus empirical semantics} version, we introduced a parameter $\beta_{\textrm{fixed}}$ interpolating between the empirically elicited typicality values ($\beta_{\textrm{fixed}}=0$) and the inferred type-level values as employed in \sectionref{sec:rsaevaluationbasicscene} ($\beta_{\textrm{fixed}}=1$).
 The type-level values again consisted of one value for color terms and another for type terms, which are multiplied when the terms are composed in an utterance. 
-In a lesioned \emph{empirical semantics} version, we set $\beta_{fixed}=0$ and only used the empirical values.
-Conversly, in a lesioned \emph{fixed semantics} version, we set $\beta_{fixed}=1$ and only used the inferred type-level values. 
+In a lesioned \emph{empirical semantics} version, we set $\beta_{\textrm{fixed}}=0$ and only used the empirical values.
+Conversly, in a lesioned \emph{fixed semantics} version, we set $\beta_{\textrm{fixed}}=1$ and only used the inferred type-level values. 
 This allowed us to perform a nested model comparison, since the latter models are special cases of the first.
 
 \subsubsection{Cost function}
@@ -1011,7 +1011,7 @@ There is one major, and interesting, divergence from the empirical data in condi
 % old location \includegraphics[width=\textwidth]{../../../models/old/1a_bda_basic/results_bda/graphs/parameterposteriors-fixed-reducedconditions-unlogged}
 %\includegraphics[width=\textwidth]{pics/parameterposteriors-fixed-reducedconditions-unlogged}
 \includegraphics[width=\textwidth]{pics/exp2-cost-none-sem-fixedplusempirical-paramposteriors}
-\caption{For best model, posterior model parameter distributions for utterance type level semantic values (color, type), interpolation weight on fixed vs.~empirical semantics, typicality stretching parameter, and weight on informativity. Maximum a posteriori (MAP)  $x_{\textrm{color}}$ = 0.86, 95\% highest density interval (HDI) = [0.82,0.89]; MAP $x_{\textrm{type}}$ = 0.998, HDI = [0.97,1.00]; $\beta_{\textrm{fixed}}$ = .69, HDI = [0.64, 0.77]; MAP $\beta_{\textrm{typ}}$ = 1.34, HDI = [1.19,1.75]; MAP $\beta_i$ = 13.74, HDI = [11.58,14.37].}
+\caption{For best model, posterior model parameter distributions for  interpolation weight on fixed vs.~empirical semantics $\beta_{\textrm{fixed}}$, informativity weight $\beta_i$, typicality weight $\beta_t$, and utterance type level semantic values for color $x_{\textrm{color}}$ and type $x_{\textrm{type}}$. Maximum a posteriori (MAP)  $\beta_{\textrm{fixed}}$ = 0.69, 95\% highest density interval (HDI) =  [0.64,0.77]; MAP $\beta_i$ = 13.74, HDI = [11.58,14.37]; MAP $\beta_t$ = 1.34, HDI = [1.19,1.75];  MAP  $x_{\textrm{color}}$ = 0.86, HDI = [0.82,0.89]; MAP $x_{\textrm{type}}$ = 0.998, HDI = [0.97,1.00].}
 \label{fig:typparamposteriors}
 \end{figure}
 
@@ -1040,7 +1040,7 @@ This choice of reference level is interestingly different from that of adding mo
 Still, we hypothesized that similar factors may contribute: an expression's contextual informativeness, its cognitive cost \cite<short and frequent terms are preferred over long and infrequent ones,>{griffin1998,jescheniak1994}, and its typicality \cite<an utterance is more likely to be used if the object is a good instance of it,> {Jolicoeur1984}.
 
 In order to evaluate cs-RSA for nominal choice, we proceeded as in \sectionref{sec:colortypicality}: we collected production data within the same reference game setting, but varied the contextual informativeness of utterances by varying whether distractors shared the same basic or superordinate category with the target (see \figref{fig:dogcontexts}). We also elicited typicality ratings for object-utterance combinations, which entered the model as the semantic values via the lexicon. We then conducted Bayesian data analysis, as in previous sections, for model comparison.
-Our key insight is that compared to a traditional boolean semantics where class labels (e.g. \emph{dog}) are strictly true or false of objects, a continuous semantics incorporating knowledge of typicality more successfully predicts preferences for taxonomic level of reference.
+Our key insight is that compared to a traditional Boolean semantics where class labels (e.g. \emph{dog}) are strictly true or false of objects, a continuous semantics incorporating knowledge of typicality more successfully predicts preferences for taxonomic level of reference.
 That is, cs-RSA accurately predicts, from Gricean principles, that speakers will increase their preference for subordinate terms (e.g. \emph{penguin}) when an object is a more atypical example of the basic-level (\emph{bird}) and prefer basic-level terms (e.g. \emph{bird}) when those objects are more atypical examples of the super-ordinate level (\emph{animal}). 
 
 
@@ -1101,7 +1101,7 @@ We collected data from 2193 critical trials. Each referring expression was class
 
 In order to test for typicality effects on the production data and to evaluate cs-RSA's performance, we again collected empirical typicality values for each utterance/object pair. See \appref{app:typicalitynorms2} for details.
 
-\subsection{Behavioral results}
+\subsection{Behavioral results and discussion}
 
 
 Proportions of sub, basic, and super level utterances are shown in \figref{fig:exp3results}. Overall, super level mentions are highly dispreferred ($< 2\%$), so we focus in this section only on predictors of sub over basic level mentions. The clearest pattern of note is that sub level mentions are only preferred in the most constrained context that necessitates the sub level mention for unique reference (e.g., target: dalmatian, distractor: greyhound; see \figref{fig:item12}). Nevertheless, even in these contexts there is a non-negligible proportion of basic level mentions (28\%). This includes cases of using just the basic level term (6\%, e.g., \emph{dog} for the German Shepherd when one of the distractors was a greyhound, an atypical dog, akin to the unmodified cases in the informative conditions discussed in \sectionref{sec:exp2resultsdisc}) as well as basic level terms with additional modifying material (22\%). In the remaining contexts, where the sub and basic level are equally informative, there is a clear preference for the basic level. Finally, mitigating this context effect, sub level mentions increased with increasing typicality of the object as an instance of the sub level utterance.
@@ -1164,10 +1164,9 @@ Perhaps surprisingly, we did not observe an effect of frequency on sub level ter
 \label{sec:reflevelmodel}
 
 
-We evaluated cs-RSA on the production data from Exp.~3. The architecture of the model is identical to that of the model presented in \sectionref{sec:colorypicalitymodel}. The only difference is the set of alternative utterances\footnote{See \tableref{tab:modeldiffs} for an overview of the models reported in the paper.} Whereas the models from the previous sections treated all individual features and feature combinations present in the display as utterance alternatives, we now consider only the three different levels of reference to the target as alternatives, i.e. subordinate (\emph{dalmatian}), basic (\emph{dog}), and superordinate (\emph{animal}). So, event when a German Shepherd is present as a distractor, \emph{German Shepherd} is \emph{not} considered an alternative utterance for the Dalmatian target. This has minimal effects on model predictions as long as \emph{German Shepherd} has low semantic fit to the dalmatian target. 
+We evaluated cs-RSA on the production data from Exp.~3. The architecture of the model is identical to that of the model presented in \sectionref{sec:colorypicalitymodel}. The only difference is the set of alternative utterances.\footnote{See \tableref{tab:modeldiffs} for an overview of the models reported in the paper.} Whereas the models from the previous sections treated all individual features and feature combinations present in the display as utterance alternatives, for computational efficiency we now consider only the three different levels of reference to the target as alternatives, i.e. subordinate (\emph{dalmatian}), basic (\emph{dog}), and superordinate (\emph{animal}). So, even when a German Shepherd is present as a distractor, \emph{German Shepherd} is \emph{not} considered an alternative utterance for the dalmatian target. This has minimal effects on model predictions as long as \emph{German Shepherd} has low semantic fit to the dalmatian target. 
 
-In Experiment 2, we tested which of two different semantics was most justified -- the empirically elicited typicality semantics, or one that combined typicality with a fixed compositional semantics using (inferred) type-level semantic values. 
-Here, the relevant comparison is between a fixed noun semantics (i.e. 1 if the object belongs to the given class label, and 0 otherwise) and a continuous semantics using empirical typicalities. 
+In Experiment 2, we tested which of three different semantics was most justified -- the empirically elicited typicality semantics, a fixed semantics with type-level semantic values, and one that combined both. Here, the relevant comparison is between a fixed Boolean noun semantics (i.e. 1 if the object belongs to the given class label, and 0 otherwise) and the empirically elicited typicality semantics.
 Again, we introduced a parameter that interpolated between these semantic values. 
 Additionally, we evaluated which cost function was best supported by the data: the one defined in \eqref{eq:exp2cost} (a linear weighted combination of an utterance's length and its frequency) or a simpler baseline in which utterances were assumed to have no cost.
 
@@ -1175,11 +1174,11 @@ Additionally, we evaluated which cost function was best supported by the data: t
 %c(u) = \beta_F\cdot p(u) + (1-\beta_F)\cdot l(u)
 %\end{equation} 
 
-We employed the same procedure as in the previous section to compute the Bayes Factor for the comparison between the two cost models, and to compute the posteriors over parameters. Priors were again  $\beta_i  \sim \mathcal{U}(0,20)$,  $\beta_{F} \sim \mathcal{U}(0,5)$, $\beta_{L} \sim \mathcal{U}(0,5)$, $\beta_t  \sim \mathcal{U}(0,5)$, .
+We employed the same procedure as in the previous section to compute the Bayes Factor for the comparison between the two cost models, and to compute the posteriors over parameters. Priors were again  $\beta_i  \sim \mathcal{U}(0,20)$,  $\beta_{F} \sim \mathcal{U}(0,5)$, $\beta_{L} \sim \mathcal{U}(0,5)$, $\beta_t  \sim \mathcal{U}(0,5)$.
 Despite the greater number of parameters associated with adding the cost function, the  model that includes non-zero costs was preferred compared to its no-cost counterpart ($BF = 2.8 \times 10^{77}$). 
 Posteriors over parameters are shown in \figref{fig:nomparamposteriors}. 
-First, we observe that the semantic interpolation value was highly skewed toward 0, strongly indicating that empirical typicality values strongly improve model performance over a deterministic baseline. \todo[inline]{TODO: Add this facet to Fig. 19; also can we manually fix the facet titles to be the latex? (it's slightly confusing to have `beta\_typ' compared to $\beta_t$ in the caption/text.) }
-Second, the weight on frequency is close to zero. That is, in line with the results from the mixed effects regression, it is an utterance's length, but not its frequency, that affects the probabilitiy with which it is produced in this paradigm.\footnote{As discussed in previous sections, the lack of importance of a word's frequency may well be attributable to the written modality within which participants generated referring expressions.} 
+First, we observe that the semantic interpolation value was highly skewed toward 0, strongly indicating that empirical typicality values strongly improve model performance over a Boolean baseline.
+Second, the weight on frequency is close to zero. That is, in line with the results from the mixed effects regression, it is an utterance's length, but not its frequency, that affects the probability with which it is produced in this paradigm.\footnote{As discussed in previous sections, the lack of importance of a word's frequency may well be attributable to the written modality within which participants generated referring expressions.} 
 %In the written modality, time pressure on lexical retrieval is lower than in spoken language, so a word's retrievability (which its frequency is an indicator of) is less likely to affect production choices than in the spoken modality; vice versa for an utterance's length -- each additional character incurs a typing cost in the written modality.} 
 %The posterior on the typicality weight (values $< 1$) also suggests that, in contrast to Exp.~2, the typicality values elicited empirically are somewhat more extreme than the semantic values that are appropriate for computing informativity in the context of nominal choice.
 %\ndg{i commented out the note on inferred typicality values since i think its kind of cryptic, and i'm not convinced that these values are really directly interpretable as anything.... we can add a comment in discussion pointing out that inferred typicality weight, as well as inferred cost weight, are different between the two expts and conjecturing about why...}\jd{ok, i included it because it seemed weird to not comment on it at all, but i agree that it's cryptic. i think we just don't have anything particularly interesting to say about this, except that apparently the elicited typicality diffs were "too big" in this exp and "too small" in the previous one. but like i said, it's unclear there's anything interesting to say about thtis.}
@@ -1188,7 +1187,7 @@ Second, the weight on frequency is close to zero. That is, in line with the resu
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{pics/exp3-paramposteriors}
-\caption{Posterior model parameter distributions for informativity weight ($\beta_i$), frequency cost weight  ($\beta_{F}$), length cost weight ($\beta_{L}$), and typicality weight ($\beta_t $). Maximum a posteriori (MAP)  $\beta_i$ = 19.8, 95\% highest density interval (HDI) = [17.71,20.0]; MAP $\beta_{F}$ = 0.0.02, HDI = [0.00,0.19]; MAP $\beta_{L}$ = 2.69, HDI = [2.42,2.99]; MAP $\beta_t $ = 0.57, HDI = [0.53,0.67].}
+\caption{Posterior model parameter distributions for interpolation weight on fixed vs.~empirical semantics $\beta_{\textrm{fixed}}$, informativity weight $\beta_i$, typicality weight $\beta_t $, frequency cost weight $\beta_{F}$, and length cost weight $\beta_{L}$. Maximum a posteriori (MAP) $\beta_{\textrm{fixed}}$ = 0.004, 95\% highest density interval (HDI) = [0.000,0.03];  $\beta_i$ = 19.8, HDI = [17.71,20.0]; MAP $\beta_t $ = 0.57, HDI = [0.53,0.67]; MAP $\beta_{F}$ = 0.0.02, HDI = [0.00,0.19]; MAP $\beta_{L}$ = 2.69, HDI = [2.42,2.99].}
 \label{fig:nomparamposteriors}
 \end{figure}
 
