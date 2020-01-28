@@ -141,7 +141,7 @@ Stick together semantic value and cost plots for paper.
 # grid.arrange(typParamPosteriors,costParamPosteriors,nrow=1)
 # dev.off()
 
-tiff(file="../writing/pics/fig10.tiff",units="in",width=5.5,height=2.7,res=600)
+tiff(file="../writing/pics/fig6.tiff",units="in",width=5.5,height=2.7,res=600)
 grid.arrange(typParamPosteriors,costParamPosteriors,nrow=1)
 dev.off()
 ```
@@ -252,7 +252,7 @@ redundant = d %>%
   droplevels()
 ```
 
-Make Fig 8 plot analogous to Fig 6.
+Make Fig 6 plot analogous to Fig 4.
 ```{r} 
 scale_value=1
 ggplot(redundant, aes(x=Variation,y=Probability,color=Data,shape=NumDistractors)) +
@@ -287,10 +287,10 @@ ggplot(redundant, aes(x=Variation,y=Probability,color=Data,shape=NumDistractors)
 )
 
 # ggsave("../writing/pics/exp1-empirical-predictives.pdf",height=3.9,width=9)
-ggsave("../writing/pics/fig8.tiff",units="in",width=2.7,height=1.7,dpi=600)
+ggsave("../writing/pics/fig6.tiff",units="in",width=2.7,height=1.7,dpi=600)
 ```
 
-Make Fig 9 a scatterplot of all data points fit in Exp 1.
+Make Fig 7 a scatterplot of all data points fit in Exp 1.
 ```{r} 
 predictives$ModelProbability = predictives$Probability
 predictives$Probability = NULL
@@ -326,7 +326,7 @@ ggplot(scatterd, aes(x=ModelProbability,y=Probability,color=Utterance,shape=Redu
         legend.box.margin=margin(0,0,0,0) # change space between legend and plot
 )
 # ggsave("../writing/pics/exp1-scatterplot.pdf",height=3,width=4.8)
-ggsave("../writing/pics/fig9.tiff",units="in",width=2.7,height=2.8,dpi=600)
+ggsave("../writing/pics/fig7.tiff",units="in",width=2.7,height=2.8,dpi=600)
 ```
 
 
@@ -419,12 +419,12 @@ typParamPosteriors = ggplot(params.samples, aes(x=value))+
 )
 typParamPosteriors
 # ggsave(file=paste("../writing/pics/exp2-cost-",costs,"-sem-",semantics,"-paramposteriors.pdf",sep=""),width=9,height=2)
-ggsave("../writing/pics/fig16.tiff",units="in",width=5.7,height=1.3,dpi=600)
+ggsave("../writing/pics/fig14.tiff",units="in",width=5.7,height=1.3,dpi=600)
 ```
 
 ## Predictives
 
-FIXME Load empirical data and get into right format.
+Load empirical data and get into right format.
 
 ```{r}
 empirical = read.csv("../models/bdaInput/typicality/bda_data.csv") %>%
@@ -517,9 +517,6 @@ predictives = predictives %>%
 # change order of levels
 predictives$Utterance <- factor(predictives$Utterance, levels=c("type-only", "color-only", "color-and-type", "other"))
 
-modelcaption = expression(paste(bold("(b) "), 
-                        "MAP model predicted utterance probabilities"))
-
 modelplot = ggplot(predictives, aes(x=type_typicality,y=ModelProb,color=Utterance)) +
   geom_point(size=.5) +
   geom_smooth(method="lm",se=F) +
@@ -552,7 +549,8 @@ modelplot = ggplot(predictives, aes(x=type_typicality,y=ModelProb,color=Utteranc
         legend.box.margin=margin(0,0,0,0), # change space between legend and plot
         legend.key=element_blank(),
         strip.text      = element_text(size = 6 * scale_value,margin=margin(t=3,b=3,unit="pt")),
-        plot.tag.position = c(0,1)
+        plot.tag.position = c(0,1),
+        plot.tag = element_text(size=12)
         # plot.caption = element_text(size = 7 * scale_value, hjust=.5) #, margin = margin(t = .5)),
 )
 modelplot
@@ -596,8 +594,6 @@ bananas = df %>%
 
 # plot
 scale_value = 1
-empiricalcaption = expression(paste(bold("(a) "), 
-                        "Empirical utterance proportions"))
 empiricalplot = ggplot(agr, aes(x=NormedTypicality,y=Probability,color=Utterance)) +
   geom_point(size=.5) +
   geom_smooth(method="lm",se=F) +
@@ -635,12 +631,13 @@ empiricalplot = ggplot(agr, aes(x=NormedTypicality,y=Probability,color=Utterance
         # legend.key=element_blank(),
         # legend.key = element_rect(colour = "transparent", fill = "transparent"),
         strip.text      = element_text(size = 6 * scale_value,margin=margin(t=3,b=3,unit="pt")),
-        plot.tag.position = c(0,1)
+        plot.tag.position = c(0,1),
+        plot.tag = element_text(size=12)
         # plot.caption = element_text(size = 7 * scale_value, hjust=.5) #, margin = margin(t = .5)),
   )
 empiricalplot
 
-tiff(file="../writing/pics/fig15.tiff",units="in",width=3.6,height=6.5,res=600)
+tiff(file="../writing/pics/fig13.tiff",units="in",width=3.6,height=6.5,res=600)
 grid.arrange(empiricalplot,modelplot,nrow=2)
 dev.off()
 
@@ -757,10 +754,37 @@ nomParamPosteriors = ggplot(params.samples, aes(x=value, alpha = .2))+
     # ggtitle("Param Posteriors (2000 samples; lag = 10; burnin=10000)") +
     facet_wrap( ~ parameter2, scales = 'free',nrow=1,labeller = label_parsed) +
     theme_bw() +
-  theme(legend.position="none") +
-    ylab("Density") 
+    theme(legend.position="none") +
+    ylab("Density") +
+    xlab("Value") +
+    theme(panel.border = element_rect(size=.2),
+        plot.margin = unit(x = c(0.03, 0.06, 0.03, 0.03), units = "in"),
+        panel.grid = element_line(size = .4),
+        axis.line        = element_line(colour = "black", size = .2),
+        axis.ticks       = element_line(colour = "black", size = .2),
+        axis.ticks.length = unit(2, "pt"),
+        axis.text.x        = element_text(size = 6 * scale_value, colour = "black",vjust=2),
+        axis.text.y        = element_text(size = 6 * scale_value, colour = "black",margin = margin(r = 0.3)),#,hjust=-5),
+        axis.title.x       = element_text(size = 6 * scale_value, margin = margin(t = .5)),
+        axis.title.y       = element_text(size = 6 * scale_value, margin = margin(r = .7)),
+        # legend.text      = element_text(margin = margin(l = -2, r=0, unit = "pt"), size = 6 * scale_value),
+        # legend.title     = element_text(size = 6, face = "bold"),
+        # legend.position  = "bottom",#c(0.5,-.5),
+        # legend.direction = "horizontal",
+        # legend.box = "vertical",
+        # legend.spacing.x = unit(1, 'pt'),
+        # legend.spacing.y = unit(5, 'pt'),
+        # legend.box.spacing = unit(.1,"pt"),
+        # legend.margin=margin(0,0,-10,0), # change space between sub-legends
+        # legend.box.margin=margin(0,0,0,0), # change space between legend and plot
+        # legend.key=element_blank(),
+        # legend.key = element_rect(colour = "transparent", fill = "transparent"),
+        strip.text      = element_text(size = 6 * scale_value,margin=margin(t=3,b=3,unit="pt"))
+        # plot.tag.position = c(0,1)
+  )
 nomParamPosteriors
-ggsave(file="../writing/pics/exp3-paramposteriors.pdf",width=9,height=2)
+# ggsave(file="../writing/pics/exp3-paramposteriors.pdf",width=9,height=2)
+ggsave("../writing/pics/fig17.tiff",units="in",width=5.7,height=1.3,dpi=600)
 ```
 
 
@@ -879,15 +903,39 @@ toplot[toplot$Target == "poloshirt" & toplot$Data == "empirical",]$item = "polos
 toplot[toplot$Target == "suv" & toplot$Data == "empirical",]$item = "suv"
 
 ggplot(toplot, aes(x=typ_sub,y=Probability,color=relevel(as.factor(Utterance),"sub"))) +
-  geom_point() +
+  geom_point(size=.5) +
   geom_smooth(method="lm") +
   scale_color_manual(values=cbPalette[2:4]) +
-  geom_text(aes(label=item),nudge_y=.08) +
+  geom_text(aes(label=item),nudge_y=.08,size=2) +
   ylab("Utterance probability") +
   xlab("Typicality of object for subordinate level utterance") +
   facet_grid(relevel(Data,"empirical")~relevel(as.factor(Condition),"sub necessary")) +
-  guides(color=guide_legend(title="Utterance"))
-ggsave("../writing/pics/results-exp3.png",height=4,width=7.5)
+  guides(color=guide_legend(title="Utterance",override.aes=list(fill=NA))) +
+  theme(panel.border = element_rect(size=.2),
+        plot.margin = unit(x = c(0.03, 0.06, 0.1, 0.03), units = "in"),
+        panel.grid = element_line(size = .4),
+        axis.line        = element_line(colour = "black", size = .2),
+        axis.ticks       = element_line(colour = "black", size = .2),
+        axis.ticks.length = unit(2, "pt"),
+        axis.text.x        = element_text(size = 6 * scale_value, colour = "black",vjust=2),
+        axis.text.y        = element_text(size = 6 * scale_value, colour = "black",margin = margin(r = 0.3)),#,hjust=-5),
+        axis.title.x       = element_text(size = 6 * scale_value, margin = margin(t = .5)),
+        axis.title.y       = element_text(size = 6 * scale_value, margin = margin(r = .7)),
+        legend.text      = element_text(margin = margin(l = -2, r=0, unit = "pt"), size = 6 * scale_value),
+        legend.title     = element_text(size = 6, face = "bold"),
+        legend.position  = "bottom",#c(0.5,-.5),
+        legend.direction = "horizontal",
+        legend.box = "vertical",
+        legend.spacing.x = unit(1, 'pt'),
+        legend.spacing.y = unit(5, 'pt'),
+        legend.box.spacing = unit(.1,"pt"),
+        legend.margin=margin(0,0,-10,0), # change space between sub-legends
+        legend.box.margin=margin(0,0,0,0), # change space between legend and plot
+        legend.key=element_blank(),
+        strip.text      = element_text(size = 6 * scale_value,margin=margin(t=3,b=3,l=3,r=3,unit="pt")))
+        # plot.tag.position = c(0,1)
+# ggsave("../writing/pics/results-exp3.png",height=4,width=7.5)
+ggsave("../writing/pics/fig16.tiff",units="in",width=5.3,height=3.2,dpi=600)
 ```
 
 ## Model comparison
