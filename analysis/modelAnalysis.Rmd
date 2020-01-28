@@ -10,7 +10,8 @@ library(tidyverse)
 library(coda)
 library(lme4)
 library(magrittr)
-#library(gridExtra)
+library(gridExtra)
+library(ggnewscale)
 estimate_mode <- function(s) {
   d <- density(s)
   return(d$x[which.max(d$y)])
@@ -516,14 +517,19 @@ predictives = predictives %>%
 # change order of levels
 predictives$Utterance <- factor(predictives$Utterance, levels=c("type-only", "color-only", "color-and-type", "other"))
 
-ggplot(predictives, aes(x=type_typicality,y=ModelProb,color=Utterance)) +
-  geom_point() +
-  geom_smooth(method="lm") +
+modelcaption = expression(paste(bold("(b) "), 
+                        "MAP model predicted utterance probabilities"))
+
+modelplot = ggplot(predictives, aes(x=type_typicality,y=ModelProb,color=Utterance)) +
+  geom_point(size=.5) +
+  geom_smooth(method="lm",se=F) +
   xlab("Typicality of object for type-only utterance") +
   ylab("MAP model predicted probability") +
   scale_color_manual(values = c(cbPalette[2],cbPalette[3],cbPalette[4],"gray30")) +
   facet_wrap(~condition) +
   guides(color=guide_legend(override.aes=list(fill=NA))) +
+  # labs(caption=modelcaption) +
+  labs(tag='b') +
   theme(panel.border = element_rect(size=.2),
         # plot.margin = unit(x = c(0.03, 0.1, 0.03, 0.03), units = "in"),
         panel.grid = element_line(size = .4),
@@ -545,13 +551,102 @@ ggplot(predictives, aes(x=type_typicality,y=ModelProb,color=Utterance)) +
         legend.margin=margin(0,0,-10,0), # change space between sub-legends
         legend.box.margin=margin(0,0,0,0), # change space between legend and plot
         legend.key=element_blank(),
-        strip.text      = element_text(size = 6 * scale_value,margin=margin(t=3,b=3,unit="pt"))
+        strip.text      = element_text(size = 6 * scale_value,margin=margin(t=3,b=3,unit="pt")),
+        plot.tag.position = c(0,1)
+        # plot.caption = element_text(size = 7 * scale_value, hjust=.5) #, margin = margin(t = .5)),
 )
+modelplot
 # ggsave(file=paste("../writing/pics/exp2-cost-",costs,"-sem-",semantics,"-paramposteriors.pdf",sep=""),width=9,height=2)
-ggsave("../writing/pics/fig15b.tiff",units="in",width=3.6,height=3.5,dpi=600)
+# ggsave("../writing/pics/fig15b.tiff",units="in",width=3.6,height=3,dpi=600)
 ```
 
-Bind empirical and predictives and plot
+Get empirical plot analogous to model plot, then stick the two together
+```{r}
+df = read.table(file="../data/data_exp2.csv",sep="\t", header=T, quote="")
+agr = df %>%
+  select(Color,Type,ColorAndType,Other,NormedTypicality,context) %>%
+  gather(Utterance,Mentioned,-context,-NormedTypicality) %>%
+  group_by(Utterance,context,NormedTypicality) %>%
+  summarise(Probability=mean(Mentioned),ci.low=ci.low(Mentioned),ci.high=ci.high(Mentioned))
+agr = as.data.frame(agr)
+agr$YMin = agr$Probability - agr$ci.low
+agr$YMax = agr$Probability + agr$ci.high
+# change order of Utterance column
+agr$Utterance <- case_when(
+  agr$Utterance == "Type" ~ "type-only",
+  agr$Utterance == "Color" ~ "color-only",
+  agr$Utterance == "ColorAndType" ~ "color-and-type",
+  agr$Utterance == "Other" ~ "other")
+# change order of levels
+agr$Utterance <- factor(agr$Utterance, levels=c("type-only", "color-only", "color-and-type", "other"))
+# change context names to have nicer facet labels 
+levels(agr$context) = c("informative","informative-cc", "overinformative", "overinformative-cc")
+
+# make banana item data.frame to circle
+bananas = df %>%
+  filter(Item == "banana") %>%
+  select(Color,Type,ColorAndType,Other,NormedTypicality,context,TargetColor) %>%
+  gather(Utterance,Mentioned,-context,-NormedTypicality,-TargetColor) %>%
+  group_by(Utterance,context,NormedTypicality,TargetColor) %>%
+  summarise(Probability=mean(Mentioned)) %>%
+  ungroup() %>%
+  filter(Utterance == "ColorAndType") %>%
+  mutate(X=NormedTypicality,Y=Probability,Utterance="color-and-type") %>%
+  select(context,TargetColor,X,Y,Utterance)
+
+# plot
+scale_value = 1
+empiricalcaption = expression(paste(bold("(a) "), 
+                        "Empirical utterance proportions"))
+empiricalplot = ggplot(agr, aes(x=NormedTypicality,y=Probability,color=Utterance)) +
+  geom_point(size=.5) +
+  geom_smooth(method="lm",se=F) +
+  scale_color_manual(values = c(cbPalette[2],cbPalette[3],cbPalette[4],"gray30","red","orange")) +
+  guides(color=guide_legend(override.aes=list(fill=NA))) +
+  new_scale_color() +
+  geom_point(data=bananas,aes(x=X,y=Y,color=TargetColor),shape=0,size=3,stroke=1,show.legend=F) +
+  scale_color_manual(values = c("dodgerblue3","chocolate4","gold")) +
+  facet_wrap(~context) +
+  xlab("Typicality of object for type-only utterance") +
+  ylab("Empirical utterance proportion") +
+  # labs(caption=empiricalcaption) +
+  labs(tag = 'a') +
+  coord_cartesian(xlim=c(0.4,1),ylim=c(0, 1)) +
+  theme(panel.border = element_rect(size=.2),
+        # plot.margin = unit(x = c(0.03, 0.1, 0.03, 0.03), units = "in"),
+        panel.grid = element_line(size = .4),
+        axis.line        = element_line(colour = "black", size = .2),
+        axis.ticks       = element_line(colour = "black", size = .2),
+        axis.ticks.length = unit(2, "pt"),
+        axis.text.x        = element_text(size = 6 * scale_value, colour = "black",vjust=2),
+        axis.text.y        = element_text(size = 6 * scale_value, colour = "black",margin = margin(r = 0.3)),#,hjust=-5),
+        axis.title.x       = element_text(size = 6 * scale_value, margin = margin(t = .5)),
+        axis.title.y       = element_text(size = 6 * scale_value, margin = margin(r = .7)),
+        legend.text      = element_text(margin = margin(l = -2, r=0, unit = "pt"), size = 6 * scale_value),
+        legend.title     = element_text(size = 6, face = "bold"),
+        legend.position  = "bottom",#c(0.5,-.5),
+        legend.direction = "horizontal",
+        legend.box = "vertical",
+        legend.spacing.x = unit(1, 'pt'),
+        legend.spacing.y = unit(5, 'pt'),
+        legend.box.spacing = unit(.1,"pt"),
+        legend.margin=margin(0,0,-10,0), # change space between sub-legends
+        legend.box.margin=margin(0,0,0,0), # change space between legend and plot
+        # legend.key=element_blank(),
+        # legend.key = element_rect(colour = "transparent", fill = "transparent"),
+        strip.text      = element_text(size = 6 * scale_value,margin=margin(t=3,b=3,unit="pt")),
+        plot.tag.position = c(0,1)
+        # plot.caption = element_text(size = 7 * scale_value, hjust=.5) #, margin = margin(t = .5)),
+  )
+empiricalplot
+
+tiff(file="../writing/pics/fig15.tiff",units="in",width=3.6,height=6.5,res=600)
+grid.arrange(empiricalplot,modelplot,nrow=2)
+dev.off()
+
+```
+
+Bind empirical and predictives and plot correlation
 ```{r}
 d = left_join(predictives,empirical,by=c("condition","target_item","utterance")) %>%
   replace_na(list(EmpiricalProp = 0))
