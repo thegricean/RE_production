@@ -58,7 +58,7 @@ anova(m.1,m.3) # interaction effect of both typicality-informativity and typical
 # Plot utterance choice proportions by typicality #
 ###################################################
 
-# plot utterance choice proportions by typicality thick for poster/thesis
+# plot utterance choice proportions by typicality thick for poster/thesis -- this code is duplicated in modelAnalysis.Rmd
 agr = df %>%
   select(Color,Type,ColorAndType,Other,NormedTypicality,context) %>%
   gather(Utterance,Mentioned,-context,-NormedTypicality) %>%
@@ -78,25 +78,41 @@ agr$Utterance <- factor(agr$Utterance, levels=c("type-only", "color-only", "colo
 # change context names to have nicer facet labels 
 levels(agr$context) = c("informative","informative-cc", "overinformative", "overinformative-cc")
 # plot
+scale_value = 1
 ggplot(agr, aes(x=NormedTypicality,y=Probability,color=Utterance)) +
-  geom_point(size=2) +
-  geom_smooth(method="lm",size=2.25) +
+  geom_point(size=.5) +
+  geom_smooth(method="lm") +
   facet_wrap(~context) +
   xlab("Typicality of object for type-only utterance") +
   ylab("Empirical utterance proportion") +
   coord_cartesian(xlim=c(0.4,1),ylim=c(0, 1)) +
   scale_color_manual(values = c(cbPalette[2],cbPalette[3],cbPalette[4],"gray30")) +
-  theme(axis.title=element_text(size=25,colour="#757575")) +
-  theme(axis.text.x=element_text(size=20,colour="#757575")) +
-  theme(axis.text.y=element_text(size=20,colour="#757575")) +
-  theme(axis.ticks=element_line(size=.5,colour="#757575"), axis.ticks.length=unit(1,"mm")) +
-  theme(strip.text.x=element_text(size=25,colour="#757575")) +
-  theme(legend.position="top") +
-  theme(legend.title=element_text(size=25,color="#757575")) +
-  theme(legend.text=element_text(size=20,colour="#757575")) +
-  labs(color = "Utterance") +
-  theme(strip.background=element_rect(colour="#939393",fill="white")) +
-  theme(panel.background=element_rect(colour="#939393"))
+  guides(color=guide_legend(override.aes=list(fill=NA))) +
+  theme(panel.border = element_rect(size=.2),
+        # plot.margin = unit(x = c(0.03, 0.1, 0.03, 0.03), units = "in"),
+        panel.grid = element_line(size = .4),
+        axis.line        = element_line(colour = "black", size = .2),
+        axis.ticks       = element_line(colour = "black", size = .2),
+        axis.ticks.length = unit(2, "pt"),
+        axis.text.x        = element_text(size = 6 * scale_value, colour = "black",vjust=2),
+        axis.text.y        = element_text(size = 6 * scale_value, colour = "black",margin = margin(r = 0.3)),#,hjust=-5),
+        axis.title.x       = element_text(size = 6 * scale_value, margin = margin(t = .5)),
+        axis.title.y       = element_text(size = 6 * scale_value, margin = margin(r = .7)),
+        legend.text      = element_text(margin = margin(l = -2, r=0, unit = "pt"), size = 6 * scale_value),
+        legend.title     = element_text(size = 6, face = "bold"),
+        legend.position  = "bottom",#c(0.5,-.5),
+        legend.direction = "horizontal",
+        legend.box = "vertical",
+        legend.spacing.x = unit(1, 'pt'),
+        legend.spacing.y = unit(5, 'pt'),
+        legend.box.spacing = unit(.1,"pt"),
+        legend.margin=margin(0,0,-10,0), # change space between sub-legends
+        legend.box.margin=margin(0,0,0,0), # change space between legend and plot
+        legend.key=element_blank(),
+        strip.text      = element_text(size = 6 * scale_value,margin=margin(t=3,b=3,unit="pt"))
+  )
+# ggsave(file=paste("../writing/pics/exp2-cost-",costs,"-sem-",semantics,"-paramposteriors.pdf",sep=""),width=9,height=2)
+
 # banana cases were circled by hand and then this edited graph is used in the paper
 # ggsave(here("writing","pics","empiricalProportions_typ_nobanana.png"),width=30,height=30)
 
