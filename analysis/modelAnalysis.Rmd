@@ -936,6 +936,7 @@ ggplot(toplot, aes(x=typ_sub,y=Probability,color=relevel(as.factor(Utterance),"s
         # plot.tag.position = c(0,1)
 # ggsave("../writing/pics/results-exp3.png",height=4,width=7.5)
 ggsave("../writing/pics/fig16.tiff",units="in",width=5.3,height=3.2,dpi=600)
+ggsave("../writing/pics/fig16.eps",units="in",width=5.3,height=3.2)#,device=cairo_ps,fallback_resolution = 600)#,dpi=600)
 ```
 
 ## Model comparison
