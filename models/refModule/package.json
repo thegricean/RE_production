@@ -9,6 +9,6 @@
   },
   "dependencies": {
     "babyparse": "*",
-    "lodash": ">=4.17.13"
+    "lodash": ">=4.17.19"
   }
 }
